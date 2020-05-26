@@ -12,15 +12,58 @@
             left:0;
             margin:0;
             padding:0;
-            cursor: move;
+            cursor: url('img/chaos-magick.png'), auto;
+            font-family: optima;
+            color: white;
+            text-align: justify;
+        }
+        #title {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            cursor: url('img/chaos-magick.png'), auto;
+            width: 370px;
+            text-align: justify;
+            text-align-last: justify;
+            text-justify: inter-word;
+        }
+        #volume {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            font-size: 13px;
+            font-style: bold;
+            cursor: pointer;
+        }
+        #fullscreen {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            cursor: pointer;
         }
     </style>
+    <!-- <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' /> -->
 </head>
 <body>
-    <div style="position: absolute; color: white; font-family: optima; left: 5px;">mirrors in space ☷ coming to you</div>
-    <audio src="space.ogg" autoplay>
-    <p>If you are reading this, it is because your browser does not support the audio element.     </p>
-</audio>
+    <div id="fullscreen">fullscreen</div>
+    <script>
+      var goFS = document.getElementById("fullscreen");
+      goFS.addEventListener("click", function() {
+          document.body.requestFullscreen();
+      }, false);
+    </script>
+    <div id="title">
+        <strong>mirrors in space ☷ coming soon to be outlived</strong><br>
+        by the stairs free falling into the running water<br>
+        the stars rolling away from each other<br>
+        outshone by the silhouettes on the fortuitous placards<br>
+        & out of sight; forgetful of its smeared desires
+    </div>
+    <div id="volume">TURN SOUND ON</div>
+    <audio id="sound" preload="auto" loop>
+      <source src="snd/mirrors_short.ogg" type="audio/ogg">
+    </audio>
+
     <script src="vendor/three.min.js"></script>
     <script src="vendor/OrbitControls.js"></script>
     <script src="ShaderLoader.js"></script>
@@ -31,8 +74,11 @@
         var scene, camera, renderer, controls, timer = 0, timerInc = .01;
         var simulationnShader;
         var clock, stages, stage;
-        var currStage = 0;
-
+        var currStage = 0
+        var sound = false;
+        var amplInc = 0.11, amplDec = 0.08;
+        var audioLoader, soundObj;
+        var backColor=0x10, stroboBackColor=0xFFFFFF, tempBackColor;
 
         window.onload = function() {
 
@@ -46,6 +92,17 @@
 
         };
 
+        function playSound(name) {
+            // debugger;
+            audioLoader.load('snd/' + name + '.ogg', function(buffer) {
+                // debugger;
+                soundObj.setBuffer(buffer);
+                soundObj.setLoop(false);
+                soundObj.setVolume(0.8);
+                soundObj.play();
+            });
+
+        }
         function init(args)
         {
             args = args || {};
@@ -57,32 +114,35 @@
             });
             renderer.setSize( w,h );
             renderer.setClearColor( 0x10 );
+
             document.body.appendChild(renderer.domElement);
 
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000);
 
             controls = new THREE.OrbitControls(camera);
-            camera.position.z = controls.minDistance = controls.maxDistance = 45;
+            camera.position.z = controls.minDistance = controls.maxDistance = 30;
 
-            // clock = new THREE.Clock();
+            // create an AudioListener and add it to the camera
+            var listener = new THREE.AudioListener();
+            camera.add(listener);
+            // create a global audio source
+            soundObj = new THREE.Audio(listener);
+            // load a sound and set it as the Audio object's buffer
+            audioLoader = new THREE.AudioLoader();
+
             stages = [
                 {frequency: 0.0005, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0002, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0003, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0004, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0005, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0004, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0003, timer: 0.01, amplitude: 96, maxDistance: 48},
-                {frequency: 0.0002, timer: 0.01, amplitude: 96, maxDistance: 48},
             ];
             stage = stages[0];
 
             var width  = args.w || 330;
             var height = args.h || 330;
 
-            var data = getSphere( width * height, args.s || 5120 );
-            var texture = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.RepeatWrapping, THREE.RepeatWrapping );
+            var data = getSphere( width * height, args.s || 2500 );
+            var texture = new THREE.DataTexture(
+                data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.RepeatWrapping, THREE.RepeatWrapping
+                );
             texture.needsUpdate = true;
 
             simulationShader = new THREE.ShaderMaterial({
@@ -90,8 +150,8 @@
                 uniforms: {
                     texture: { type: "t", value: texture },
                     timer: { type: "f", value: 0},
-                    frequency: { type: "f", value: 0.00022 },
-                    amplitude: { type: "f", value: 9 },
+                    frequency: { type: "f", value: 0.00032 },
+                    amplitude: { type: "f", value: 31 },
                     maxDistance: { type: "f", value: 48 }
                 },
                 vertexShader: ShaderLoader.get( "simulation_vs"),
@@ -114,10 +174,27 @@
 //                blending:THREE.AdditiveBlending
             } );
 
-            FBO.init( width,height, renderer, simulationShader, renderShader );
-            scene.add( FBO.particles );
+            FBO.init(width,height, renderer, simulationShader, renderShader);
+            scene.add(FBO.particles);
 
-            window.addEventListener( "resize", onResize );
+            window.addEventListener("resize", onResize);
+
+            var volumeButton = document.getElementById('volume');
+            volumeButton.addEventListener('click', function(event) {
+                let soundOgg = document.getElementById('sound');
+                if (!sound) {
+                    soundOgg.play();
+                    volumeButton.innerHTML = "TURN SOUND OFF";
+                    sound = true;
+                }
+                else {
+                    soundOgg.pause();
+                    soundOgg.currentTime = 0;
+                    volumeButton.innerHTML = "TURN SOUND ON";
+                    sound = false;
+                }
+            });
+            window.addEventListener("resize", onResize);
             onResize();
             update();
 
@@ -177,13 +254,13 @@
             camera.updateProjectionMatrix();
         }
 
+        // function play
 
+        var stroboOn=false;
         function update()
         { 
             requestAnimationFrame(update);
-
             controls.update();
-
             //update simulation
             FBO.update();
 
@@ -194,20 +271,35 @@
             FBO.particles.rotation.y -= Math.PI / 180 * .3;
             //render the particles at the new location
             renderer.render( scene, camera );
-            // console.log('ics ' + camera.position.x + ' y ' + camera.position.y + ' z ' + camera.position.z);
-            // console.log('stage ' + currStage % stages.length + ' ' + stage.frequency);
-            // console.log(simulationShader.uniforms.amplitude.value);
-            // console.log(simulationShader.uniforms.frequency.value);
 
-            if (parseInt(timer) % 3 == 0) {
-                simulationShader.uniforms.amplitude.value += 0.1;
+            if (parseInt(timer) > 0) {
+                if (parseInt(timer) % 10 == 0) {
+                    // debugger;
+                    if (!stroboOn) {
+                        playSound('tempo-change');
+                        stroboOn = true;
+                    }
+                    let temp = stroboBackColor;
+                    stroboBackColor = backColor;
+                    backColor = temp;
+                    renderer.setClearColor(backColor);
+                } else if (timer % 10 > 0) {
+                    stroboOn = false;
+                }
+            }
+
+            if (parseInt(timer) % 2 == 0) {
+                simulationShader.uniforms.amplitude.value += amplInc;
                 // currStage += 1;
                 // stage = stages[currStage % stages.length];
                 // simulationShader.uniforms.frequency.value += 0.00001;
-
             }
-            if (parseInt(timer) % 3 == 2) {
-                simulationShader.uniforms.amplitude.value -= 0.05;
+            if (parseInt(timer) % 2 == 1) {
+                simulationShader.uniforms.amplitude.value -= amplDec;
+            }
+            if (simulationShader.uniforms.amplitude.value < 30 || simulationShader.uniforms.amplitude.value > 120) {
+                amplDec = -amplDec;
+                amplInc = -amplInc;
             }
         }
     </script>
