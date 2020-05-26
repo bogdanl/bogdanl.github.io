@@ -121,7 +121,7 @@
             camera = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000);
 
             controls = new THREE.OrbitControls(camera);
-            camera.position.z = 30;
+            camera.position.z = controls.minDistance = controls.maxDistance = 30;
 
             // create an AudioListener and add it to the camera
             var listener = new THREE.AudioListener();
@@ -139,7 +139,7 @@
             var width  = args.w || 330;
             var height = args.h || 330;
 
-            var data = getSphere( width * height, args.s || 256 );
+            var data = getSphere( width * height, args.s || 2500 );
             var texture = new THREE.DataTexture(
                 data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.RepeatWrapping, THREE.RepeatWrapping
                 );
@@ -150,7 +150,7 @@
                 uniforms: {
                     texture: { type: "t", value: texture },
                     timer: { type: "f", value: 0},
-                    frequency: { type: "f", value: 0.01 },
+                    frequency: { type: "f", value: 0.00032 },
                     amplitude: { type: "f", value: 31 },
                     maxDistance: { type: "f", value: 48 }
                 },
@@ -294,13 +294,13 @@
                 // stage = stages[currStage % stages.length];
                 // simulationShader.uniforms.frequency.value += 0.00001;
             }
-            // if (parseInt(timer) % 2 == 1) {
-            //     simulationShader.uniforms.amplitude.value -= amplDec;
-            // }
-            // if (simulationShader.uniforms.amplitude.value < 30 || simulationShader.uniforms.amplitude.value > 120) {
-            //     amplDec = -amplDec;
-            //     amplInc = -amplInc;
-            // }
+            if (parseInt(timer) % 2 == 1) {
+                simulationShader.uniforms.amplitude.value -= amplDec;
+            }
+            if (simulationShader.uniforms.amplitude.value < 30 || simulationShader.uniforms.amplitude.value > 120) {
+                amplDec = -amplDec;
+                amplInc = -amplInc;
+            }
         }
     </script>
 
