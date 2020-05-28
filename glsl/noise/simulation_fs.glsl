@@ -127,6 +127,7 @@ vec3 curl(float	x,	float	y,	float	z)
 
 
 void main() {
+    vec2 mvUv = vec2(1.-vUv.x, 1.-vUv.y);
 
     vec3 pos = texture2D( texture, vUv ).xyz;
 

@@ -10,14 +10,16 @@ varying float size;
 
 void main()
 {
+
     // gl_FragColor = vec4( small, .2 );
-    // gl_FragColor = nColor;
+
+    gl_FragColor = vec4(nColor, 1.);
     // if( size > 1. )
     // {
-	vec4 textureColor = texture2D(positions, gl_FragCoord.yz);
+	// vec4 textureColor = texture2D(positions, gl_FragCoord.yz);
 
 	// gl_FragColor = vec4(vec3(1.) - textureColor.rgb, 1.);
-    gl_FragColor = vec4( big * vec3( 1. - length( gl_PointCoord.xy-vec2(.5) ) ) * 1.5, .95 );
+    // gl_FragColor = vec4(nColor, 1.) * vec4( big * vec3( 1. - length( gl_PointCoord.xy-vec2(.5) ) ) * 1.5, .95 );
     // gl_FragColor = vec4(vec3(1.) - gl_FragColor.rgb, 1.);
     // }
 

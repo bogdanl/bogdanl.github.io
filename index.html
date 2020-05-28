@@ -66,19 +66,27 @@
 
     <script src="vendor/three.min.js"></script>
     <script src="vendor/OrbitControls.js"></script>
+<!--     <script type="module" src="vendor/jsm/postprocessing/EffectComposer.js"></script>
+    <script type="module" src="vendor/jsm/postprocessing/RenderPass.js"></script>
+    <script type="module" src="vendor/jsm/postprocessing/ShaderPass.js"></script> -->
     <script src="ShaderLoader.js"></script>
     <script src="fbo.js"></script>
 
-    <script>
-
+    <script type="module">
+    import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/EffectComposer.js';
+    import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/RenderPass.js';
+    import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/ShaderPass.js';
+    // import { EffectComposer } from './vendor/jsm/postprocessing/EffectComposer.js';
+    // import { RenderPass } from './vendor/jsm/postprocessing/RenderPass.js';
+    // import { ShaderLoader } from './ShaderLoader.js';
         var scene, camera, renderer, controls, timer = 0, timerInc = .01;
-        var simulationnShader;
+        var simulationShader, renderShader;
         var clock, stages, stage;
         var currStage = 0
         var sound = false;
         var amplInc = 0.11, amplDec = 0.08;
         var audioLoader, soundObj;
-        var backColor=0x10, stroboBackColor=0xFFFFFF, tempBackColor;
+        var composer;
 
         window.onload = function() {
 
@@ -89,7 +97,6 @@
                 render_vs : "",
                 render_fs : ""
             }, "./glsl/noise/", init );
-
         };
 
         function playSound(name) {
@@ -136,12 +143,13 @@
             ];
             stage = stages[0];
 
-            var width  = args.w || 330;
-            var height = args.h || 330;
+            var ww = 512;
+            var width  = args.w || ww;
+            var height = args.h || ww;
 
             var data = getSphere( width * height, args.s || 2500 );
             var texture = new THREE.DataTexture(
-                data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.RepeatWrapping, THREE.RepeatWrapping
+                data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.MirroredRepeatWrapping, THREE.MirroredRepeatWrapping
                 );
             texture.needsUpdate = true;
 
@@ -151,7 +159,7 @@
                     texture: { type: "t", value: texture },
                     timer: { type: "f", value: 0},
                     frequency: { type: "f", value: 0.00032 },
-                    amplitude: { type: "f", value: 31 },
+                    amplitude: { type: "f", value: 30 },
                     maxDistance: { type: "f", value: 48 }
                 },
                 vertexShader: ShaderLoader.get( "simulation_vs"),
@@ -159,11 +167,11 @@
 
             });
 
-            var renderShader = new THREE.ShaderMaterial( {
+            renderShader = new THREE.ShaderMaterial( {
                 uniforms: {
                     positions: { type: "t", value: null },
                     pointSize: { type: "f", value: 3 },
-                    nColor: { type: "v3", value: new THREE.Vector3(0, 0, 0) },
+                    nColor: { type: "v3", value: new THREE.Vector3(1, 1, 1) },
                     big: { type: "v3", value: new THREE.Vector3(207,221,212).multiplyScalar(1/0xFF) },
                     small: { type: "v3", value: new THREE.Vector3( 213,239,229).multiplyScalar(1/0xFF) },
                 },
@@ -173,6 +181,42 @@
                 side:THREE.DoubleSide
 //                blending:THREE.AdditiveBlending
             } );
+
+            const kaleidoscopeShader = {
+                uniforms: {
+                  "tDiffuse": { value: null },
+                  "sides": { value: 1.0 },
+                  "angle": { value: 0.0 }
+                },
+
+                vertexShader: `
+                    varying vec2 vUv;
+
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+                    }
+                `,
+
+                fragmentShader: `
+                    uniform sampler2D tDiffuse;
+                    uniform float sides;
+                    uniform float angle;
+                    varying vec2 vUv;
+                    const float tau = 2. * 3.1415926535897932384626433832795;
+                    void main() {
+                        vec2 p = vUv - .5;
+                        float r = length(p);
+                        float a = atan(p.x, p.y) + angle;
+                        a = mod(a, tau/sides);
+                        a = abs(a - tau/sides/2.) ;
+                        p = r * vec2(sin(a), cos(a));
+                        vec4 color = texture2D(tDiffuse, p + .5);
+                        gl_FragColor = color;
+                    }
+                `
+              };
+
 
             FBO.init(width,height, renderer, simulationShader, renderShader);
             scene.add(FBO.particles);
@@ -195,6 +239,16 @@
                 }
             });
             window.addEventListener("resize", onResize);
+
+            composer = new EffectComposer(renderer);
+            composer.addPass(new RenderPass(scene, camera));
+
+            const kaleidoscopePass = new ShaderPass(kaleidoscopeShader);
+            kaleidoscopePass.renderToScreen = true;
+            composer.addPass(kaleidoscopePass);
+
+            composer.setSize(w, h);
+
             onResize();
             update();
 
@@ -249,41 +303,76 @@
         {
             var w = window.innerWidth;
             var h = window.innerHeight;
-            renderer.setSize(w,h);
-            camera.aspect = w/h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
             camera.updateProjectionMatrix();
         }
 
         // function play
 
-        var stroboOn=false;
+        var stroboOn=false, currAmpli=30, currFrequency=0.00032;
+        var backColor=0x10, stroboBackColor=0xFFFFFF, tempBackColor;
+        var backColor=new THREE.Color(0, 0, 0.02), stroboBackColor=new THREE.Color(1, 1, 1), tempBackColor;
+        var currSimTexture;
         function update()
         { 
             requestAnimationFrame(update);
             controls.update();
             //update simulation
             FBO.update();
-
             //update mesh
             timer += timerInc;
             simulationShader.uniforms.timer.value = timer;
-            FBO.particles.rotation.x = Math.cos( Date.now() *.001 ) * Math.PI / 180 * 2;
-            FBO.particles.rotation.y -= Math.PI / 180 * .3;
-            //render the particles at the new location
-            renderer.render( scene, camera );
+            // FBO.particles.rotation.x = Math.cos( Date.now() *.001 ) * Math.PI / 180 * 2;
 
+            FBO.particles.rotation.y -= Math.PI / 180 * .3;
+
+            // render the particles at the new location
+            if (stroboOn) {
+                composer.render();
+            } else {
+                renderer.render(scene, camera);
+            }
+
+            // var stroboInterval = THREE.Math.randInt(4, 8);
+            var stroboInterval = 5;
             if (parseInt(timer) > 0) {
-                if (parseInt(timer) % 10 == 0) {
-                    // debugger;
+                if (parseInt(timer) % stroboInterval == 0) {
+
                     if (!stroboOn) {
-                        playSound('tempo-change');
+                        if (sound) {
+                            playSound('tempo-change');
+                        }
+
                         stroboOn = true;
+                        currAmpli = simulationShader.uniforms.amplitude.value;
+                        currFrequency = simulationShader.uniforms.frequency.value;
+                        simulationShader.uniforms.amplitude.value = 1000000.1;
+                        // simulationShader.uniforms.frequency.value = 10000.1;
+                        // renderShader.uniforms.pointSize.value = THREE.Math.randInt(3, 5);
+                        renderShader.uniforms.nColor.value = new THREE.Vector3(0, 0, 0);
+
+                        // var data = getImage( img, width, height, 64 );
+                        // var imgTexture = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
+                        // imgTexture.needsUpdate = true;
+                        // simulationShader.uniforms.texture.value = imgTexture;
                     }
+                    FBO.particles.rotation.y += Math.PI / 180 * .6;
+
                     let temp = stroboBackColor;
                     stroboBackColor = backColor;
                     backColor = temp;
                     renderer.setClearColor(backColor);
-                } else if (timer % 10 > 0) {
+
+                } else if (stroboOn && timer % stroboInterval > 0) {
+                    // soundObj.pause();
+                    backColor = new THREE.Color(0, 0, 0.02);
+
+                    simulationShader.uniforms.amplitude.value = currAmpli;
+                    simulationShader.uniforms.frequency.value = currFrequency;
+                    renderShader.uniforms.pointSize.value = 3;
+                    renderShader.uniforms.nColor.value = new THREE.Vector3(1, 1, 1);
+                    renderer.setClearColor(backColor);
                     stroboOn = false;
                 }
             }
@@ -302,6 +391,54 @@
                 amplInc = -amplInc;
             }
         }
+
+        //returns a Float32Array buffer of 3D points after an image
+        function getImage( img, width, height, elevation ){
+
+            var ctx = getContext( null, width, height );
+            ctx.drawImage(img, 0, 0);
+
+            var imgData = ctx.getImageData(0,0,width,height);
+            var iData = imgData.data;
+
+            var l = (width * height );
+            var data = new Float32Array( l * 3 );
+            for ( var i = 0; i < l; i++ ) {
+
+                var i3 = i * 3;
+                var i4 = i * 4;
+                data[ i3 ]      = ( ( i % width ) - width  * .5 );
+                data[ i3 + 1 ]  = ( iData[i4] / 0xFF * 0.299 +iData[i4+1]/0xFF * 0.587 + iData[i4+2] / 0xFF * 0.114 ) * elevation;
+                data[ i3 + 2 ]  = ( parseInt( i / width ) - height * .5 );
+            }
+            return data;
+        }
+        function getCanvas( w,h ){
+
+            var canvas = document.createElement( "canvas");
+            canvas.width = w || 512;
+            canvas.height = h || 512;
+            return canvas;
+        }
+        function getContext( canvas, w,h ){
+
+            canvas = canvas || getCanvas(w,h);
+            canvas.width = w || canvas.width;
+            canvas.height = h || canvas.height;
+            return canvas.getContext("2d");
+        }
+        function loadImage()
+        {
+            var img = new Image();
+            img.onload = function(e)
+            {
+                init(e.target);
+            };
+            img.crossOrigin = "anonymous";
+            img.src = "img/focus.jpeg";
+            return img;
+        }
+
     </script>
 
 </body>

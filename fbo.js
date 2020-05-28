@@ -1,6 +1,6 @@
 var FBO = function( exports ){
 
-    var scene, orthoCamera, nextRtt, currRtt;
+    var scene, orthoCamera, rtt;
     exports.init = function(width, height, renderer, simulationMaterial, renderMaterial){
 
         //3 rtt setup
@@ -14,8 +14,7 @@ var FBO = function( exports ){
             format: THREE.RGBAFormat,//180407 changed to RGBAFormat
             type:THREE.FloatType//important as we need precise coordinates (not ints)
         };
-        currRtt = new THREE.WebGLRenderTarget(width, height, options);
-        nextRtt = new THREE.WebGLRenderTarget(width, height, options);
+        rtt = new THREE.WebGLRenderTarget(width, height, options);
 
         //5 the simulation:
         //create a bi-unit quadrilateral and uses the simulation material to update the Float Texture
@@ -54,9 +53,9 @@ var FBO = function( exports ){
         var geometry = new THREE.BufferGeometry();
         geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices, 3));
         geometry.setAttribute( 'newcolor', new THREE.BufferAttribute(colors, 3) );
-
         //the rendermaterial is used to render the particles
         exports.particles = new THREE.Points(geometry, renderMaterial);
+
         exports.renderer = renderer;
 
     };
@@ -65,15 +64,13 @@ var FBO = function( exports ){
     exports.update = function(){
 
         //1 update the simulation and render the result in a target texture
-        // exports.renderer.setRenderTarget(null);
-        // exports.renderer.setRenderTarget(currRtt);
         exports.renderer.clear();
-        exports.renderer.setRenderTarget(currRtt);
+        exports.renderer.setRenderTarget(rtt);
         exports.renderer.render(scene, orthoCamera);
-        renderer.setRenderTarget(null);
-    
+        exports.renderer.setRenderTarget(null);
+
         //2 use the result of the swap as the new position for the particles' renderer
-        exports.particles.material.uniforms.positions.value = currRtt.texture;
+        exports.particles.material.uniforms.positions.value = rtt.texture;
 
     };
     return exports;
