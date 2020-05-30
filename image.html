@@ -46,7 +46,7 @@
                 init(e.target);
             };
             img.crossOrigin = "anonymous";
-            img.src = "img/focus.jpeg";
+            img.src = "img/pp.jpeg";
         }
 
         function init(img)
@@ -101,11 +101,9 @@
                 fragmentShader: ShaderLoader.get( "render_fs" )
             } );
 
-            //init the FBO
             FBO.init( width,height, renderer, simulationShader, renderShader );
             scene.add( FBO.particles );
 
-            //GO !
             window.addEventListener( "resize", onResize );
             onResize();
             update();
@@ -152,12 +150,11 @@
         {
             var w = window.innerWidth;
             var h = window.innerHeight;
-            renderer.setSize(w,h);
-            camera.aspect = w/h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
             camera.updateProjectionMatrix();
         }
 
-        //update loop
         function update()
         {
             requestAnimationFrame(update);
