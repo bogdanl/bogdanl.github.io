@@ -25,12 +25,11 @@ ShaderLoader.prototype =
     batchLoad : function( scope, callback )
     {
         var queue = 0;
-        for ( var name in ShaderLoader.shaders ) {
-
+        for (var name in ShaderLoader.shaders) {
             queue++;
             var req = new XMLHttpRequest();
             req.onload = loadHandler( name, req );
-            req.open( 'get', scope.baseUrl + name + '.glsl', true );
+            req.open( 'get', scope.baseUrl + name.split('_').join('/') + '.glsl', true );
             req.send();
         }
 

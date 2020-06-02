@@ -3,12 +3,16 @@
 
 varying vec2 vUv;
 uniform sampler2D texture;
+uniform sampler2D textureDest;
 uniform float timer;
 uniform float frequency;
 uniform float amplitude;
 uniform float maxDistance;
+uniform float morph;
+uniform float morphTimestamp;
+uniform float morphSpeed;
 
-//
+// -----------
 // Description : Array and textureless GLSL 2D simplex noise function.
 //      Author : Ian McEwan, Ashima Arts.
 //  Maintainer : ijm
@@ -82,7 +86,7 @@ float noise(vec2 v)
 vec3 curl(float	x,	float	y,	float	z)
 {
 
-    float	eps	= 1., eps2 = 2. * eps;
+    float	eps	= .1, eps2 = 20. * eps;
     float	n1,	n2,	a,	b;
 
     x += timer * .05;
@@ -123,18 +127,25 @@ vec3 curl(float	x,	float	y,	float	z)
 
     return	curl;
 }
-
+// -----------
 
 
 void main() {
-    vec2 mvUv = vec2(1.-vUv.x, 1.-vUv.y);
+    vec3 pos  = texture2D(texture, vUv).xyz;
 
-    vec3 pos = texture2D( texture, vUv ).xyz;
-
-    vec3 tar = pos + curl( pos.x * frequency, pos.y * frequency, pos.z * frequency ) * amplitude;
-
-    float d = length( pos-tar ) / maxDistance;
-    pos = mix( pos, tar, pow( d, 5. ) );
+    if (morph == 1.0) {
+        vec3 destination = texture2D( textureDest, vUv ).xyz;
+        float timeInc = (timer - morphTimestamp) * morphSpeed;
+        if (timeInc < 1.) {
+            pos = mix(pos, destination,  timeInc);  // lerp
+        } else {
+             pos = mix(pos, destination, 1.);
+        }
+    } else {
+        vec3 tar = pos + curl(pos.x * frequency, pos.y * frequency, pos.z * frequency) * amplitude;
+        float d = length(pos - tar) / maxDistance;
+        pos = mix( pos, tar, pow( d, 5. ) );
+    }
 
     gl_FragColor = vec4( pos, 1. );
 

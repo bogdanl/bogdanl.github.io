@@ -57,10 +57,6 @@
     <audio id="sound" preload="auto" loop>
       <source src="snd/mirrors_short.ogg" type="audio/ogg">
     </audio>
-<!--         <video id="video" loop muted style="display:none; position: absolute; width: 640px; height: 360px;left: 200px;top: 100px;">
-            <source src="vid/altaic2_.mp4" type='video/mp4;'>
-        </video>
- -->
     <script src="vendor/three.min.js"></script>
     <script src="vendor/OrbitControls.js"></script>
     <script src="ShaderLoader.js"></script>
@@ -75,9 +71,9 @@
         var soundOn=false, audioLoader, soundObj;
 
         var stroboOn=false, currAmpli, currFrequency, amplInc=0.11, amplDec=0.08;
-        var defaultBackColor=new THREE.Color(0, 0, 0.02), backColor=new THREE.Color(0, 0, 0.02), stroboBackColor=new THREE.Color(1, 1, 1);
-        var stages = [{frequency: 0.0005, timer: 0.01, amplitude: 96, maxDistance: 48}];
-        var texture, video, videoMaterial, img;
+        var texture, video, videoMaterial, defaultTexture;
+        var imgUrls = ['ourobouros.jpeg', 'sigil.jpeg'];
+        var imgs = [];
 
         var stroboFlow = [
             {
@@ -117,28 +113,31 @@
         window.onload = function() {
             var sl = new ShaderLoader();
             sl.loadShaders({
-                simulation_vs : "",
-                simulation_fs : "",
-                render_vs : "",
-                render_fs : ""
-            }, "./glsl/noise/", init );
+                noise_simulationVS : "",
+                noise_simulationFS : "",
+                noise_renderVS : "",
+                noise_renderFS : "",
+                image_simulationVS : "",
+                image_simulationFS : "",
+                image_renderVS : "",
+                image_renderFS : ""
+            }, "./glsl/", init );
         };
 
-        function playSound(name) {
+        function playSound(name, volume) {
             if (!soundOn) {
                 return;
             }
             audioLoader.load('snd/' + name + '.ogg', function(buffer) {
                 soundObj.setBuffer(buffer);
                 soundObj.setLoop(false);
-                soundObj.setVolume(0.8);
+                soundObj.setVolume(volume || 0.8);
                 soundObj.play();
             });
 
         }
 
         function playVideo() {
-
             video = document.getElementById('video');
             texture = new THREE.VideoTexture(video);
             texture.minFilter = THREE.NearestFilter;
@@ -161,8 +160,32 @@
             video.play();
         }
 
-        function init(args)
-        {
+        //returns a Float32Array buffer of random 3D coordinates
+        function getRandomData( width, height, size ){
+            var len = width * height * 3;
+            var data = new Float32Array( len );
+            while( len-- )data[len] = ( Math.random() -.5 ) * size ;
+            return data;
+        }
+
+        function getDefaultTexture(width, height, size) {
+            let data = getSphere(width * height, size);
+            let texture = new THREE.DataTexture(
+                data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.MirroredRepeatWrapping, THREE.MirroredRepeatWrapping
+                );
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        function init(args) {
+            loadImages(imgUrls).then(images => {
+                imgs = images;
+                initCont(args);
+            });
+
+        }
+
+        function initCont(args) {
             args = args || {};
             var w = window.innerWidth;
             var h = window.innerHeight;
@@ -193,46 +216,22 @@
             var width  = args.w || ww;
             var height = args.h || ww;
 
-            var data = getSphere(width * height, args.s || 2500);
-            var texture = new THREE.DataTexture(
-                data, width, height, THREE.RGBFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.MirroredRepeatWrapping, THREE.MirroredRepeatWrapping
-                );
-            // playVideo();
-            // video = document.getElementById('video');
-            // texture = new THREE.VideoTexture(video);
-            // texture.minFilter = THREE.NearestFilter;
-            // texture.magFilter = THREE.NearestFilter;
-            // texture.format = THREE.RGBFormat;
-
-            // videoMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
-
-            // var imageObject = new THREE.Mesh(
-            //     new THREE.PlaneGeometry(256, 128),
-            //     videoMaterial,
-            // );
-
-            // // video.src = "pantarei.mp4";
-            // // video.load();
-            // video.style.visibility = 'visible';
-            // video.muted = false;
-
-            // img = loadImage('altaic.png');
-            // width = img.width;
-            // height = img.height;
-            // var data = getImage( img, width, height, 64 );
-            // var texture = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
-            // texture.needsUpdate = true;
+            defaultTexture = getDefaultTexture(width, height, args.s || 2500);
 
             simulationShader = new THREE.ShaderMaterial({
                 uniforms: {
-                    texture: { type: "t", value: texture },
+                    texture: { type: "t", value: defaultTexture },
                     timer: { type: "f", value: 0},
                     frequency: { type: "f", value: 0.00032 },
                     amplitude: { type: "f", value: 60 },
-                    maxDistance: { type: "f", value: 48 }
+                    maxDistance: { type: "f", value: 48 },
+                    morph: {type: 'f', value: 0.0 },
+                    textureDest: { type: "t", value: null },
+                    morphTimestamp: { type: 'f', value: null },
+                    morphSpeed: { type: 'f', value: 0.1 },
                 },
-                vertexShader: ShaderLoader.get( "simulation_vs"),
-                fragmentShader:  ShaderLoader.get( "simulation_fs")
+                vertexShader: ShaderLoader.get( "noise_simulationVS"),
+                fragmentShader:  ShaderLoader.get( "noise_simulationFS")
             });
 
             renderShader = new THREE.ShaderMaterial( {
@@ -243,10 +242,10 @@
                     big: { type: "v3", value: new THREE.Vector3(207, 221, 212).multiplyScalar(1/0xFF) },
                     small: { type: "v3", value: new THREE.Vector3(213, 239, 229).multiplyScalar(1/0xFF) },
                 },
-                vertexShader: ShaderLoader.get( "render_vs"),
-                fragmentShader: ShaderLoader.get( "render_fs"),
+                vertexShader: ShaderLoader.get( "noise_renderVS"),
+                fragmentShader: ShaderLoader.get( "noise_renderFS"),
                 transparent: true,
-                side:THREE.DoubleSide
+                side:THREE.DoubleSide,
                 // blending:THREE.AdditiveBlending
             });
 
@@ -291,6 +290,7 @@
 
             composer = new EffectComposer(renderer);
             composer.addPass(new RenderPass(scene, camera));
+
             const kaleidoscopePass = new ShaderPass(kaleidoscopeShader);
             kaleidoscopePass.renderToScreen = true;
             composer.addPass(kaleidoscopePass);
@@ -359,53 +359,87 @@
             camera.updateProjectionMatrix();
         }
 
-        function stroboBackground() {
-            let temp = stroboBackColor;
-            stroboBackColor = backColor;
-            backColor = temp;
-            renderer.setClearColor(backColor);
+        var currentRender = {};
+        var morphRender = {};
+        var stroboCount = 0;
+
+        function startMorph() {
+            simulationShader.uniforms.morph.value = 1.0;
+            simulationShader.uniforms.textureDest.value = getRandImgTexture();
+            simulationShader.uniforms.morphTimestamp.value = timer;
+            simulationShader.uniforms.morphSpeed.value = 0.8;
+            renderShader.uniforms.pointSize.value = 5;
         }
 
-        var linesOn=0, kaleidoOn=0;
+        function stopMorph() {
+            simulationShader.uniforms.morph.value = 0.0;
+        }
+
+        function saveCurrentRender() {
+            currentRender.amplitude = simulationShader.uniforms.amplitude.value;
+            currentRender.frequency = simulationShader.uniforms.frequency.value;
+            currentRender.texture = simulationShader.uniforms.texture.value;
+            currentRender.pointSize = renderShader.uniforms.pointSize.value;
+            currentRender.renderColor = renderShader.uniforms.nColor.value;
+            currentRender.backgroundColor = backColor;
+        }
+
+        function restoreCurrentRender() {
+            simulationShader.uniforms.amplitude.value = currentRender.amplitude;
+            simulationShader.uniforms.frequency.value = currentRender.frequency;
+            simulationShader.uniforms.texture.value = currentRender.texture;
+            renderShader.uniforms.pointSize.value = currentRender.pointSize;
+            renderShader.uniforms.nColor.value = currentRender.renderColor
+            backColor = currentRender.backgroundColor;
+        }
 
         function startStrobo() {
             playSound('tempo-change');
             stroboOn = true;
-            currAmpli = simulationShader.uniforms.amplitude.value;
-            currFrequency = simulationShader.uniforms.frequency.value;
+            stroboCount += 1;
+
+            saveCurrentRender();
+
+            // startMorph();
+
             simulationShader.uniforms.amplitude.value = 1000000.1;
-            if (linesOn % 0 == 1) {
+            if (stroboCount % 2 == 0) {
                 simulationShader.uniforms.frequency.value = 10000.1;
             } else {
                 simulationShader.uniforms.frequency.value = 0.00032;
             }
             // simulationShader.uniforms.frequency.value = 10000.1;
-            renderShader.uniforms.pointSize.value = THREE.Math.randInt(3, 5);
-            renderShader.uniforms.nColor.value = new THREE.Vector3(0, 0, 0);
+            // renderShader.uniforms.pointSize.value = THREE.Math.randInt(3, 4);
             // renderShader.uniforms.nColor.value = new THREE.Vector3(Math.random(), Math.random(), Math.random());
 
-            // var data = getImage( img, width, height, 64 );
-            // var imgTexture = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
-            // imgTexture.needsUlepdate = true;
-            // simulationShader.uniforms.texture.value = imgTexture;
-
+            renderShader.uniforms.nColor.value = stroboParticleColor;
             renderer.setClearColor(stroboBackColor);
 
         }
 
         function stopStrobo() {
             stroboOn = false;
-            // kaleidoOn *= -1;
-            // linesOn *= -1;
-            linesOn += 1;
-            kaleidoOn += 1;
             soundObj.pause();
-            backColor = defaultBackColor;
-            simulationShader.uniforms.amplitude.value = currAmpli;
-            simulationShader.uniforms.frequency.value = currFrequency;
-            renderShader.uniforms.pointSize.value = 3;
-            renderShader.uniforms.nColor.value = new THREE.Vector3(1, 1, 1);
+
+            // stopMorph();
+            
+            restoreCurrentRender();
             renderer.setClearColor(backColor);
+        }
+
+        var defaultBackColor=new THREE.Color(0, 0, 0.02), backColor=new THREE.Color(0, 0, 0.02), stroboBackColor=new THREE.Color(1, 1, 1);
+        var defaultParticleColor=new THREE.Color(1, 1, 1), particleColor=new THREE.Color(1, 1, 1), stroboParticleColor=new THREE.Color(0, 0, 0);
+
+        function stroboBackground() {
+            let tempBack = stroboBackColor;
+            stroboBackColor = backColor;
+            backColor = tempBack;
+            renderer.setClearColor(backColor);
+
+            // let tempParticle = stroboParticleColor;
+            // stroboParticleColor = particleColor;
+            // particleColor = tempParticle;
+            // renderShader.uniforms.nColor.value = particleColor;
         }
 
         function update()
@@ -415,7 +449,7 @@
 
             //update simulation
             FBO.update();
-            renderer.render(scene, camera);
+
             timer += timerInc;
             let timerInt = parseInt(timer);
 
@@ -428,13 +462,12 @@
             // If we are in strobo mode, flicker the background
             // Also check if the kaleido effect is on and call the effect composer
             if (stroboOn) {
-                FBO.particles.rotation.y += Math.PI / 180 * .6;
-                if (kaleidoOn % 3 == 1) {
+                // FBO.particles.rotation.y += Math.PI / 180 * .6;
+                if (stroboCount % 3 == 0) {
                     composer.render();
                 } else {
                     renderer.render(scene, camera);
                 }
-                // renderer.render(scene, camera);
                 stroboBackground();
             } else {
                 renderer.render(scene, camera);
@@ -447,7 +480,7 @@
                 if (!stroboOn) {
                     startStrobo();
                 }
-            } else if (stroboOn && timer % stroboInterval > 0) {
+            } else if (stroboOn && timer % stroboInterval > 1) {
                 stopStrobo();
             }
 
@@ -466,49 +499,73 @@
         }
 
         //returns a Float32Array buffer of 3D points after an image
-        function getImage( img, width, height, elevation ){
-            var ctx = getContext( null, width, height );
+        function getImage(img, elevation){
+            var ctx = getContext( null, img.width, img.height );
             ctx.drawImage(img, 0, 0);
-
-            var imgData = ctx.getImageData(0,0,width,height);
+            var imgData = ctx.getImageData(0,0,img.width,img.height);
             var iData = imgData.data;
 
-            var l = (width * height);
+            var l = (img.width * img.height);
             var data = new Float32Array(l * 3);
             for (var i = 0; i < l; i++) {
                 var i3 = i * 3;
                 var i4 = i * 4;
-                data[ i3 ]      = ( ( i % width ) - width  * .5 );
+                data[ i3 ]      = ( ( i % img.width ) - img.width  * .5 );
                 data[ i3 + 1 ]  = (iData[i4] / 0xFF * 0.299 +iData[i4+1]/0xFF * 0.587 + iData[i4+2] / 0xFF * 0.114 ) * elevation;
-                data[ i3 + 2 ]  = (parseInt(i / width ) - height * .5);
+                data[ i3 + 2 ]  = (parseInt(i / img.width ) - img.height * .5);
             }
             return data;
         }
+        function getCanvas( w,h ){
 
-        function getCanvas(w, h){
             var canvas = document.createElement( "canvas");
             canvas.width = w || 512;
             canvas.height = h || 512;
             return canvas;
         }
+        function getContext( canvas, w,h ){
 
-        function getContext(canvas, w, h){
-            canvas = canvas || getCanvas(w, h);
+            canvas = canvas || getCanvas(w,h);
             canvas.width = w || canvas.width;
             canvas.height = h || canvas.height;
             return canvas.getContext("2d");
         }
 
-        function loadImage(name){
-            var img = new Image();
-            img.onload = function(e)
-            {
-                init(e.target);
-            };
-            debugger;
-            img.crossOrigin = "anonymous";
-            img.src = "img/focus.jpeg";
-            return img;
+        function getRandImgTexture() {
+            let img = imgs[THREE.Math.randInt(0, imgs.length - 1)];
+            let data = getImage(img, 64);
+            let texture = new THREE.DataTexture(data, img.width, img.height, THREE.RGBFormat, THREE.FloatType);
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        async function loadImages(imageUrlArray) {
+            const promiseArray = []; // create an array for promises
+            const imageArray = []; // array for the images
+
+            for (let imageUrl of imageUrlArray) {
+
+                promiseArray.push(new Promise(resolve => {
+
+                    const img = new Image();
+                    // if you don't need to do anything when the image loads,
+                    // then you can just write img.onload = resolve;
+
+                    img.onload = function() {
+                        // do stuff with the image if necessary
+
+                        // resolve the promise, indicating that the image has been loaded
+                        resolve();
+                    };
+
+                    img.src = 'img/' + imageUrl;
+                    imageArray.push(img);
+                }));
+            }
+
+            await Promise.all(promiseArray); // wait for all the images to be loaded
+            console.log("all images loaded");
+            return imageArray;
         }
 
     </script>
