@@ -3,46 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>mirrors in space</title>
-    <!-- <link href="css/main.css" rel="stylesheet"> -->
-<style>
-    head, body{
-    width:100%;
-    height:100%;
-    overflow: hidden;
-    top:0;
-    left:0;
-    margin:0;
-    padding:0;
-    cursor: url('img/chaos-magick.png'), auto;
-    font-family: optima;
-    color: white;
-    text-align: justify;
-}
-#title {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    cursor: url('img/chaos-magick.png'), auto;
-    width: 330px;
-    text-align: justify;
-    text-align-last: justify;
-    text-justify: inter-word;
-}
-#volume {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    font-size: 13px;
-    font-style: bold;
-    cursor: pointer;
-}
-#fullscreen {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    cursor: pointer;
-}
-</style>
+    <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
     <div id="fullscreen">fullscreen</div>
@@ -57,58 +18,29 @@
     <audio id="sound" preload="auto" loop>
       <source src="snd/mirrors_short.ogg" type="audio/ogg">
     </audio>
+
+    <div id="container"></div>
+
     <script src="vendor/three.min.js"></script>
     <script src="vendor/OrbitControls.js"></script>
     <script src="ShaderLoader.js"></script>
     <script src="fbo.js"></script>
+    <script src="vid360.js"></script>
     <script type="module">
         import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/EffectComposer.js';
         import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/RenderPass.js';
         import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/ShaderPass.js';
 
         var scene, camera, renderer, composer, controls, timer=0, timerInc=.01;
-        var simulationShader, renderShader;
+        var simulationShader, renderShader, kaleidoscopePass;
         var soundOn=false, audioLoader, soundObj;
 
-        var stroboOn=false, currAmpli, currFrequency, amplInc=0.11, amplDec=0.08;
+        var glimpsing = false, glimpseLength = 1, amplInc = 0.11, amplDec = 0.08;
         var texture, video, videoMaterial, defaultTexture;
-        var imgUrls = ['ourobouros.jpeg', 'sigil.jpeg'];
+        var imgUrls = ['ourobouros.jpeg', 'ourobouros2.jpeg', 'sigil.jpeg', 'astro.jpeg', 'focus.jpeg', 'dra.jpeg', 'solar.jpeg']
         var imgs = [];
-
-        var stroboFlow = [
-            {
-                length: 1,
-                sound: 'tempo-change',
-                amplitude: 10^4, // lots of movement
-                frequency: 10^3, // still particles + grid lines
-                particlesColor: new THREE.Vector3(0, 0, 0),
-                backgroundColor: new THREE.Vector3(1, 1, 1),
-                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
-                pointSize: THREE.Math.randInt(3, 5),
-                kaleido: {
-                    sides: 1.,
-                    angle: 0.,
-                    uvOffset: -.5,
-                    diffuseOffset: .5
-                }
-            },
-            {
-                length: 1,
-                sound: 'tempo-change',
-                amplitude: 10^4, // lots of movement
-                // frequency: 10^3, // still particles + grid lines
-                particlesColor: new THREE.Vector3(0, 0, 0),
-                backgroundColor: new THREE.Vector3(1, 1, 1),
-                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
-                pointSize: THREE.Math.randInt(3, 5),
-                kaleido: {
-                    sides: 1.,
-                    angle: 0.,
-                    uvOffset: -.5,
-                    diffuseOffset: .5
-                }
-            }
-        ];
+        var videoPlaying = false, kaleidoing = false;
+        var vids = [];
 
         window.onload = function() {
             var sl = new ShaderLoader();
@@ -117,10 +49,6 @@
                 noise_simulationFS : "",
                 noise_renderVS : "",
                 noise_renderFS : "",
-                image_simulationVS : "",
-                image_simulationFS : "",
-                image_renderVS : "",
-                image_renderFS : ""
             }, "./glsl/", init );
         };
 
@@ -128,6 +56,7 @@
             if (!soundOn) {
                 return;
             }
+            return;
             audioLoader.load('snd/' + name + '.ogg', function(buffer) {
                 soundObj.setBuffer(buffer);
                 soundObj.setLoop(false);
@@ -137,34 +66,13 @@
 
         }
 
-        function playVideo() {
-            video = document.getElementById('video');
-            texture = new THREE.VideoTexture(video);
-            texture.minFilter = THREE.NearestFilter;
-            texture.magFilter = THREE.NearestFilter;
-            texture.format = THREE.RGBFormat;
-
-            videoMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
-
-            var imageObject = new THREE.Mesh(
-                new THREE.PlaneGeometry(256, 128),
-                videoMaterial,
-            );
-
-            scene.add(imageObject);
-
-            // video.src = "pantarei.mp4";
-            // video.load();
-            video.style.visibility = 'visible';
-            video.muted = false;
-            video.play();
-        }
-
         //returns a Float32Array buffer of random 3D coordinates
-        function getRandomData( width, height, size ){
+        function getRandomData(width, height, size){
             var len = width * height * 3;
             var data = new Float32Array( len );
-            while( len-- )data[len] = ( Math.random() -.5 ) * size ;
+            while(len--) {
+                data[len] = (Math.random() - .5) * size;
+            }
             return data;
         }
 
@@ -182,7 +90,6 @@
                 imgs = images;
                 initCont(args);
             });
-
         }
 
         function initCont(args) {
@@ -199,11 +106,12 @@
             document.body.appendChild(renderer.domElement);
 
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000);
+            camera = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000000);
 
             controls = new THREE.OrbitControls(camera);
-            camera.position.z =  30;
-
+            camera.position.z = 30;
+            // controls.maxDistance = 1000000;
+            // controls.minDistance = 30;
             // create an AudioListener and add it to the camera
             var listener = new THREE.AudioListener();
             camera.add(listener);
@@ -222,9 +130,9 @@
                 uniforms: {
                     texture: { type: "t", value: defaultTexture },
                     timer: { type: "f", value: 0},
-                    frequency: { type: "f", value: 0.00032 },
+                    frequency: { type: "f", value: .00032 },
                     amplitude: { type: "f", value: 60 },
-                    maxDistance: { type: "f", value: 48 },
+                    maxDistance: { type: "f", value: 40 },
                     morph: {type: 'f', value: 0.0 },
                     textureDest: { type: "t", value: null },
                     morphTimestamp: { type: 'f', value: null },
@@ -236,24 +144,29 @@
 
             renderShader = new THREE.ShaderMaterial( {
                 uniforms: {
-                    positions: { type: "t", value: null },
-                    pointSize: { type: "f", value: 3 },
-                    nColor: { type: "v3", value: new THREE.Vector3(1, 1, 1) },
-                    big: { type: "v3", value: new THREE.Vector3(207, 221, 212).multiplyScalar(1/0xFF) },
-                    small: { type: "v3", value: new THREE.Vector3(213, 239, 229).multiplyScalar(1/0xFF) },
+                    positions: {type: "t", value: null},
+                    pointSize: {type: "f", value: 3},
+                    nColor: {type: "v3", value: new THREE.Vector3(1, 1, 1)},
+                    big: {type: "v3", value: new THREE.Vector3(207, 221, 212).multiplyScalar(1/0xFF)},
+                    small: {type: "v3", value: new THREE.Vector3(213, 239, 229).multiplyScalar(1/0xFF)},
+                    timer: {value: timer}
                 },
                 vertexShader: ShaderLoader.get( "noise_renderVS"),
                 fragmentShader: ShaderLoader.get( "noise_renderFS"),
                 transparent: true,
                 side:THREE.DoubleSide,
-                // blending:THREE.AdditiveBlending
             });
 
             const kaleidoscopeShader = {
                 uniforms: {
-                  "tDiffuse": { value: null },
-                  "sides": { value: 1.0 },
-                  "angle": { value: 0.0 }
+                  "tDiffuse": {value: null},
+                  "sides": {value: 1.},
+                  "angle": {value: 0.},
+                  "uvOffset": {value: -.5},
+                  "diffuseOffset": {value: .5},
+                  // 0=sin, 1=cos, 2=tan, 3=atan
+                  "trigoX": {value: 0},
+                  "trigoY": {value: 1}
                 },
                 vertexShader: `
                     varying vec2 vUv;
@@ -267,23 +180,39 @@
                     uniform sampler2D tDiffuse;
                     uniform float sides;
                     uniform float angle;
+                    uniform float uvOffset;
+                    uniform float diffuseOffset;
+                    uniform int trigoX;
+                    uniform int trigoY;
+
                     varying vec2 vUv;
                     const float tau = 2. * 3.1415926535897932384626433832795;
+
+                    float _trigo(int trigo, float a) {
+                        if (trigo == 0)
+                            return sin(a);
+                        if (trigo == 1)
+                            return cos(a);
+                        if (trigo == 2)
+                            return tan(a);
+                        if (trigo == 3)
+                            return atan(a);
+                    }
+
                     void main() {
-                        vec2 p = vUv - .5;
+                        vec2 p = vUv + uvOffset;
                         float r = length(p);
                         float a = atan(p.x, p.y) + angle;
                         a = mod(a, tau/sides);
-                        a = abs(a - tau/sides/2.) ;
-                        p = r * vec2(sin(a), cos(a));
-                        vec4 color = texture2D(tDiffuse, p + .5);
+                        a = abs(a - tau/sides/2.);
+                        p = r * vec2(_trigo(trigoX, a), _trigo(trigoY, a));
+                        vec4 color = texture2D(tDiffuse, p + diffuseOffset);
                         gl_FragColor = color;
                     }
                 `
               };
 
-
-            FBO.init(width,height, renderer, simulationShader, renderShader);
+            FBO.init(width, height, renderer, simulationShader, renderShader);
             scene.add(FBO.particles);
 
             addDomListeners();
@@ -291,10 +220,20 @@
             composer = new EffectComposer(renderer);
             composer.addPass(new RenderPass(scene, camera));
 
-            const kaleidoscopePass = new ShaderPass(kaleidoscopeShader);
+            kaleidoscopePass = new ShaderPass(kaleidoscopeShader);
             kaleidoscopePass.renderToScreen = true;
+            // kaleidoscopePass.enabled = true;
             composer.addPass(kaleidoscopePass);
 
+            // vids.push(vid360.init(renderer, 'thornhill1.webm'));
+            // vids[0].mesh.position.set(300, 300, 0);
+            // vids[0].start();
+
+            // vids.push(vid360.init(renderer, 'thornhill2.webm'));
+            // vids[1].mesh.position.set(0, 50, 50);
+            // vids[0].start();
+
+            videoPlaying = false;
             onResize();
             update();
         }
@@ -359,130 +298,460 @@
             camera.updateProjectionMatrix();
         }
 
-        var currentRender = {};
+        var presentGaze = {};
         var morphRender = {};
-        var stroboCount = 0;
+        var glimpseCount = 0;
+        var theGlimpse = {};
+        var currentRotation = Math.PI / 180 * .3;
 
-        function startMorph() {
+        var kaleidoSettings = [
+            {
+                // horizontal
+                "sides": {value: .1},
+                "angle": {value: .0},
+                "uvOffset": {value: 0.},
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                // vertical
+                "sides": {value: 1.}, //> 1 diagonal w/ part; <1 diagonal w/o
+                "angle": {value: .0},
+                "uvOffset": {value: 0.},
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                "sides": {value: 0.00000003}, // circles down left
+                "angle": {value: .0},
+                "uvOffset": {value: 0.},
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                "sides": {value: 0.00000003},
+                "angle": {value: .0},
+                "uvOffset": {value: -.5},  // circles centre
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                "sides": {value: .000003}, // trippy circle
+                "angle": {value: .0},
+                "uvOffset": {value: -.5},
+                "diffuseOffset": {value: 0.3},
+            }, 
+            {
+                "sides": {value: .000003},
+                "angle": {value: 0.},
+                "uvOffset": {value: -.5},
+                "diffuseOffset": {value: .5},
+                "trigoX": {value: 0}, // 0=sin, 1=cos, 2=tan, 3=atan
+                "trigoY": {value: 1}
+            }
+        ];
+
+        var theFlow = [
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 5), // lots of movement
+                frequency: Math.pow(10, 4), // still particles + grid lines
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: THREE.Math.randInt(3, 5),
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffsetRange: [-.5, -0.2],
+                    diffuseOffsetRange: [0.1, 0.5],
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: .000003,
+                    angle: 0.,
+                    uvOffset: -.5,
+                    diffuseOffset: .5,
+                    trigoX: 0, // 0=sin, 1=cos, 2=tan, 3=atan
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: .00000003,
+                    angle: 0.,
+                    uvOffset: -.5,
+                    diffuseOffset: .0,
+                }
+            },            
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 10,
+                kaleido: {
+                    // vertical
+                    sides: 1., //> 1 diagonal w/ part; <1 diagonal w/o
+                    angle: .0,
+                    uvOffset: 0.,
+                    diffuseOffset: 0.,
+                    trigoX: 0,
+                    trigoY: 1,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: .00032, // movement
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 12,
+                kaleido: {
+                    // horizontal
+                    sides: .3,
+                    angle: .0,
+                    uvOffset: 0.,
+                    diffuseOffset: 0.,
+                    // trigoX: 0,
+                    // trigoY: 1,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: Math.pow(10, 6), // grid
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 0.6, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: 2.20000003,
+                    angle: .0,
+                    uvOffset: -.3,  // circles centre
+                    diffuseOffset: 0.,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 3), // lots of movement
+                frequency: 0.5, // movement
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: 20,
+                kaleido: {
+                    sides: 0.00000003,
+                    angle: .0,
+                    uvOffsetRange: [-.3, -.7],  // circles centre - bottom-left - top-right
+                    diffuseOffsetRange: [-.2, .1],
+                    trigoX: 0, // 0=sin, 1=cos, 2=tan, 3=atan
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 5), // lots of movement
+                frequency: Math.pow(10, 4),
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: -Math.PI / 180 * .3, // left or k-inwards
+                pointSize: 3,
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 10), // lots of movement
+                frequency: 0.0002,
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 2.3, // left or k-inwards
+                pointSize: 4,
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 22), // lots of movement
+                frequency: 0.00032,
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 5.3, // left or k-inwards
+                pointSize: 3,
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 96, // lots of movement
+                frequency: 1221,
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * 3.3, // left or k-inwards
+                pointSize: 20,
+                // morph: {
+                //     morph: 1.0,
+                //     textureDest: null,
+                //     speed: 100.,
+                // },        
+                kaleido: {
+                    sides: 0.2002201,
+                    angle: .0,
+                    uvOffsetRange: [-.9, 0],  // circles centre
+                    diffuseOffsetRange: [0., .2],
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 96, // lots of movement
+                frequency: 1221,
+                particlesColor: new THREE.Color(0, 0, 0),
+                backgroundColor: new THREE.Color(1, 1, 1),
+                particlesRotationY: Math.PI / 180 * .03, // left or k-inwards
+                pointSize: 13,
+                // morph: {
+                //     morph: 1.0,
+                //     textureDest: null,
+                //     speed: 100.,
+                // },        
+                kaleido: {
+                    sides: 1.12002201,
+                    angle: 4.2,
+                    uvOffsetRange: [-.4, .2],  // circles centre
+                    diffuseOffsetRange: [-.4, .4],
+                }
+            }
+        ];
+
+        function startGlimpse() {
+            // return;
+            glimpsing = true;
+            glimpseCount += 1;
+
+            savePresentGaze();
+
+            theGlimpse = theFlow[THREE.Math.randInt(0, theFlow.length - 1)];
+
+            if ('kaleido' in theGlimpse) {
+                startKaleido();
+            } 
+            if ('morph' in theGlimpse) {
+                startMorph(
+                    theGlimpse.morph.textureDest,
+                    theGlimpse.morph.speed,
+                    theGlimpse.morph.pointSize
+                )
+            }
+
+            simulationShader.uniforms.amplitude.value = theGlimpse.amplitude;
+            simulationShader.uniforms.frequency.value = THREE.Math.randFloat(theGlimpse.frequency / 3, theGlimpse.frequency * 3);
+            renderShader.uniforms.pointSize.value = theGlimpse.pointSize;
+            // var cc = [theGlimpse.particlesColor, particleColor];
+            renderShader.uniforms.nColor.value = theGlimpse.particlesColor; //cc[THREE.Math.randInt(0, 1)];
+            glimpseBackColor = theGlimpse.backgroundColor;
+            currentRotation = theGlimpse.particlesRotationY;
+
+            renderer.setClearColor(glimpseBackColor);
+            playSound(theGlimpse.sound);
+        }
+
+        function stopGlimpse() {
+            kaleidoing = false;
+            glimpsing = false;
+            soundObj.pause();
+            bringBackPresentGaze();
+
+            if ('morph' in theGlimpse) {
+                stopMorph();
+            }
+
+            renderer.setClearColor(backColor);
+        }
+
+        function startKaleido() {
+            kaleidoing = true;
+            kaleidoscopePass.material.uniforms.sides.value = theGlimpse.kaleido.sides;
+            kaleidoscopePass.material.uniforms.angle.value = theGlimpse.kaleido.angle;
+
+            if ('uvOffset' in theGlimpse.kaleido) {
+                kaleidoscopePass.material.uniforms.uvOffset.value = theGlimpse.kaleido.uvOffset;
+            } else if ('uvOffsetRange' in theGlimpse.kaleido) {
+                kaleidoscopePass.material.uniforms.uvOffset.value = THREE.Math.randFloat(theGlimpse.kaleido.uvOffsetRange[0], theGlimpse.kaleido.uvOffsetRange[1]);
+            }
+
+            if ('diffuseOffset' in theGlimpse.kaleido) {
+                kaleidoscopePass.material.uniforms.diffuseOffset.value = theGlimpse.kaleido.diffuseOffset;
+            } else if ('diffuseOffsetRange' in theGlimpse.kaleido) {
+                kaleidoscopePass.material.uniforms.diffuseOffset.value = THREE.Math.randFloat(theGlimpse.kaleido.diffuseOffsetRange[0], theGlimpse.kaleido.diffuseOffsetRange[1]);
+            }
+            kaleidoscopePass.material.uniforms.trigoX.value = theGlimpse.kaleido.trigoX !== undefined ? theGlimpse.kaleido.trigoX : THREE.Math.randInt(0, 3);
+            kaleidoscopePass.material.uniforms.trigoY.value = theGlimpse.kaleido.trigoY !== undefined ? theGlimpse.kaleido.trigoY : THREE.Math.randInt(0, 3);
+
+            kaleidoscopePass.material.needsUpdate = true;
+            // kaleidoscopePass.enabled = true;
+        }
+
+        function startMorph(textureDest, speed, pointSize) {
             simulationShader.uniforms.morph.value = 1.0;
-            simulationShader.uniforms.textureDest.value = getRandImgTexture();
+            simulationShader.uniforms.textureDest.value = textureDest || getRandImgTexture();
             simulationShader.uniforms.morphTimestamp.value = timer;
-            simulationShader.uniforms.morphSpeed.value = 0.8;
-            renderShader.uniforms.pointSize.value = 5;
+            simulationShader.uniforms.morphSpeed.value = speed || 0.8;
+            renderShader.uniforms.pointSize.value = pointSize || 4;
+            camera.position.set(0., 200., 5.);
         }
 
         function stopMorph() {
             simulationShader.uniforms.morph.value = 0.0;
         }
 
-        function saveCurrentRender() {
-            currentRender.amplitude = simulationShader.uniforms.amplitude.value;
-            currentRender.frequency = simulationShader.uniforms.frequency.value;
-            currentRender.texture = simulationShader.uniforms.texture.value;
-            currentRender.pointSize = renderShader.uniforms.pointSize.value;
-            currentRender.renderColor = renderShader.uniforms.nColor.value;
-            currentRender.backgroundColor = backColor;
+        function savePresentGaze() {
+            presentGaze.amplitude = simulationShader.uniforms.amplitude.value;
+            presentGaze.frequency = simulationShader.uniforms.frequency.value;
+            presentGaze.texture = simulationShader.uniforms.texture.value;
+            presentGaze.pointSize = renderShader.uniforms.pointSize.value;
+            presentGaze.renderColor = renderShader.uniforms.nColor.value;
+            presentGaze.backgroundColor = backColor;
+            presentGaze.currentRotation = currentRotation;
+            presentGaze.cameraPosition = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+            // debugger;
         }
 
-        function restoreCurrentRender() {
-            simulationShader.uniforms.amplitude.value = currentRender.amplitude;
-            simulationShader.uniforms.frequency.value = currentRender.frequency;
-            simulationShader.uniforms.texture.value = currentRender.texture;
-            renderShader.uniforms.pointSize.value = currentRender.pointSize;
-            renderShader.uniforms.nColor.value = currentRender.renderColor
-            backColor = currentRender.backgroundColor;
+        function bringBackPresentGaze() {
+            simulationShader.uniforms.amplitude.value = presentGaze.amplitude;
+            simulationShader.uniforms.frequency.value = presentGaze.frequency;
+            simulationShader.uniforms.texture.value = presentGaze.texture;
+            renderShader.uniforms.pointSize.value = presentGaze.pointSize;
+            renderShader.uniforms.nColor.value = presentGaze.renderColor;
+            backColor = presentGaze.backgroundColor;
+            currentRotation = presentGaze.currentRotation;
+            camera.position.set(presentGaze.cameraPosition.x, presentGaze.cameraPosition.y, presentGaze.cameraPosition.z);
+            // debugger;
         }
 
-        function startStrobo() {
-            playSound('tempo-change');
-            stroboOn = true;
-            stroboCount += 1;
-
-            saveCurrentRender();
-
-            // startMorph();
-
-            simulationShader.uniforms.amplitude.value = 1000000.1;
-            if (stroboCount % 2 == 0) {
-                simulationShader.uniforms.frequency.value = 10000.1;
-            } else {
-                simulationShader.uniforms.frequency.value = 0.00032;
-            }
-            // simulationShader.uniforms.frequency.value = 10000.1;
-            // renderShader.uniforms.pointSize.value = THREE.Math.randInt(3, 4);
-            // renderShader.uniforms.nColor.value = new THREE.Vector3(Math.random(), Math.random(), Math.random());
-
-            renderShader.uniforms.nColor.value = stroboParticleColor;
-            renderer.setClearColor(stroboBackColor);
-
-        }
-
-        function stopStrobo() {
-            stroboOn = false;
-            soundObj.pause();
-
-            // stopMorph();
-            
-            restoreCurrentRender();
-            renderer.setClearColor(backColor);
-        }
-
-        var defaultBackColor=new THREE.Color(0, 0, 0.02), backColor=new THREE.Color(0, 0, 0.02), stroboBackColor=new THREE.Color(1, 1, 1);
+        var defaultBackColor=new THREE.Color(0, 0, 0.02), backColor=new THREE.Color(0, 0, 0.02), glimpseBackColor=new THREE.Color(1, 1, 1);
         var defaultParticleColor=new THREE.Color(1, 1, 1), particleColor=new THREE.Color(1, 1, 1), stroboParticleColor=new THREE.Color(0, 0, 0);
 
         function stroboBackground() {
-            let tempBack = stroboBackColor;
-            stroboBackColor = backColor;
+            let tempBack = glimpseBackColor;
+            glimpseBackColor = backColor;
             backColor = tempBack;
             renderer.setClearColor(backColor);
-
             // let tempParticle = stroboParticleColor;
             // stroboParticleColor = particleColor;
             // particleColor = tempParticle;
             // renderShader.uniforms.nColor.value = particleColor;
         }
 
-        function update()
-        { 
+        function update() { 
             requestAnimationFrame(update);
             controls.update();
+
+            timer += timerInc;
+            let timerInt = parseInt(timer);
+            simulationShader.uniforms.timer.value = timer;
+            renderShader.uniforms.timer.value = timer;
 
             //update simulation
             FBO.update();
 
-            timer += timerInc;
-            let timerInt = parseInt(timer);
+            if (videoPlaying) {
+                for (var i=0; i<vids.length; i++) {
+                    vids[i].update(-0.1);
+                }
+                renderer.autoClear = false;
+                return;
+            } 
 
-            simulationShader.uniforms.timer.value = timer;
-            // FBO.particles.rotation.x = Math.cos( Date.now() *.001 ) * Math.PI / 180 * 2;
+           // Pick a time interval for how often to start the glimpse effect
+            var glimpseInterval = THREE.Math.randInt(2, 9);
+            // var glimpseInterval = 5;
+            if (timer > 1 && timerInt % glimpseInterval == 0) {
+                if (!glimpsing) {
+                    startGlimpse();
+                }
+            } else if (glimpsing && timer % glimpseInterval > theGlimpse.length * 5) {
+                stopGlimpse();
+            }
 
             // Constant counter-clockwise rotation, dervish style
-            FBO.particles.rotation.y -= Math.PI / 180 * .3;
+            FBO.particles.rotation.y -= currentRotation;
 
-            // If we are in strobo mode, flicker the background
+            // If we are in glimpse mode
             // Also check if the kaleido effect is on and call the effect composer
-            if (stroboOn) {
-                // FBO.particles.rotation.y += Math.PI / 180 * .6;
-                if (stroboCount % 3 == 0) {
-                    composer.render();
-                } else {
-                    renderer.render(scene, camera);
+            if (glimpsing) {
+                if (theGlimpse.stroboBackground) {
+                    stroboBackground();
                 }
-                stroboBackground();
+            } else {
+                // When we reach min/max sphere amplitude, reverse
+                if (simulationShader.uniforms.amplitude.value < 50 || simulationShader.uniforms.amplitude.value > 150) {
+                    amplDec = -amplDec;
+                    amplInc = -amplInc;
+                }
+            }
+
+            if (kaleidoing) {
+                composer.render();
             } else {
                 renderer.render(scene, camera);
             }
-
-            // Pick a time interval for how often to start the strobo effect
-            // var stroboInterval = THREE.Math.randInt(4, 8);
-            var stroboInterval = 5;
-            if (timer > 1 && timerInt % stroboInterval == 0) {
-                if (!stroboOn) {
-                    startStrobo();
-                }
-            } else if (stroboOn && timer % stroboInterval > 1) {
-                stopStrobo();
-            }
+            renderer.autoClear = true;
 
             // Increase or decrease the amplitutde cyclically every time unit
             if (timerInt % 2 == 0) {
@@ -491,18 +760,13 @@
                 simulationShader.uniforms.amplitude.value -= amplDec;
             }
 
-            // When we reach min/max sphere amplitude, go in reverse
-            if (simulationShader.uniforms.amplitude.value < 60 || simulationShader.uniforms.amplitude.value > 150) {
-                amplDec = -amplDec;
-                amplInc = -amplInc;
-            }
         }
 
         //returns a Float32Array buffer of 3D points after an image
         function getImage(img, elevation){
-            var ctx = getContext( null, img.width, img.height );
+            var ctx = getContext(null, img.width, img.height);
             ctx.drawImage(img, 0, 0);
-            var imgData = ctx.getImageData(0,0,img.width,img.height);
+            var imgData = ctx.getImageData(0, 0, img.width, img.height);
             var iData = imgData.data;
 
             var l = (img.width * img.height);
@@ -510,22 +774,20 @@
             for (var i = 0; i < l; i++) {
                 var i3 = i * 3;
                 var i4 = i * 4;
-                data[ i3 ]      = ( ( i % img.width ) - img.width  * .5 );
-                data[ i3 + 1 ]  = (iData[i4] / 0xFF * 0.299 +iData[i4+1]/0xFF * 0.587 + iData[i4+2] / 0xFF * 0.114 ) * elevation;
-                data[ i3 + 2 ]  = (parseInt(i / img.width ) - img.height * .5);
+                data[i3] = (i % img.width) - img.width * .5;
+                data[i3 + 1] = (iData[i4] / 0xFF * 0.299 +iData[i4+1]/0xFF * 0.587 + iData[i4+2] / 0xFF * 0.114) * elevation;
+                data[i3 + 2] = (parseInt(i / img.width) - img.height * .5);
             }
             return data;
         }
-        function getCanvas( w,h ){
-
-            var canvas = document.createElement( "canvas");
+        function getCanvas(w, h){
+            var canvas = document.createElement("canvas");
             canvas.width = w || 512;
             canvas.height = h || 512;
             return canvas;
         }
-        function getContext( canvas, w,h ){
-
-            canvas = canvas || getCanvas(w,h);
+        function getContext(canvas, w, h){
+            canvas = canvas || getCanvas(w, h);
             canvas.width = w || canvas.width;
             canvas.height = h || canvas.height;
             return canvas.getContext("2d");
@@ -540,30 +802,19 @@
         }
 
         async function loadImages(imageUrlArray) {
-            const promiseArray = []; // create an array for promises
-            const imageArray = []; // array for the images
+            const promiseArray = [];
+            const imageArray = [];
 
             for (let imageUrl of imageUrlArray) {
-
                 promiseArray.push(new Promise(resolve => {
-
                     const img = new Image();
-                    // if you don't need to do anything when the image loads,
-                    // then you can just write img.onload = resolve;
-
-                    img.onload = function() {
-                        // do stuff with the image if necessary
-
-                        // resolve the promise, indicating that the image has been loaded
-                        resolve();
-                    };
-
+                    img.onload = resolve;
                     img.src = 'img/' + imageUrl;
                     imageArray.push(img);
                 }));
             }
 
-            await Promise.all(promiseArray); // wait for all the images to be loaded
+            await Promise.all(promiseArray);
             console.log("all images loaded");
             return imageArray;
         }

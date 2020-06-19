@@ -6,7 +6,7 @@ head, body{
     left:0;
     margin:0;
     padding:0;
-    cursor: url('img/chaos-magick.png'), auto;
+    cursor: url('chaos-magick.png'), auto;
     font-family: optima;
     color: white;
     text-align: justify;
@@ -15,7 +15,7 @@ head, body{
     position: absolute;
     left: 10px;
     bottom: 10px;
-    cursor: url('img/chaos-magick.png'), auto;
+    cursor: url('chaos-magick.png'), auto;
     width: 330px;
     text-align: justify;
     text-align-last: justify;

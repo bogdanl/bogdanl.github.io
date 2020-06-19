@@ -83,10 +83,27 @@ float noise(vec2 v)
     return 130.0 * dot(m, g);
 }
 
+#define NUM_OCTAVES 5
+
+float fbm(vec2 x) {
+    float v = 0.5;
+    float a = 0.5;
+    vec2 shift = vec2(100);
+    // Rotate to reduce axial bias
+    mat2 rot = mat2(cos(0.8), sin(0.2), -sin(0.5), cos(0.50));
+    for (int i = 0; i < NUM_OCTAVES; ++i) {
+        v += a * noise(x);
+        x = rot * x * 2.0 + shift;
+        a *= 0.5;
+    }
+    return v;
+}
+
+
 vec3 curl(float	x,	float	y,	float	z)
 {
 
-    float	eps	= .1, eps2 = 20. * eps;
+    float	eps	= 1., eps2 = 2. * eps;
     float	n1,	n2,	a,	b;
 
     x += timer * .05;
@@ -144,9 +161,9 @@ void main() {
     } else {
         vec3 tar = pos + curl(pos.x * frequency, pos.y * frequency, pos.z * frequency) * amplitude;
         float d = length(pos - tar) / maxDistance;
-        pos = mix( pos, tar, pow( d, 5. ) );
+        pos = mix(pos, tar, pow(d, 5.));
     }
 
-    gl_FragColor = vec4( pos, 1. );
+    gl_FragColor = vec4(pos, 1.);
 
 }

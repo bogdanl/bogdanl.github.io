@@ -39,10 +39,10 @@ var FBO = function( exports ){
         var l = (width * height );
         var vertices = new Float32Array(l * 3);
         var colors = new Float32Array(l * 3);
-        for ( var i = 0; i < l; i++ ) {
+        for (var i = 0; i < l; i++) {
             var i3 = i * 3;
-            vertices[ i3 ] = ( i % width ) / width ;
-            vertices[ i3 + 1 ] = ( i / width ) / height;
+            vertices[i3] = (i % width) / width ;
+            vertices[i3 + 1] = (i / width) / height;
 
             colors[i3] = Math.random();
             colors[i3 +1] = Math.random();
@@ -51,13 +51,13 @@ var FBO = function( exports ){
 
         //create the particles geometry
         var geometry = new THREE.BufferGeometry();
-        geometry.setAttribute( 'position', new THREE.BufferAttribute(vertices, 3));
-        geometry.setAttribute( 'newcolor', new THREE.BufferAttribute(colors, 3) );
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        // geometry.setAttribute('newcolor', new THREE.BufferAttribute(colors, 3));
         //the rendermaterial is used to render the particles
         exports.particles = new THREE.Points(geometry, renderMaterial);
 
         exports.renderer = renderer;
-
+        return scene;
     };
 
     //7 update loop

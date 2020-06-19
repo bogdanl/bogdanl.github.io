@@ -30,11 +30,11 @@
 
             var sl = new ShaderLoader();
             sl.loadShaders({
-                simulation_vs : "",
-                simulation_fs : "",
-                render_vs : "",
-                render_fs : ""
-            }, "./glsl/image/", loadImage );
+                image_simulationVS : "",
+                image_simulationFS : "",
+                image_renderVS : "",
+                image_renderFS : ""
+            }, "./glsl/", loadImage );
 
         };
 
@@ -46,19 +46,17 @@
                 init(e.target);
             };
             img.crossOrigin = "anonymous";
-            img.src = "img/pp.jpeg";
+            img.src = "img/focus.jpeg";
         }
 
         function init(img)
         {
-
-
             var w = window.innerWidth;
             var h = window.innerHeight;
 
             //regular scene creation
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(60,w/h, 1,10000 );
+            camera = new THREE.PerspectiveCamera(60, w/h, 1,10000 );
             camera.position.z = 250;
 
             controls = new THREE.OrbitControls(camera);
@@ -75,18 +73,17 @@
 
             var elevation = 64;
             var data = getImage( img, width, height, elevation );
-            var positions = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
-            positions.needsUpdate = true;
+            var texture = new THREE.DataTexture( data, width, height, THREE.RGBFormat, THREE.FloatType );
+            texture.needsUpdate = true;
 
-            //this will be used to update the particles' positions
+            //this will be used to update the particles' texture
 
             var simulationShader = new THREE.ShaderMaterial({
-
                 uniforms: {
-                    positions: { type: "t", value: positions }
+                    texture: { type: "t", value: texture }
                 },
-                vertexShader: ShaderLoader.get( "simulation_vs" ),
-                fragmentShader:  ShaderLoader.get( "simulation_fs" )
+                vertexShader: ShaderLoader.get( "image_simulationVS" ),
+                fragmentShader:  ShaderLoader.get( "image_simulationFS" )
             });
 
 
@@ -97,8 +94,10 @@
                     positions: { type: "t", value: null },
                     pointSize: { type: "f", value: 1 }
                 },
-                vertexShader: ShaderLoader.get( "render_vs" ),
-                fragmentShader: ShaderLoader.get( "render_fs" )
+                transparent: true,
+                side:THREE.DoubleSide,
+                vertexShader: ShaderLoader.get( "image_renderVS" ),
+                fragmentShader: ShaderLoader.get( "image_renderFS" )
             } );
 
             FBO.init( width,height, renderer, simulationShader, renderShader );
