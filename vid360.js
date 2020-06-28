@@ -3,7 +3,7 @@ var vid360 = function(vid){
 	var isUserInteracting = false,
 		lon = 0, lat = 0,
 		phi = 0, theta = 0,
-		distance = 50,
+		distance = 90,
 		onPointerDownPointerX = 0,
 		onPointerDownPointerY = 0,
 		onPointerDownLon = 0,
@@ -47,12 +47,6 @@ var vid360 = function(vid){
 
 		onPointerDownLon = lon;
 		onPointerDownLat = lat;
-
-		if (vid.isMouseOn(event) && distance > 50) {
-			vid.mesh.position.set(0, 0, 0);
-			// distance = 45;
-	        document.body.style.cursor = "url('css/chaos-magick.png'), auto";
-		}
 	}
 
 	vid.isMouseOn = function(event) {
@@ -70,14 +64,6 @@ var vid360 = function(vid){
 		if (isUserInteracting) {
 			lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
 			lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
-		}
-
-		if (distance > 50) {
-			if (vid.isMouseOn(event)) {
-	        	document.body.style.cursor = "pointer";
-			} else {
-	        	document.body.style.cursor = "url('css/chaos-magick.png'), auto";
-			}
 		}
 	}
 
@@ -102,6 +88,8 @@ var vid360 = function(vid){
 		document.addEventListener('wheel', vid.onDocumentMouseWheel, false);
 		window.addEventListener('resize', vid.onWindowResize, false);
 		vid.video.play();
+		// vid.video.currentTime = 5;
+
 	}
 
 	vid.stop = function() {

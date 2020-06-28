@@ -100,17 +100,16 @@ float fbm(vec2 x) {
 }
 
 
-vec3 curl(float	x,	float	y,	float	z)
-{
-
-    float	eps	= 1., eps2 = 2. * eps;
-    float	n1,	n2,	a,	b;
+vec3 curl(float	x, float y,	float z){
+    float eps = 1., eps2 = 2. * eps;
+    float n1, n2, a, b;
 
     x += timer * .05;
     y += timer * .05;
     z += timer * .05;
+    // w += timer * .05;
 
-    vec3	curl = vec3(0.);
+    vec3 curl = vec3(0.);
 
     n1	=	noise(vec2( x,	y	+	eps ));
     n2	=	noise(vec2( x,	y	-	eps ));
@@ -142,28 +141,47 @@ vec3 curl(float	x,	float	y,	float	z)
 
     curl.z	=	a	-	b;
 
+    n1  =   noise(vec2( x   +   eps,    y));
+    n2  =   noise(vec2( x   -   eps,    y));
+    a   =   (n1 -   n2)/eps2;
+
+    // n1  =   noise(vec2( z  +   eps,    w));
+    // n2  =   noise(vec2( z  -   eps,    w));
+    // b   =   (n1 -   n2)/eps2;
+
+    // curl.w  =   a   -   b;
+
     return	curl;
 }
 // -----------
 
+uniform vec3 mouse;
 
 void main() {
-    vec3 pos  = texture2D(texture, vUv).xyz;
-
+    vec4 pos = texture2D(texture, vUv).xyzw;
     if (morph == 1.0) {
-        vec3 destination = texture2D( textureDest, vUv ).xyz;
+        vec4 destination = texture2D(textureDest, vUv).xyzw;
         float timeInc = (timer - morphTimestamp) * morphSpeed;
         if (timeInc < 1.) {
             pos = mix(pos, destination,  timeInc);  // lerp
         } else {
              pos = mix(pos, destination, 1.);
         }
+        gl_FragColor = pos;
     } else {
-        vec3 tar = pos + curl(pos.x * frequency, pos.y * frequency, pos.z * frequency) * amplitude;
-        float d = length(pos - tar) / maxDistance;
-        pos = mix(pos, tar, pow(d, 5.));
+        vec3 nPos, curlOffset;
+        float ampl = amplitude;
+        float freq = frequency;
+        // if (abs(pos.x - mouse.x) < 20. && abs(pos.y - mouse.y) < 10.) {
+        //     // ampl = ampl * 2.;
+        //     freq = frequency * 3.;
+        // }
+        curlOffset = curl(pos.x * freq, pos.y * freq, pos.z * freq);
+        vec3 tar = pos.xyz + curlOffset * ampl;
+        float d = length(pos.xyz - tar) / maxDistance;
+        nPos = mix(pos.xyz, tar, pow(d, 5.));
+        pos.w += curlOffset.x;
+        gl_FragColor = vec4(nPos, pos.w);
     }
-
-    gl_FragColor = vec4(pos, 1.);
 
 }

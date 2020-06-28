@@ -5,7 +5,7 @@ var FBO = function( exports ){
 
         //3 rtt setup
         scene = new THREE.Scene();
-        orthoCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow( 2, 53 ),1 );
+        orthoCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow(2, 53), 1);
 
         //4 create a target texture
         var options = {
@@ -22,8 +22,8 @@ var FBO = function( exports ){
         geom.setAttribute(
             'position',
             new THREE.BufferAttribute(
-                new Float32Array([-1,-1,0, 1,-1,0, 1,1,0, -1,-1,0, 1,1,0, -1,1,0]), 
-                3 
+                new Float32Array([-1,-1,0,0, 1,-1,0,0, 1,1,0,0, -1,-1,0,0, 1,1,0,0, -1,1,0,0]), 
+                4
             ) 
         );
         geom.setAttribute('uv',
@@ -36,22 +36,17 @@ var FBO = function( exports ){
 
         //6 the particles:
         //create a vertex buffer of size width * height with normalized coordinates
-        var l = (width * height );
-        var vertices = new Float32Array(l * 3);
-        var colors = new Float32Array(l * 3);
+        var l = (width * height);
+        var vertices = new Float32Array(l * 4);
         for (var i = 0; i < l; i++) {
-            var i3 = i * 3;
+            var i3 = i * 4;
             vertices[i3] = (i % width) / width ;
             vertices[i3 + 1] = (i / width) / height;
-
-            colors[i3] = Math.random();
-            colors[i3 +1] = Math.random();
-            colors[i3+2] = 1;
         }
 
         //create the particles geometry
         var geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 4));
         // geometry.setAttribute('newcolor', new THREE.BufferAttribute(colors, 3));
         //the rendermaterial is used to render the particles
         exports.particles = new THREE.Points(geometry, renderMaterial);
