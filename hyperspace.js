@@ -172,7 +172,7 @@ Tunnel.prototype.initAnimation = function() {
 };
 Tunnel.prototype.updateMaterialOffset = function() {
   this.tubeMaterial.map.offset.x = this.textureParams.offsetX;
-  this.tubeMaterial.map.offset.y += 0.0016;
+  this.tubeMaterial.map.offset.y += 0.0018;
   this.tubeMaterial.map.repeat.set(
     this.textureParams.repeatX,
     this.textureParams.repeatY
