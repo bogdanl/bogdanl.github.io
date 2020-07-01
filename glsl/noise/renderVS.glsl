@@ -5,7 +5,7 @@ uniform sampler2D positions;
 uniform float pointSize;
 varying vec4 newpos;
 
-varying float pointColor;
+// varying float pointColor;
 // varying float size;
 // varying vec2 vTexCoords;
 
@@ -18,7 +18,7 @@ float rand(float n){return fract(sin(n) * 43758.5453123);}
 void main() {
     vec4 pos = texture2D(positions, position.xy).xyzw;
     // newpos = pos;
-    pointColor = pos.w;
+    // pointColor = pos.w;
     //pos now contains the position of a point in space that can be transformed
     if (abs(pos.y-mouse.y) < 1000.) {
     	gl_Position = projectionMatrix * modelViewMatrix * vec4(pos.xyz, 0.);

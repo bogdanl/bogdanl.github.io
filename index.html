@@ -16,7 +16,7 @@
     </div>
     <div id="volume">TURN SOUND ON</div>
     <audio id="sound" preload="auto" loop>
-      <source src="snd/mirrors_short.ogg" type="audio/ogg">
+      <source src="snd/thornhill2.ogg" type="audio/ogg">
     </audio>
 
     <div id="container"></div>
@@ -28,8 +28,9 @@
     <script src="vid360.js"></script>
     <script src="vendor/three-bmfont.js"></script>
     <script src="vendor/load-bmfont.js"></script>
-    <script src="vendor/TweenMax.min.js"></script>
+    <!-- <script src="vendor/TweenMax.min.js"></script> -->
     <script src="hyperspace.js"></script>
+    <!-- <script src="vendor/anime.min.js"></script> -->
 
     <script type="module">
         import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/EffectComposer.js';
@@ -48,6 +49,11 @@
         var vids = [];
 
         var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
+
+        var vids = {
+            thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
+            thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4'
+        };
 
         window.onload = function() {
             var sl = new ShaderLoader();
@@ -126,6 +132,7 @@
 
             controls = new THREE.OrbitControls(camera);
             camera.position.z = 30;
+            controls.enableDamping = true;
             // controls.maxDistance = 1000000;
             // controls.minDistance = 30;
             // create an AudioListener and add it to the camera
@@ -187,10 +194,11 @@
                     textureDest: {type: "t", value: null},
                     morphTimestamp: {type: 'f', value: null},
                     morphSpeed: {type: 'f', value: 0.1},
-                    mouse: {type: "v3", value: new THREE.Vector3(0)}
+                    mouse: {type: "v3", value: new THREE.Vector3(0)},
+                    // alphaMap: { type: 't', value: currVid.mesh.material.alphaMap }
                 },
                 vertexShader: ShaderLoader.get( "noise_simulationVS"),
-                fragmentShader:  ShaderLoader.get( "noise_simulationFS")
+                fragmentShader:  ShaderLoader.get( "noise_simulationFS"),
             });
 
             renderShader = new THREE.ShaderMaterial( {
@@ -278,12 +286,17 @@
             composer.addPass(kaleidoscopePass);
 
             // vids.push(vid360.init(renderer, 'thornhill2.webm'));
-            // // vids[0].mesh.position.set(300, 300, 0);
-            // vids[0].start();
+            // // currVid.mesh.position.set(300, 300, 0);
+            // currVid.start();
 
             // vids.push(vid360.init(renderer, 'thornhill2.webm'));
             // // vids[1].mesh.position.set(0, 50, 50);
-            // vids[0].start();
+            // currVid.start();
+
+            // currVid = vid360.init(renderer, 'thornhill2.webm');
+            currVid = vid360.init(renderer, vids['thornhill2']);
+            currVid.start();
+            videoPlaying = true;
 
             sky = new THREE.Group();
             sky.add(FBO.particles);
@@ -294,20 +307,20 @@
             for (let j=0; j<floatingVids.length; j++) {
                 sky.add(floatingVids[j]);
                 floatingVids[j].position.set(
-                    THREE.Math.randInt(-150, -30),
-                    THREE.Math.randInt(-40, 90),
-                    THREE.Math.randInt(-40, 80)
+                    THREE.Math.randInt(-70, -30),
+                    THREE.Math.randInt(-30, 70),
+                    THREE.Math.randInt(-40, 40)
                 );
             }
 
             scene.add(sky);
 
-            videoPlaying = false;
+            // videoPlaying = false;
             onResize();
             update();
         }
 
-        var floatingVids = [], sky;
+        var floatingVids = [], currVid, sky;
 
         function addSphereImage(name) {
             // vid.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
@@ -881,17 +894,8 @@
         var raycaster = new THREE.Raycaster();
 
         function onDocumentMouseMove(event) {
-            // mouse.x = (event.clientX / window.innerWidth ) * 2 - 1;
-            // mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-            // raycaster.setFromCamera(mouse, camera); 
-            // let vector = new THREE.Vector3();
-            // vector.set(
-            //     (event.clientX / window.innerWidth) * 2 - 1,
-            //     - (event.clientY / window.innerHeight) * 2 + 1,
-            //     0
-            // );
-            // vector.unproject(camera);
             if (videoPlaying) {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
                 return;
             }
 
@@ -913,6 +917,7 @@
         var raycaster = new THREE.Raycaster();
         function onMouseDown(event) {
             if (videoPlaying) {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
                 return;
             }
             event.preventDefault();
@@ -924,6 +929,7 @@
             var intersects = raycaster.intersectObjects(floatingVids);
             if (intersects.length) {
                 glimpseOn = true;
+                alphabetOn = true;
                 scheduleVideo(intersects[0].object.vidName, 3, false);
                 for (var j=0; j<floatingVids.length; j++)
                     sky.remove(floatingVids[j]);
@@ -932,6 +938,7 @@
                 document.body.style.cursor = "url('css/chaos-magick.png'), auto";
                 renderShader.uniforms.nColor.value = new THREE.Color(0, 0, 0);
                 backColor = new THREE.Color(1, 1, 1);
+                renderer.setClearColor(backColor);
             }
         }
         var nextVideo, nextVideoCountdown = 0;
@@ -939,31 +946,49 @@
         function scheduleVideo(name, time, intersect) {
             nextVideo = name;
             nextVideoCountdown = time;
-            if (intersect) {
-                playVideo(name);
-            }
         }
 
         function playVideo(name) {
             hyperspace(name, renderer, scene);
-            // vids.push(vid360.init(renderer, name + '.webm'));
-            // vids[0].start();
-            // videoPlaying = true;
+            delayGlimpseStop(3);
+        }
+
+        var glimpseTimer = 0;
+        function delayGlimpseStop(time) {
+            glimpseTimer = time;
+            // theGlimpse.length = 5;
         }
 
         function hyperspace(name, renderer, scene) {
+            hyperspaceOn = true;
+            hyperspacing = true;
             var loader = new THREE.TextureLoader();
             loader.crossOrigin = "Anonymous";
-
+            // theGlimpse.length *= 3;
             loader.load(
                 "vid/" + name + ".png",
                 function(texture) {
                     window.tunnel = new Tunnel(texture, renderer, scene);
+                    window.tunnel.vidName = name;
                 }
             );
         }
 
         var glimpseOn = false, alphabetOn = false;
+        var stroboHyper = true;
+        var hyperspaceOn = false, hyperspacing = false;
+
+        function stopHyperspace() {
+            scene.remove(window.tunnel.tubeMesh);
+            hyperspaceOn = false;
+            hyperspacing = false;
+            if (glimpsing)
+                stopGlimpse();
+            currVid = vid360.init(renderer, vids[window.tunnel.vidName]);
+            currVid.start();
+            videoPlaying = true;
+        }
+
         function update() { 
             requestAnimationFrame(update);
 
@@ -972,6 +997,55 @@
 
             simulationShader.uniforms.timer.value = timer;
             renderShader.uniforms.timer.value = timer;
+            // simulationShader.uniforms.alphaMap.needsUpdate = true;
+
+            if (glimpseTimer > 0) {
+                glimpseTimer -= timerInc;
+                if (glimpseTimer <= 0) {
+                    glimpseOn = false;
+                    alphabetOn = false;
+                    hyperspacing = true;
+                }
+            }
+
+            if (videoPlaying) {
+                currVid.update(-0.1);
+                if (!currVid.playing) {
+                    videoPlaying = false;
+                    if (glimpsing)
+                        stopGlimpse();
+                    // simulationShader.uniforms.amplitude.value = 100;
+                    // timer = 200;
+                    document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+                    renderShader.uniforms.nColor.value = new THREE.Color(1, 1, 1);
+                    backColor = new THREE.Color(0, 0, 0);
+                    renderer.setClearColor(backColor);
+                    for (var j=0; j<floatingVids.length; j++)
+                        sky.add(floatingVids[j]);
+                }
+                if (!glimpseOn)
+                    return;
+            }
+
+            if (hyperspaceOn) {
+                if (typeof window.tunnel !== undefined && window.tunnel.progress() > 0.99) {
+                    stopHyperspace();
+                    return;
+                }
+                if (glimpseOn) {
+                    var hyperspaceInterval = THREE.Math.randInt(2, 9);
+                    if (!hyperspacing && timerInt % hyperspaceInterval == 0) {
+                        hyperspacing = true;
+                    } else if (hyperspacing && timer % hyperspaceInterval > 1) {
+                        hyperspacing = false;
+                    }
+                }
+            }
+
+            if (hyperspaceOn && hyperspacing) {
+                window.tunnel.render();
+                return;
+            }
 
             if (alphabeting) {
                 textMaterial.uniforms.timer.value += timerInc;
@@ -987,18 +1061,9 @@
                     if (!videoPlaying) {
                         playVideo(nextVideo);
                     }
-                    glimpseOn = false;
+                    // glimpseOn = false;
                 }
 
-            }
-
-            if (videoPlaying) {
-                for (var i = 0; i < vids.length; i++) {
-                    vids[i].update(-0.1);
-                }
-                renderer.autoClear = false;
-                if (!glimpseOn)
-                    return;
             }
 
             //update simulation
@@ -1035,13 +1100,10 @@
             // FBO.particles.rotation.y -= currentRotation;
             for (let j=0; j<floatingVids.length; j++) {
                 floatingVids[j].rotation.y -= currentRotation;
-                // floatingVids[j].position.y += currentRotation;
-                // floatingVids[j].position.setFromSphericalCoords(50, THREE.Math.degToRad(23), THREE.Math.degToRad(23));
             }
 
             // camera.position.x -= 10 * Math.PI / 180;
             sky.rotation.y -= currentRotation;
-            // floatingVids[0].
             controls.update();
 
             // If we are in glimpse mode
