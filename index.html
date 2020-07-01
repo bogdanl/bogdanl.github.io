@@ -3,7 +3,57 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>mirrors in space</title>
-    <link href="css/main.css" rel="stylesheet">
+    <!-- <link href="css/main.css" rel="stylesheet"> -->
+    <style>
+        head, body{
+    width:100%;
+    height:100%;
+    overflow: hidden;
+    top:0;
+    left:0;
+    margin:0;
+    padding:0;
+    cursor: url('css/chaos-magick.png'), auto;
+    font-family: optima;
+    color: white;
+    text-align: justify;
+}
+#title {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    cursor: url('css/chaos-magick.png'), auto;
+    width: 330px;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-word;
+}
+#instructions {
+    position: absolute;
+    font-family: optima;
+    right: 10px;
+    bottom: 10px;
+    width: 280px;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-word;
+    text-transform: uppercase;
+}
+#volume {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    font-size: 13px;
+    font-style: bold;
+    cursor: pointer;
+}
+#fullscreen {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    cursor: pointer;
+}
+</style>
 </head>
 <body>
     <div id="fullscreen">fullscreen</div>
@@ -14,8 +64,11 @@
         outshone by silhouettes on fortuitous placards<br>
         & out of sight; forgetful of its smeared desires
     </div>
+    <div id="instructions">
+        <strong>you can use the trackpad<br> to move around, zoom & click</strong>
+    </div>
     <div id="volume">TURN SOUND ON</div>
-    <audio id="sound" preload="auto" loop>
+    <audio id="sound" preload="none" loop>
       <source src="snd/thornhill2.ogg" type="audio/ogg">
     </audio>
 

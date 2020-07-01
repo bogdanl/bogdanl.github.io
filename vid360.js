@@ -20,7 +20,7 @@ var vid360 = function(vid){
 	    vid.raycaster = new THREE.Raycaster();
 
 		// CAMERAS
-		camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+		camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 1100);
 		camera.position.set( 0, 0, 1000 );
 		cameraCube = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 1, 1100);
 
