@@ -68,9 +68,6 @@
         <strong>you can use the trackpad<br> to move around, zoom & click</strong>
     </div>
     <div id="volume">TURN SOUND ON</div>
-    <audio id="sound" preload="none" loop>
-      <source src="snd/thornhill2.ogg" type="audio/ogg">
-    </audio>
 
     <div id="container"></div>
 
@@ -83,12 +80,12 @@
     <script src="vendor/load-bmfont.js"></script>
     <script src="vendor/TweenMax.min.js"></script>
     <script src="hyperspace.js"></script>
-    <!-- <script src="vendor/anime.min.js"></script> -->
 
     <script type="module">
         import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/EffectComposer.js';
         import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/RenderPass.js';
         import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/ShaderPass.js';
+        import {Curves} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/curves/CurveExtras.js';
 
         var scene, camera, renderer, composer, controls, timer=0, timerInc=.01;
         var simulationShader, renderShader, kaleidoscopePass;
@@ -99,13 +96,15 @@
         var imgUrls = ['ourobouros.jpeg', 'ourobouros2.jpeg', 'sigil.jpeg', 'astro.jpeg', 'focus.jpeg', 'solar.jpeg']
         var imgs = [];
         var videoPlaying = false, kaleidoing = false;
-        var vids = [];
+        var listener, volumeButton;
 
         var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
 
         var vids = {
             thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
             thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4'
+            // thornhill1: 'vid/thornhill1.webm',
+            // thornhill2: 'vid/thornhill2.webm',
         };
 
         window.onload = function() {
@@ -120,18 +119,61 @@
             }, "./glsl/", init );
         };
 
-        function playSound(name, volume) {
-            if (!soundOn) {
-                return;
+        function playSound(name, crossFade) {
+            if (audioLoader == undefined) {
+                audioLoader = new THREE.AudioLoader();
+                listener = new THREE.AudioListener();
+                camera.add(listener);
             }
-            return;
-            audioLoader.load('snd/' + name + '.ogg', function(buffer) {
-                soundObj.setBuffer(buffer);
-                soundObj.setLoop(false);
-                soundObj.setVolume(volume || 0.8);
-                soundObj.play();
-            });
 
+            let snd = new THREE.Audio(listener);
+
+            crossFade = crossFade || false;
+            if (crossFade) {
+                var volume = {x : 1};
+
+                TweenMax.to(volume, 3, {
+                    x: 0,
+                    onUpdate: function() {
+                        for (const [sndName, snd] of Object.entries(snds)) {
+                            if (sndName !== name)
+                                snd.setVolume(this.target.x);
+                        }
+                    },
+                    onComplete: function() {
+                        for (const [sndName, snd] of Object.entries(snds)) {
+                            if (sndName !== name)
+                                snd.pause();
+                        }
+                    },
+                });
+            }
+
+            audioLoader.load('snd/' + name + '.ogg', function(buffer) {
+                snd.setBuffer(buffer);
+                snd.setLoop(true);
+                snd.setVolume(0.8);
+                if (soundOn) {
+                    snd.play();
+                }
+                snds[name] = snd;
+            });
+        }
+
+        function onVolumeChange(event) {
+            if (!soundOn) {
+                soundOn = true;
+                for (const [name, snd] of Object.entries(snds)) {
+                    snd.play();
+                }
+                volumeButton.innerHTML = "TURN SOUND OFF";
+            } else {
+                for (const [name, snd] of Object.entries(snds)) {
+                    snd.pause();
+                }
+                volumeButton.innerHTML = "TURN SOUND ON";
+                soundOn = false;
+            }
         }
 
         //returns a Float32Array buffer of random 3D coordinates
@@ -188,13 +230,9 @@
             controls.enableDamping = true;
             // controls.maxDistance = 1000000;
             // controls.minDistance = 30;
+
             // create an AudioListener and add it to the camera
-            var listener = new THREE.AudioListener();
-            camera.add(listener);
-            // create a global audio source
-            soundObj = new THREE.Audio(listener);
-            // load a sound and set it as the Audio object's buffer
-            audioLoader = new THREE.AudioLoader();
+            volumeButton = document.getElementById('volume');
 
             var ww = 512;
             var width  = args.w || ww;
@@ -208,7 +246,6 @@
                 font: font,
                 // flipY: true
             });
-
             // the texture atlas containing our glyphs
             textMaterial = new THREE.RawShaderMaterial({
                 vertexShader: ShaderLoader.get("bmfont_vert"),
@@ -224,9 +261,7 @@
                 side: THREE.DoubleSide,
                 depthTest: false
             });
-
             textMesh = new THREE.Mesh(textGeometry, textMaterial);
-
             // scale it down so it fits in our 3D units
             textAnchor = new THREE.Object3D();
             // textAnchor.scale.multiplyScalar(-0.005);
@@ -326,7 +361,6 @@
               };
 
             FBO.init(width, height, renderer, simulationShader, renderShader);
-            // scene.add(FBO.particles);
 
             addDomListeners();
 
@@ -338,24 +372,17 @@
             // kaleidoscopePass.enabled = true;
             composer.addPass(kaleidoscopePass);
 
-            // vids.push(vid360.init(renderer, 'thornhill2.webm'));
-            // // currVid.mesh.position.set(300, 300, 0);
-            // currVid.start();
-
-            // vids.push(vid360.init(renderer, 'thornhill2.webm'));
-            // // vids[1].mesh.position.set(0, 50, 50);
-            // currVid.start();
-
-            // currVid = vid360.init(renderer, 'thornhill2.webm');
-            currVid = vid360.init(renderer, vids['thornhill2']);
+            currVid = vid360.init(renderer, vids['thornhill2'], Curves, playSound);
             currVid.start();
             videoPlaying = true;
+            mainSnd = 'thornhill2';
+            playSound(mainSnd);
 
             sky = new THREE.Group();
             sky.add(FBO.particles);
 
-            floatingVids.push(addSphereImage('thornhill1'));
-            floatingVids.push(addSphereImage('thornhill2'));
+            floatingVids.push(addFloatingVid('thornhill1'));
+            floatingVids.push(addFloatingVid('thornhill2'));
 
             for (let j=0; j<floatingVids.length; j++) {
                 sky.add(floatingVids[j]);
@@ -365,24 +392,21 @@
                     THREE.Math.randInt(-40, 40)
                 );
             }
-
             scene.add(sky);
 
-            // videoPlaying = false;
             onResize();
             update();
         }
 
         var floatingVids = [], currVid, sky;
 
-        function addSphereImage(name) {
+        function addFloatingVid(name) {
             // vid.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
             // vid.camera.target = new THREE.Vector3(0, 0, 0);
             // vid.scene = new THREE.Scene();
             // vid.raycaster = new THREE.Raycaster();
 
-            var geometry = new THREE.SphereBufferGeometry(5, 60, 40);
-            // invert the geometry on the x-axis so that all of the faces point inward
+            var geometry = new THREE.TorusKnotBufferGeometry(10, 3, 100, 16);
             // geometry.scale(-1, 1, 1);
             var material = new THREE.MeshBasicMaterial(
                 {map: new THREE.TextureLoader().load("vid/" + name + ".png")}
@@ -392,28 +416,12 @@
             return mesh;
         }
 
+        var snds = {}, mainSnd;
         function addDomListeners() {
             window.addEventListener("resize", onResize);
 
-            var volumeButton = document.getElementById('volume');
-            volumeButton.addEventListener('click', function(event) {
-                let soundOgg = document.getElementById('sound');
-                if (!soundOn) {
-                    soundOgg.play();
-                    volumeButton.innerHTML = "TURN SOUND OFF";
-                    soundOn = true;
-                }
-                else {
-                    soundOgg.pause();
-                    soundOgg.currentTime = 0;
-                    volumeButton.innerHTML = "TURN SOUND ON";
-                    soundOn = false;
-                }
-            });
+            volumeButton.addEventListener('click', onVolumeChange);
             window.addEventListener("resize", onResize);
-            // window.addEventListener('mousewheel', function(event){
-            //     event.preventDefault()
-            // }, { passive: false });
 
             var goFS = document.getElementById("fullscreen");
             goFS.addEventListener("click", function() {
@@ -846,13 +854,13 @@
             currentRotation = theGlimpse.particlesRotationY;
 
             renderer.setClearColor(glimpseBackColor);
-            playSound(theGlimpse.sound);
+            // playSound(theGlimpse.sound);
         }
 
         function stopGlimpse() {
             kaleidoing = false;
             glimpsing = false;
-            soundObj.pause();
+            // soundObj.pause();
             bringBackPresentGaze();
 
             if ('morph' in theGlimpse) {
@@ -862,6 +870,24 @@
             renderer.setClearColor(backColor);
         }
 
+        function startTrip(name) {
+            glimpseOn = true;
+            alphabetOn = true;
+            scheduleVideo(name, 8);
+
+            playSound('transition', true);
+
+            for (var j=0; j<floatingVids.length; j++) {
+                sky.remove(floatingVids[j]);
+            }
+
+            simulationShader.uniforms.amplitude.value += 10;
+            // timer = 200;
+            document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+            renderShader.uniforms.nColor.value = new THREE.Color(0, 0, 0);
+            backColor = new THREE.Color(1, 1, 1);
+            renderer.setClearColor(backColor);
+        }
         function startKaleido() {
             kaleidoing = true;
 
@@ -981,22 +1007,12 @@
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObjects(floatingVids);
             if (intersects.length) {
-                glimpseOn = true;
-                alphabetOn = true;
-                scheduleVideo(intersects[0].object.vidName, 3, false);
-                for (var j=0; j<floatingVids.length; j++)
-                    sky.remove(floatingVids[j]);
-                simulationShader.uniforms.amplitude.value = 1000000;
-                timer = 200;
-                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
-                renderShader.uniforms.nColor.value = new THREE.Color(0, 0, 0);
-                backColor = new THREE.Color(1, 1, 1);
-                renderer.setClearColor(backColor);
+                startTrip(intersects[0].object.vidName);
             }
         }
         var nextVideo, nextVideoCountdown = 0;
 
-        function scheduleVideo(name, time, intersect) {
+        function scheduleVideo(name, time) {
             nextVideo = name;
             nextVideoCountdown = time;
         }
@@ -1032,12 +1048,16 @@
         var hyperspaceOn = false, hyperspacing = false;
 
         function stopHyperspace() {
-            scene.remove(window.tunnel.tubeMesh);
             hyperspaceOn = false;
             hyperspacing = false;
+            scene.remove(window.tunnel.tubeMesh);
+            window.tunnel.stop();
+
             if (glimpsing)
                 stopGlimpse();
-            currVid = vid360.init(renderer, vids[window.tunnel.vidName]);
+
+            // Queue video
+            currVid = vid360.init(renderer, vids[window.tunnel.vidName], Curves);
             currVid.start();
             videoPlaying = true;
         }
@@ -1093,18 +1113,9 @@
                         hyperspacing = false;
                     }
                 }
-            }
-
-            if (hyperspaceOn && hyperspacing) {
-                window.tunnel.render();
-                return;
-            }
-
-            if (alphabeting) {
-                textMaterial.uniforms.timer.value += timerInc;
-                if (textMaterial.uniforms.timer.value > alphabetDuration) {
-                    textMaterial.uniforms.timer.value = 0;
-                    alphabeting = false;
+                if (hyperspacing) {
+                    window.tunnel.render();
+                    return;
                 }
             }
 
@@ -1120,12 +1131,7 @@
             }
 
             //update simulation
-            if (videoPlaying) {
-                if (glimpsing) 
-                    FBO.update();
-            } else {
-                FBO.update();
-            }
+            FBO.update();
 
             if (glimpseOn) {
                 // Pick a time interval for how often to start the glimpse effect
@@ -1143,9 +1149,15 @@
                 var alaphabetInterval = THREE.Math.randInt(2, 9);
                 if (!alphabeting && timerInt % alaphabetInterval == 0) {
                     startAlphabet();
-                    alphabetStart = timer;
                 } else if (alphabeting && timer % alaphabetInterval > 3) {
                     stopAlphabet();
+                }
+                if (alphabeting) {
+                    textMaterial.uniforms.timer.value += timerInc;
+                    if (textMaterial.uniforms.timer.value > alphabetDuration) {
+                        textMaterial.uniforms.timer.value = 0;
+                        alphabeting = false;
+                    }
                 }
             }
 

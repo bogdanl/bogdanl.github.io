@@ -1,5 +1,4 @@
 var vid360 = function(vid){
-
 	var isUserInteracting = false,
 		lon = 0, lat = 0,
 		phi = 0, theta = 0,
@@ -11,13 +10,16 @@ var vid360 = function(vid){
 
 	var controls, camera, scene, renderer;
 	var cameraCube, sceneCube;
-	var textureEquirec, textureCube;
+	var textureEquirec, equirectMaterial;
 	var cubeMesh, sphereMesh;
-	var sphereMaterial;
+	var sphereMaterial, geometry;
+	var geometries;
 
-	vid.init = function(renderer, name) {
+	vid.init = function(renderer, name, curves, snd) {
+		var Curves = curves;
 		vid.playing = false;
 	    vid.raycaster = new THREE.Raycaster();
+	    vid.playSound = snd;
 
 		// CAMERAS
 		camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 1100);
@@ -46,9 +48,9 @@ var vid360 = function(vid){
 		textureEquirec.encoding = THREE.sRGBEncoding;
 
 		// Materials
-		var equirectShader = THREE.ShaderLib[ 'equirect' ];
-		var equirectMaterial = new THREE.ShaderMaterial( {
-			uniforms: THREE.UniformsUtils.clone( equirectShader.uniforms ),
+		var equirectShader = THREE.ShaderLib['equirect'];
+		equirectMaterial = new THREE.ShaderMaterial( {
+			uniforms: THREE.UniformsUtils.clone(equirectShader.uniforms),
 			fragmentShader: equirectShader.fragmentShader,
 			vertexShader: equirectShader.vertexShader,
 			depthWrite: false,
@@ -57,55 +59,85 @@ var vid360 = function(vid){
 		equirectMaterial.uniforms['tEquirect'].value = textureEquirec;
 
 		// enable code injection for non-built-in material
-		Object.defineProperty( equirectMaterial, 'map', {
+		Object.defineProperty(equirectMaterial, 'map', {
 			get: function () {
 				return this.uniforms.tEquirect.value;
 			}
 		});
 
-		var cubeShader = THREE.ShaderLib[ 'cube' ];
-
-		var cubeMaterial = new THREE.ShaderMaterial( {
-			uniforms: THREE.UniformsUtils.clone( cubeShader.uniforms ),
-			fragmentShader: cubeShader.fragmentShader,
-			vertexShader: cubeShader.vertexShader,
-			depthWrite: false,
-			side: THREE.BackSide
-		} );
-
-		cubeMaterial.envMap = textureCube;
-
 		// Skybox
-		cubeMesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 100, 100, 100 ), equirectMaterial );
+		cubeMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(100, 100, 100), equirectMaterial);
 
 		sceneCube.add(cubeMesh);
 		cubeMesh.visible = true;
 
-		//
-		var geometry = new THREE.TorusKnotBufferGeometry( 10, 3, 100, 16 );
-		sphereMaterial = new THREE.MeshLambertMaterial( { envMap: textureCube } );
+		geometry = new THREE.TorusKnotBufferGeometry( 10, 3, 100, 16 );
+		sphereMaterial = new THREE.MeshLambertMaterial( { envMap: textureEquirec } );
+		sphereMaterial.needsUpdate = true;
+		
 		sphereMesh = new THREE.Mesh(geometry, sphereMaterial);
 		scene.add(sphereMesh);
 
-		//
 		vid.renderer = renderer;
 		vid.renderer.autoClear = false;
 		// vid.renderer.setPixelRatio( window.devicePixelRatio );
 		vid.renderer.setSize( window.innerWidth, window.innerHeight );
-		// document.body.appendChild( renderer.domElement );
 
 		vid.origEncoding = vid.renderer.outputEncoding;
 		vid.renderer.outputEncoding = THREE.sRGBEncoding;
+		vid.disposables = [scene, textureEquirec, equirectMaterial, sphereMaterial, geometry];
 
-		//
-		// controls = new THREE.OrbitControls( camera, renderer.domElement );
-		// controls.minDistance = 10;
-		// controls.maxDistance = 500;
-
-		sphereMaterial.envMap = textureEquirec;
-		sphereMaterial.needsUpdate = true;
+		geometries = [
+			new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
+			new THREE.DodecahedronBufferGeometry(15, 0),
+			new THREE.IcosahedronBufferGeometry(15, 0),
+			new THREE.TorusBufferGeometry(13, 3, 100, 16),
+			new THREE.OctahedronBufferGeometry(15, 0),
+			new THREE.SphereBufferGeometry(15, 40, 60),
+			new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.VivianiCurve(70), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.CinquefoilKnot(20), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.FigureEightPolynomialKnot(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4b(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.HelixCurve(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4a(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot5c(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.TrefoilKnot(), 1000, 3, 10, true),
+			new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+			// [THREE.ParametricBufferGeometry, [THREE.ParametricGeometries.klein, 25, 25]]
+		];
 
 		return vid;
+	}
+	var geomIndex = 0;
+
+	vid.onDocumentKeyDown = function(event) {
+		if (event.keyCode == 39) {
+			geomIndex = (geomIndex + 1) % geometries.length;
+		} else if (event.keyCode == 37) {
+			if (geomIndex > 0) {
+				geomIndex = (geomIndex - 1) % geometries.length;
+			} else {
+				geomIndex = geometries.length - 1;
+			}
+
+		}
+
+		if (event.keyCode == 39 || event.keyCode == 37) {
+			event.preventDefault();
+			sphereMesh.geometry.dispose();
+			sphereMesh.geometry = geometries[geomIndex];
+		}
+
+		if (event.keyCode == 40 || event.keyCode == 38) {
+			event.preventDefault();
+			if (textureEquirec.mapping == THREE.EquirectangularReflectionMapping) {
+				textureEquirec.mapping = THREE.EquirectangularRefractionMapping;
+			} else {
+				textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
+			}
+		}
+		sphereMaterial.needsUpdate = true;
 	}
 
 	vid.onDocumentMouseDown = function(event) {
@@ -161,6 +193,7 @@ var vid360 = function(vid){
 	}
 
 	vid.start = function() {
+		document.addEventListener('keydown', vid.onDocumentKeyDown, false);
 		document.addEventListener('mousedown', vid.onDocumentMouseDown, false);
 		document.addEventListener('mousemove', vid.onDocumentMouseMove, false);
 		document.addEventListener('mouseup', vid.onDocumentMouseUp, false);
@@ -172,6 +205,9 @@ var vid360 = function(vid){
 	}
 
 	vid.stop = function() {
+		vid.playSound('hc');
+
+		document.removeEventListener('keydown', vid.onDocumentKeyDown, false);
 		document.removeEventListener('mousedown', vid.onDocumentMouseDown, false);
 		document.removeEventListener('mousemove', vid.onDocumentMouseMove, false);
 		document.removeEventListener('mouseup', vid.onDocumentMouseUp, false);
@@ -182,7 +218,11 @@ var vid360 = function(vid){
 		vid.video.remove();
 		vid.renderer.outputEncoding = vid.origEncoding;
 		vid.renderer.autoClear = true;
-		// vid.scene.remove(vid.mesh);
+
+		for (var i = 0; i < vid.disposables.length; i++)
+			vid.disposables[i].dispose();
+		for (var i = 0; i < geometries.length; i++)
+			geometries[i].dispose();
 	}
 
 
@@ -212,9 +252,6 @@ var vid360 = function(vid){
 
 		vid.renderer.render(sceneCube, cameraCube);
 		vid.renderer.render(scene, camera);
-
-		// vid.renderer.render(vid.nScene, vid.nCamera);
-
 	}
     return vid;
 }({});

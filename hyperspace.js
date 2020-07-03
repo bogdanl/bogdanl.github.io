@@ -1,5 +1,6 @@
 var ww = window.innerWidth;
 var wh = window.innerHeight;
+var disposables = [];
 
 function Tunnel(texture, renderer, scene) {
   this.init(renderer, scene);
@@ -39,7 +40,6 @@ Tunnel.prototype.init = function(renderer, scene) {
 Tunnel.prototype.createMesh = function(texture) {
   var points = [];
   var i = 0;
-  var geometry = new THREE.Geometry();
 
   this.scene.remove(this.tubeMesh);
 
@@ -51,7 +51,7 @@ Tunnel.prototype.createMesh = function(texture) {
   this.curve = new THREE.CatmullRomCurve3(points);
   this.curve.type = "catmullrom";
 
-  geometry = new THREE.Geometry();
+  var geometry = new THREE.Geometry();
   geometry.vertices = this.curve.getPoints(70);
   this.splineMesh = new THREE.Line(geometry, new THREE.LineBasicMaterial());
 
@@ -71,6 +71,8 @@ Tunnel.prototype.createMesh = function(texture) {
   this.tubeMesh = new THREE.Mesh(this.tubeGeometry, this.tubeMaterial);
 
   this.scene.add(this.tubeMesh);
+  disposables = [geometry, this.splineMesh.material, this.tubeMaterial, this.tubeGeometry];
+
 };
 
 Tunnel.prototype.handleEvents = function() {
@@ -221,6 +223,12 @@ Tunnel.prototype.updateCurve = function() {
 
 Tunnel.prototype.progress = function() {
   return this.hyperSpace.progress();
+}
+
+Tunnel.prototype.stop = function() {
+  for (var i = 0; i < disposables.length; i++)
+    disposables[i].dispose();
+
 }
 
 Tunnel.prototype.render = function() {
