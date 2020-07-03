@@ -119,7 +119,7 @@
             }, "./glsl/", init );
         };
 
-        function playSound(name, crossFade) {
+        function playSound(name, fadeIn, fadeOut) {
             if (audioLoader == undefined) {
                 audioLoader = new THREE.AudioLoader();
                 listener = new THREE.AudioListener();
@@ -127,17 +127,40 @@
             }
 
             let snd = new THREE.Audio(listener);
+            snds[name] = snd;
 
-            crossFade = crossFade || false;
-            if (crossFade) {
-                var volume = {x : 1};
+            audioLoader.load('snd/' + name + '.ogg', function(buffer) {
+                snd.setBuffer(buffer);
+                snd.setLoop(true);
+                snd.setVolume(1);
+                if (soundOn) {
+                    snd.play();
+                }
+            });
 
-                TweenMax.to(volume, 3, {
+            fadeOut = fadeOut || 0;
+            fadeIn = fadeIn || 0;
+
+            if (fadeIn > 0) {
+                let volume = {x : 0};
+                TweenMax.to(volume, fadeIn, {
+                    x: 1,
+                    onUpdate: function() {
+                        snds[name].setVolume(this.target.x);
+                    }
+                });
+            }
+
+            if (fadeOut > 0) {
+                let volume = {x : 1};
+
+                TweenMax.to(volume, fadeOut, {
                     x: 0,
                     onUpdate: function() {
                         for (const [sndName, snd] of Object.entries(snds)) {
-                            if (sndName !== name)
+                            if (sndName !== name) {
                                 snd.setVolume(this.target.x);
+                            }
                         }
                     },
                     onComplete: function() {
@@ -149,15 +172,6 @@
                 });
             }
 
-            audioLoader.load('snd/' + name + '.ogg', function(buffer) {
-                snd.setBuffer(buffer);
-                snd.setLoop(true);
-                snd.setVolume(0.8);
-                if (soundOn) {
-                    snd.play();
-                }
-                snds[name] = snd;
-            });
         }
 
         function onVolumeChange(event) {
@@ -276,7 +290,7 @@
                     texture: {type: "t", value: defaultTexture},
                     timer: {type: "f", value: 0},
                     frequency: {type: "f", value: .00032},
-                    amplitude: {type: "f", value: 45},
+                    amplitude: {type: "f", value: 55},
                     maxDistance: {type: "f", value: 40},
                     morph: {type: 'f', value: 0.0},
                     textureDest: {type: "t", value: null},
@@ -875,7 +889,7 @@
             alphabetOn = true;
             scheduleVideo(name, 8);
 
-            playSound('transition', true);
+            playSound('transition', 0.5, 0.5);
 
             for (var j=0; j<floatingVids.length; j++) {
                 sky.remove(floatingVids[j]);
@@ -1057,7 +1071,7 @@
                 stopGlimpse();
 
             // Queue video
-            currVid = vid360.init(renderer, vids[window.tunnel.vidName], Curves);
+            currVid = vid360.init(renderer, vids[window.tunnel.vidName], Curves, playSound);
             currVid.start();
             videoPlaying = true;
         }
@@ -1078,6 +1092,7 @@
                     glimpseOn = false;
                     alphabetOn = false;
                     hyperspacing = true;
+                    playSound('voices', 0.5, 2);
                 }
             }
 

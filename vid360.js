@@ -205,7 +205,7 @@ var vid360 = function(vid){
 	}
 
 	vid.stop = function() {
-		vid.playSound('hc');
+		vid.playSound('hc', 1, 7);
 
 		document.removeEventListener('keydown', vid.onDocumentKeyDown, false);
 		document.removeEventListener('mousedown', vid.onDocumentMouseDown, false);
