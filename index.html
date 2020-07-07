@@ -33,7 +33,7 @@
         position: absolute;
         font-family: optima;
         right: 2px;
-        bottom: 10px;
+        bottom: 2px;
         width: 300px;
 /*        text-align: justify;
         text-align-last: justify;
@@ -126,13 +126,17 @@
             return arr[THREE.Math.randInt(0, arr.length - 1)];
         }
 
+        var skySnd = 0, transitionSnd = 0, videoSnd = 0;
         function playSound(name, fadeIn, fadeOut) {
             if (name === 'sky') {
-                name = rndItem(['hc', 'meditation', 'aleksi']);
+                name = ['meditation',  'aleksi', 'hc'][skySnd];
+                skySnd = (skySnd + 1) % 3;
             } else if (name === 'transition') {
-                name = rndItem(['coil', 'cio', 'elaine']);
+                name = ['coil', 'cio', 'elaine'][transitionSnd];
+                transitionSnd = (transitionSnd + 1) % 3;
             } else if (name === 'video') {
-                name = rndItem(['voices', 'ff', 'thornhill2', 'ff2']);
+                name = ['voices', 'thornhill2', 'ff2', 'ff'][videoSnd];
+                videoSnd = (videoSnd + 1) % 4;
             }
             if (audioLoader == undefined) {
                 audioLoader = new THREE.AudioLoader();
