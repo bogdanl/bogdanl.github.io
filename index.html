@@ -3,56 +3,58 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>mirrorsin.space</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <!-- <link href="css/main.css" rel="stylesheet"> -->
     <style>
-        head, body{
-    width:100%;
-    height:100%;
-    overflow: hidden;
-    top:0;
-    left:0;
-    margin:0;
-    padding:0;
-    cursor: url('css/chaos-magick.png'), auto;
-    font-family: optima;
-    color: white;
-    text-align: justify;
-}
-#title {
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-    cursor: url('css/chaos-magick.png'), auto;
-    width: 330px;
-    text-align: justify;
-    text-align-last: justify;
-    text-justify: inter-word;
-}
-#instructions {
-    position: absolute;
-    font-family: optima;
-    right: 10px;
-    bottom: 10px;
-    width: 280px;
-    text-align: justify;
-    text-align-last: justify;
-    text-justify: inter-word;
-    text-transform: uppercase;
-}
-#volume {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    font-size: 13px;
-    font-style: bold;
-    cursor: pointer;
-}
-#fullscreen {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    cursor: pointer;
-}
+    head, body{
+        width:100%;
+        height:100%;
+        overflow: hidden;
+        top:0;
+        left:0;
+        margin:0;
+        padding:0;
+        cursor: url('css/chaos-magick.png'), auto;
+        font-family: optima;
+        color: white;
+        text-align: justify;
+    }
+    #title {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        cursor: url('css/chaos-magick.png'), auto;
+        width: 330px;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: inter-word;
+    }
+    #instructions {
+        position: absolute;
+        font-family: optima;
+        right: 10px;
+        bottom: 10px;
+        width: 290px;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: inter-word;
+        text-transform: uppercase;
+    }
+    #volume {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        font-size: 13px;
+        font-style: bold;
+        cursor: pointer;
+    }
+    #fullscreen {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
 </style>
 </head>
 <body>
@@ -65,7 +67,9 @@
         & out of sight; forgetful of its smeared desires
     </div>
     <div id="instructions">
-        <strong>you can use the trackpad<br> to move around, zoom & click</strong>
+        <strong>arrows</strong> to change the mirrors<br>
+        <strong>space bar</strong> to toggle rotation<br>
+        <strong>drag, click, scroll</strong> to interact
     </div>
     <div id="volume">TURN SOUND ON</div>
 
@@ -85,6 +89,7 @@
         import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/EffectComposer.js';
         import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/RenderPass.js';
         import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/ShaderPass.js';
+        import {Reflector} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/objects/Reflector.js';
         import {Curves} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/curves/CurveExtras.js';
 
         var scene, camera, renderer, composer, controls, timer=0, timerInc=.01;
@@ -99,12 +104,28 @@
         var listener, volumeButton;
 
         var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
+        var cameraCube, sceneCube;
+
+        // var vids = {
+        //     // thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
+        //     // thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4'
+        //     thornhill1: 'vid/thornhill1.webm',
+        //     thornhill2: 'vid/thornhill2.webm',
+        //     barber: 'vid/barber.webm',
+        //     bus: 'vid/bus.webm',
+        //     petrol: 'vid/petrol.webm',
+        //     wasserturm1: 'vid/wasserturm1.webm',
+        //     wasserturm2: 'vid/wasserturm2.webm',
+        // };        
 
         var vids = {
             thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
             thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4'
-            // thornhill1: 'vid/thornhill1.webm',
-            // thornhill2: 'vid/thornhill2.webm',
+            barber: 'https://content.jwplatform.com/videos/jzY7TFVz-yhiBISfO.mp4',
+            bus: 'https://content.jwplatform.com/videos/RTJiWoIP-yhiBISfO.mp4',
+            petrol: 'https://content.jwplatform.com/videos/MlbrvHu9-yhiBISfO.mp4',
+            wasserturm1: 'https://content.jwplatform.com/videos/2XjjGkh9-yhiBISfO.mp4',
+            wasserturm2: 'https://content.jwplatform.com/videos/vAvPamCv-yhiBISfO.mp4',
         };
 
         window.onload = function() {
@@ -119,7 +140,18 @@
             }, "./glsl/", init );
         };
 
+        function rndItem(arr) {
+            return arr[THREE.Math.randInt(0, arr.length - 1)];
+        }
+
         function playSound(name, fadeIn, fadeOut) {
+            if (name === 'sky') {
+                name = rndItem(['hc', 'meditation', 'aleksi']);
+            } else if (name === 'transition') {
+                name = rndItem(['coil', 'cio', 'elaine']);
+            } else if (name === 'video') {
+                name = rndItem(['voices', 'ff', 'thornhill2', 'ff2']);
+            }
             if (audioLoader == undefined) {
                 audioLoader = new THREE.AudioLoader();
                 listener = new THREE.AudioListener();
@@ -130,9 +162,9 @@
             snds[name] = snd;
 
             audioLoader.load('snd/' + name + '.ogg', function(buffer) {
+                volumeButton.style.display = 'block';
                 snd.setBuffer(buffer);
                 snd.setLoop(true);
-                snd.setVolume(1);
                 if (soundOn) {
                     snd.play();
                 }
@@ -146,32 +178,44 @@
                 TweenMax.to(volume, fadeIn, {
                     x: 1,
                     onUpdate: function() {
-                        snds[name].setVolume(this.target.x);
+                        snd.setVolume(this.target.x);
                     }
                 });
+            } else {
+                snd.setVolume(1);
             }
 
             if (fadeOut > 0) {
                 let volume = {x : 1};
+                var fadeOutSnds = Object.assign({}, snds);
+                delete fadeOutSnds[name];
 
+                // if (snds[name] !== undefined) snds.splice(index, 1);
                 TweenMax.to(volume, fadeOut, {
                     x: 0,
                     onUpdate: function() {
-                        for (const [sndName, snd] of Object.entries(snds)) {
+                        for (const [sndName, snd] of Object.entries(fadeOutSnds)) {
                             if (sndName !== name) {
                                 snd.setVolume(this.target.x);
                             }
                         }
                     },
                     onComplete: function() {
-                        for (const [sndName, snd] of Object.entries(snds)) {
+                        for (const [sndName, snd] of Object.entries(fadeOutSnds)) {
                             if (sndName !== name)
                                 snd.pause();
                         }
                     },
                 });
+            } else if (fadeOut == 0) {
+                var fadeOutSnds = Object.assign({}, snds);
+                delete fadeOutSnds[name];
+                for (const [sndName, snd] of Object.entries(fadeOutSnds)) {
+                    if (sndName !== name)
+                        snd.pause();
+                }
             }
-
+            return name;
         }
 
         function onVolumeChange(event) {
@@ -233,6 +277,7 @@
             });
             renderer.setSize(w, h);
             renderer.setClearColor(defaultBackColor);
+            renderer.autoClear = false;
 
             document.body.appendChild(renderer.domElement);
 
@@ -242,11 +287,17 @@
             controls = new THREE.OrbitControls(camera);
             camera.position.z = 30;
             controls.enableDamping = true;
-            // controls.maxDistance = 1000000;
-            // controls.minDistance = 30;
+            controls.maxDistance = 30;
+            controls.minDistance = 30;
+
+            cameraCube = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000000);
+            sceneCube = new THREE.Scene();
+            var ambient = new THREE.AmbientLight(0xffffff);
+            sceneCube.add(ambient);
 
             // create an AudioListener and add it to the camera
             volumeButton = document.getElementById('volume');
+            volumeButton.style.display = 'none';
 
             var ww = 512;
             var width  = args.w || ww;
@@ -290,7 +341,7 @@
                     texture: {type: "t", value: defaultTexture},
                     timer: {type: "f", value: 0},
                     frequency: {type: "f", value: .00032},
-                    amplitude: {type: "f", value: 55},
+                    amplitude: {type: "f", value: 40},
                     maxDistance: {type: "f", value: 40},
                     morph: {type: 'f', value: 0.0},
                     textureDest: {type: "t", value: null},
@@ -386,47 +437,109 @@
             // kaleidoscopePass.enabled = true;
             composer.addPass(kaleidoscopePass);
 
-            currVid = vid360.init(renderer, vids['thornhill2'], Curves, playSound);
+            currVid = vid360.init(renderer, vids['barber'], Curves, playSound);
             currVid.start();
             videoPlaying = true;
-            mainSnd = 'thornhill2';
+            mainSnd = 'ff';
             playSound(mainSnd);
 
             sky = new THREE.Group();
             sky.add(FBO.particles);
 
-            floatingVids.push(addFloatingVid('thornhill1'));
             floatingVids.push(addFloatingVid('thornhill2'));
+            floatingVids.push(addFloatingVid('wasserturm1'));
 
-            for (let j=0; j<floatingVids.length; j++) {
-                sky.add(floatingVids[j]);
-                floatingVids[j].position.set(
-                    THREE.Math.randInt(-70, -30),
-                    THREE.Math.randInt(-30, 70),
-                    THREE.Math.randInt(-40, 40)
-                );
-            }
+            remainingVids = ['bus', 'petrol', 'wasserturm2', 'thornhill1'];
+
+            // floatingVids.push(addFloatingVid('thornhill1'));
+            // floatingVids.push(addFloatingVid('bus'));
+            // floatingVids.push(addFloatingVid('petrol'));
+            // floatingVids.push(addFloatingVid('barber'));
+
             scene.add(sky);
+
+            // whatDoYouSee();
 
             onResize();
             update();
         }
 
         var floatingVids = [], currVid, sky;
+        var lastVideo, remainingVids = [], vidCount = 0;
+
+        var geometries = [
+            new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
+            new THREE.DodecahedronBufferGeometry(15, 0),
+            new THREE.IcosahedronBufferGeometry(15, 0),
+            new THREE.OctahedronBufferGeometry(15, 0),
+            new THREE.TorusBufferGeometry(13, 3, 100, 16),
+            new THREE.SphereBufferGeometry(15, 40, 60),
+            new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+            new THREE.TubeBufferGeometry(new Curves.VivianiCurve(70), 1000, 3, 10, true),
+            new THREE.TubeBufferGeometry(new Curves.CinquefoilKnot(20), 1000, 3, 10, true),
+            new THREE.TubeBufferGeometry(new Curves.FigureEightPolynomialKnot(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4b(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.HelixCurve(), 100, 2, 5, true),
+            // new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4a(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot5c(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.TrefoilKnot(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+            // [THREE.ParametricBufferGeometry, [THREE.ParametricGeometries.klein, 25, 25]]
+        ], geomIndex = 0;
+
+        var rotateCamera = true;
+
+        function onDocumentKeyDown(event) {
+            if (event.keyCode == 39) {
+                event.preventDefault();
+                geomIndex = (geomIndex + 1) % geometries.length;
+            } else if (event.keyCode == 37) {
+                event.preventDefault();
+                if (geomIndex > 0) {
+                    geomIndex = (geomIndex - 1) % geometries.length;
+                } else {
+                    geomIndex = geometries.length - 1;
+                }
+            }
+
+            if (event.keyCode == 39 || event.keyCode == 37) {
+                event.preventDefault();
+                for (var j=0; j<floatingVids.length; j++) {
+                    floatingVids[j].geometry.dispose();
+                    floatingVids[j].geometry = geometries[geomIndex];
+                    // floatingVids[j].material.needsUpdate = true;
+                    if (geomIndex > 5) {
+                        floatingVids[j].scale.set(0.5, 0.5, 0.5);
+                    } else {
+                        floatingVids[j].scale.set(1, 1, 1);
+                    }
+                }
+            }
+
+            if (event.keyCode == 32) {
+                rotateCamera = !rotateCamera;
+            }
+        }
 
         function addFloatingVid(name) {
-            // vid.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-            // vid.camera.target = new THREE.Vector3(0, 0, 0);
-            // vid.scene = new THREE.Scene();
-            // vid.raycaster = new THREE.Raycaster();
-
             var geometry = new THREE.TorusKnotBufferGeometry(10, 3, 100, 16);
-            // geometry.scale(-1, 1, 1);
-            var material = new THREE.MeshBasicMaterial(
-                {map: new THREE.TextureLoader().load("vid/" + name + ".png")}
-            );
-            var mesh = new THREE.Mesh(geometry, material);
+            var mesh = new Reflector(geometry, {
+                clipBias: 0.003,
+                textureWidth: window.innerWidth * window.devicePixelRatio,
+                textureHeight: window.innerHeight * window.devicePixelRatio,
+                recursion: 1000,
+                color: new THREE.Color(0.9843, 0.6549, 0)
+                // color: new THREE.Color(1, 1, 0)
+            } );
+            mesh.getRenderTarget().texture.wrapS = THREE.MirroredRepeatWrapping;
+            mesh.getRenderTarget().texture.wrapT = THREE.MirroredRepeatWrapping;
+            mesh.material.needsUpdate = true;
+            mesh.material.side = THREE.DoubleSide;
+            // mesh.position.y = 0.5;
+            // mesh.rotateX( - Math.PI / 2 );
             mesh.vidName = name;
+
+            // mesh.vidName = name;
             return mesh;
         }
 
@@ -436,6 +549,7 @@
 
             volumeButton.addEventListener('click', onVolumeChange);
             window.addEventListener("resize", onResize);
+            window.addEventListener("keydown", onDocumentKeyDown);
 
             var goFS = document.getElementById("fullscreen");
             goFS.addEventListener("click", function() {
@@ -807,15 +921,18 @@
             }
         ];
 
-        function startAlphabet() {
+        function startAlphabet(str) {
             alphabeting = true;
             textMaterial.uniforms.timer.value = 0;
             // let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let rndStr = "";
-            for (let j = 0; j < 1; j++) {
-                rndStr += String.fromCharCode(65+Math.floor(Math.random() * 26));
+            if (typeof str == 'undefined') {
+                str = "";
+                for (let j = 0; j < 1; j++) {
+                    str += String.fromCharCode(65+Math.floor(Math.random() * 26));
+                }
             }
-            textGeometry.update(rndStr);
+
+            textGeometry.update(str);
             // textGeometry.update(String.fromCharCode(65+Math.floor(Math.random() * 26)));
             // textGeometry.update( Math.random().toString(36).substring(2, 25) + Math.random().toString(36).substring(2, 25));
 
@@ -835,6 +952,30 @@
             renderer.setClearColor(new THREE.Color(0, 0, 0));
             FBO.particles.visible = true;
             textAnchor.visible = false;
+        }
+
+        var whatDoYouSeeOn = false;
+        var seeingStr = ["WHAT", "DO", "YOU", "SEE?"];
+        var seeingCount = 0, seeingKaleido;
+
+        function whatDoYouSee() {
+            whatDoYouSeeOn = true;
+            alphabetDuration = 3;
+            // var str = ["WHAT", "DO", "YOU", "SEE?"];
+            // for (var j=0; j<str.length; j++) {
+            //     startAlphabet(str);
+            // }
+            for (let j=0; j<floatingVids.length; j++)
+                floatingVids[j].visible = false;
+
+            seeingKaleido = {
+                sides: 1.,
+                angle: 0.,
+                uvOffsetRange: [-0.7, -0.3],
+                diffuseOffsetRange: [0.4, 0.6],
+                // trigoX: 0,
+                // trigoY: 1
+            }
         }
 
         function startGlimpse() {
@@ -889,7 +1030,7 @@
             alphabetOn = true;
             scheduleVideo(name, 8);
 
-            playSound('transition', 0.5, 0.5);
+            sndNameToStop = playSound('transition', 0.3, 1);
 
             for (var j=0; j<floatingVids.length; j++) {
                 sky.remove(floatingVids[j]);
@@ -902,30 +1043,32 @@
             backColor = new THREE.Color(1, 1, 1);
             renderer.setClearColor(backColor);
         }
-        function startKaleido() {
+
+        function startKaleido(params) {
             kaleidoing = true;
+            params = params || theGlimpse.kaleido;
 
-            kaleidoscopePass.material.uniforms.sides.value = theGlimpse.kaleido.sides;
+            kaleidoscopePass.material.uniforms.sides.value = params.sides;
 
-            if (Array.isArray(theGlimpse.kaleido.angle))
-                kaleidoscopePass.material.uniforms.angle.value = THREE.Math.randFloat(theGlimpse.kaleido.angle[0], theGlimpse.kaleido.angle[1]);
+            if (Array.isArray(params.angle))
+                kaleidoscopePass.material.uniforms.angle.value = THREE.Math.randFloat(params.angle[0], params.angle[1]);
             else {
-                kaleidoscopePass.material.uniforms.angle.value = theGlimpse.kaleido.angle;
+                kaleidoscopePass.material.uniforms.angle.value = params.angle;
             }
 
-            if ('uvOffset' in theGlimpse.kaleido) {
-                kaleidoscopePass.material.uniforms.uvOffset.value = theGlimpse.kaleido.uvOffset;
-            } else if ('uvOffsetRange' in theGlimpse.kaleido) {
-                kaleidoscopePass.material.uniforms.uvOffset.value = THREE.Math.randFloat(theGlimpse.kaleido.uvOffsetRange[0], theGlimpse.kaleido.uvOffsetRange[1]);
+            if ('uvOffset' in params) {
+                kaleidoscopePass.material.uniforms.uvOffset.value = params.uvOffset;
+            } else if ('uvOffsetRange' in params) {
+                kaleidoscopePass.material.uniforms.uvOffset.value = THREE.Math.randFloat(params.uvOffsetRange[0], params.uvOffsetRange[1]);
             }
 
-            if ('diffuseOffset' in theGlimpse.kaleido) {
-                kaleidoscopePass.material.uniforms.diffuseOffset.value = theGlimpse.kaleido.diffuseOffset;
-            } else if ('diffuseOffsetRange' in theGlimpse.kaleido) {
-                kaleidoscopePass.material.uniforms.diffuseOffset.value = THREE.Math.randFloat(theGlimpse.kaleido.diffuseOffsetRange[0], theGlimpse.kaleido.diffuseOffsetRange[1]);
+            if ('diffuseOffset' in params) {
+                kaleidoscopePass.material.uniforms.diffuseOffset.value = params.diffuseOffset;
+            } else if ('diffuseOffsetRange' in params) {
+                kaleidoscopePass.material.uniforms.diffuseOffset.value = THREE.Math.randFloat(params.diffuseOffsetRange[0], params.diffuseOffsetRange[1]);
             }
-            kaleidoscopePass.material.uniforms.trigoX.value = theGlimpse.kaleido.trigoX !== undefined ? theGlimpse.kaleido.trigoX : THREE.Math.randInt(0, 3);
-            kaleidoscopePass.material.uniforms.trigoY.value = theGlimpse.kaleido.trigoY !== undefined ? theGlimpse.kaleido.trigoY : THREE.Math.randInt(0, 3);
+            kaleidoscopePass.material.uniforms.trigoX.value = params.trigoX !== undefined ? params.trigoX : THREE.Math.randInt(0, 3);
+            kaleidoscopePass.material.uniforms.trigoY.value = params.trigoY !== undefined ? params.trigoY : THREE.Math.randInt(0, 3);
 
             kaleidoscopePass.material.needsUpdate = true;
             // kaleidoscopePass.enabled = true;
@@ -981,49 +1124,6 @@
             // renderShader.uniforms.nColor.value = particleColor;
         }
 
-        document.addEventListener('mousemove', onDocumentMouseMove, false);
-
-        var mouse = new THREE.Vector2();
-        var raycaster = new THREE.Raycaster();
-
-        function onDocumentMouseMove(event) {
-            if (videoPlaying) {
-                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
-                return;
-            }
-
-            var mouse = new THREE.Vector2();
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            // debugger;
-            raycaster.setFromCamera(mouse, camera);
-            var intersects = raycaster.intersectObjects(floatingVids);
-            // debugger;
-            if (intersects.length) {
-                document.body.style.cursor = "pointer";
-            } else {
-                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
-            }
-        }
-
-        document.addEventListener('mousedown', onMouseDown, false);
-        var raycaster = new THREE.Raycaster();
-        function onMouseDown(event) {
-            if (videoPlaying) {
-                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
-                return;
-            }
-            event.preventDefault();
-
-            var mouse = new THREE.Vector2();
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            var intersects = raycaster.intersectObjects(floatingVids);
-            if (intersects.length) {
-                startTrip(intersects[0].object.vidName);
-            }
-        }
         var nextVideo, nextVideoCountdown = 0;
 
         function scheduleVideo(name, time) {
@@ -1033,13 +1133,13 @@
 
         function playVideo(name) {
             hyperspace(name, renderer, scene);
-            delayGlimpseStop(3);
+            delayGlimpseStop(4);
         }
 
-        var glimpseTimer = 0;
+        var glimpseTimer = 0, sndNameToStop;
         function delayGlimpseStop(time) {
             glimpseTimer = time;
-            // theGlimpse.length = 5;
+            playSound('video', 2, -1);
         }
 
         function hyperspace(name, renderer, scene) {
@@ -1049,7 +1149,7 @@
             loader.crossOrigin = "Anonymous";
             // theGlimpse.length *= 3;
             loader.load(
-                "vid/" + name + ".png",
+                "vid/" + name + ".jpeg",
                 function(texture) {
                     window.tunnel = new Tunnel(texture, renderer, scene);
                     window.tunnel.vidName = name;
@@ -1071,10 +1171,14 @@
                 stopGlimpse();
 
             // Queue video
+            snds[sndNameToStop].pause();
             currVid = vid360.init(renderer, vids[window.tunnel.vidName], Curves, playSound);
             currVid.start();
             videoPlaying = true;
         }
+
+        var seeingStr = ["WHAT", "DO", "YOU", "SEE?"];
+        var seeingCount = 0;
 
         function update() { 
             requestAnimationFrame(update);
@@ -1084,7 +1188,33 @@
 
             simulationShader.uniforms.timer.value = timer;
             renderShader.uniforms.timer.value = timer;
-            // simulationShader.uniforms.alphaMap.needsUpdate = true;
+
+            if (whatDoYouSeeOn) {
+                // if (timerInt % 4 == 0)
+                seeingCount = parseInt((timerInt % 8)/2);
+
+                var alaphabetInterval = THREE.Math.randInt(2, 4);
+                if (!alphabeting && timerInt % alaphabetInterval == 0) {
+                    startKaleido(seeingKaleido);
+                    startAlphabet(seeingStr[seeingCount]);
+                    renderer.setClearColor(new THREE.Color(0, 0, 0));
+                    textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
+                } else if (alphabeting && timer % alaphabetInterval > 1) {
+                    stopAlphabet();
+                    kaleidoing = false;
+                    renderer.setClearColor(new THREE.Color(0, 0, 0));
+                }
+                textMaterial.uniforms.timer.value += timerInc;
+                if (textMaterial.uniforms.timer.value > alphabetDuration) {
+                    textMaterial.uniforms.timer.value = 0;
+                }
+
+                if (timerInt % 3 == 0)
+                    composer.render();
+                else 
+                    renderer.render(scene, camera);
+                return;
+            }
 
             if (glimpseTimer > 0) {
                 glimpseTimer -= timerInc;
@@ -1092,7 +1222,6 @@
                     glimpseOn = false;
                     alphabetOn = false;
                     hyperspacing = true;
-                    playSound('voices', 0.5, 2);
                 }
             }
 
@@ -1100,25 +1229,54 @@
                 currVid.update(-0.1);
                 if (!currVid.playing) {
                     videoPlaying = false;
+                    playSound('sky', 0.5, 3);
+                    lastVideo = currVid.name;
+
                     if (glimpsing)
                         stopGlimpse();
+                    if (alphabeting)
+                        stopAlphabet();
+
                     // simulationShader.uniforms.amplitude.value = 100;
                     // timer = 200;
                     document.body.style.cursor = "url('css/chaos-magick.png'), auto";
                     renderShader.uniforms.nColor.value = new THREE.Color(1, 1, 1);
                     backColor = new THREE.Color(0, 0, 0);
                     renderer.setClearColor(backColor);
-                    for (var j=0; j<floatingVids.length; j++)
+
+                    for (let j=0; j<floatingVids.length; j++) {
+                        if ("vid/" + floatingVids[j].vidName + '.webm' == lastVideo) {
+                            floatingVids.splice(j, 1);
+                        } 
+                    }
+
+                    if (vidCount == 4) {
+                        vidCount = 0;
+                        remainingVids = ['barber', 'thornhill2', 'wasserturm1', 'bus', 'petrol', 'wasserturm2', 'thornhill1'];
+                    }
+                    if (floatingVids.length == 1)
+                        floatingVids.push(addFloatingVid(remainingVids[vidCount]));
+
+                    for (let j=0; j<floatingVids.length; j++) {
+                        floatingVids[j].position.set(
+                            THREE.Math.randInt(-90, 90),
+                            THREE.Math.randInt(-90, 90),
+                            THREE.Math.randInt(-70, 70)
+                        );
                         sky.add(floatingVids[j]);
+                    }
+                    vidCount += 1;
                 }
                 if (!glimpseOn)
                     return;
             }
 
             if (hyperspaceOn) {
-                if (typeof window.tunnel !== undefined && window.tunnel.progress() > 0.99) {
-                    stopHyperspace();
-                    return;
+                if (typeof window.tunnel !== undefined) {
+                    if (window.tunnel.progress() > 0.99) {
+                        stopHyperspace();
+                        return;
+                    }
                 }
                 if (glimpseOn) {
                     var hyperspaceInterval = THREE.Math.randInt(2, 9);
@@ -1140,9 +1298,7 @@
                     if (!videoPlaying) {
                         playVideo(nextVideo);
                     }
-                    // glimpseOn = false;
                 }
-
             }
 
             //update simulation
@@ -1174,17 +1330,21 @@
                         alphabeting = false;
                     }
                 }
+
             }
 
             // Constant counter-clockwise rotation, dervish style
             // FBO.particles.rotation.y -= currentRotation;
-            for (let j=0; j<floatingVids.length; j++) {
-                floatingVids[j].rotation.y -= currentRotation;
-            }
 
             // camera.position.x -= 10 * Math.PI / 180;
-            sky.rotation.y -= currentRotation;
+            if (rotateCamera)
+                sky.rotation.y -= currentRotation;
+
             controls.update();
+
+            for (let j=0; j<floatingVids.length; j++) {
+                floatingVids[j].lookAt(camera.position);
+            }
 
             // If we are in glimpse mode
             // Also check if the kaleido effect is on and call the effect composer
@@ -1194,7 +1354,7 @@
                 }
             } else {
                 // When we reach min/max sphere amplitude, reverse
-                if (simulationShader.uniforms.amplitude.value < 50 || simulationShader.uniforms.amplitude.value > 150) {
+                if (simulationShader.uniforms.amplitude.value < 50 || simulationShader.uniforms.amplitude.value > 175) {
                     amplDec = -amplDec;
                     amplInc = -amplInc;
                 }
@@ -1205,6 +1365,7 @@
             } else {
                 renderer.render(scene, camera);
             }
+            // renderer.render(sceneCube, cameraCube);
             renderer.autoClear = false;
 
             // Increase or decrease the amplitutde cyclically every time unit
@@ -1252,6 +1413,47 @@
             let texture = new THREE.DataTexture(data, img.width, img.height, THREE.RGBFormat, THREE.FloatType);
             texture.needsUpdate = true;
             return texture;
+        }
+
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+        var mouse = new THREE.Vector2();
+        var raycaster = new THREE.Raycaster();
+
+        function onDocumentMouseMove(event) {
+            if (videoPlaying) {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+                return;
+            }
+
+            var mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(floatingVids);
+            if (intersects.length) {
+                document.body.style.cursor = "pointer";
+            } else {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+            }
+        }
+
+        document.addEventListener('mousedown', onMouseDown, false);
+        function onMouseDown(event) {
+            if (videoPlaying) {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+                return;
+            }
+            event.preventDefault();
+
+            var mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(floatingVids);
+            if (intersects.length) {
+                startTrip(intersects[0].object.vidName);
+            }
         }
 
         async function loadImages(imageUrlArray) {

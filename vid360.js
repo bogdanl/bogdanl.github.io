@@ -31,10 +31,11 @@ var vid360 = function(vid){
 		sceneCube = new THREE.Scene();
 
 		// Lights
-		var ambient = new THREE.AmbientLight( 0xffffff );
-		scene.add( ambient );
+		var ambient = new THREE.AmbientLight(0xffffff);
+		scene.add(ambient);
 
 		// Textures
+		vid.name = name;
 		vid.video = document.createElement('video');
 		vid.video.crossOrigin = "*";
 		vid.video.loop = true;
@@ -91,25 +92,25 @@ var vid360 = function(vid){
 			new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
 			new THREE.DodecahedronBufferGeometry(15, 0),
 			new THREE.IcosahedronBufferGeometry(15, 0),
-			new THREE.TorusBufferGeometry(13, 3, 100, 16),
 			new THREE.OctahedronBufferGeometry(15, 0),
+			new THREE.TorusBufferGeometry(13, 3, 1000, 16),
 			new THREE.SphereBufferGeometry(15, 40, 60),
 			new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
 			new THREE.TubeBufferGeometry(new Curves.VivianiCurve(70), 1000, 3, 10, true),
 			new THREE.TubeBufferGeometry(new Curves.CinquefoilKnot(20), 1000, 3, 10, true),
 			new THREE.TubeBufferGeometry(new Curves.FigureEightPolynomialKnot(), 1000, 3, 10, true),
-			new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4b(), 1000, 3, 10, true),
-			new THREE.TubeBufferGeometry(new Curves.HelixCurve(), 1000, 3, 10, true),
-			new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4a(), 1000, 3, 10, true),
-			new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot5c(), 1000, 3, 10, true),
-			new THREE.TubeBufferGeometry(new Curves.TrefoilKnot(), 1000, 3, 10, true),
-			new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+			// new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4b(), 1000, 3, 10, true),
+			// new THREE.TubeBufferGeometry(new Curves.HelixCurve(), 1000, 3, 10, true),
+			// new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4a(), 1000, 3, 10, true),
+			// new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot5c(), 1000, 3, 10, true),
+			// new THREE.TubeBufferGeometry(new Curves.TrefoilKnot(), 1000, 3, 10, true),
+			// new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
 			// [THREE.ParametricBufferGeometry, [THREE.ParametricGeometries.klein, 25, 25]]
 		];
 
 		return vid;
 	}
-	var geomIndex = 0;
+	var geomIndex = 0, rotateCamera = true;
 
 	vid.onDocumentKeyDown = function(event) {
 		if (event.keyCode == 39) {
@@ -120,13 +121,17 @@ var vid360 = function(vid){
 			} else {
 				geomIndex = geometries.length - 1;
 			}
-
 		}
 
 		if (event.keyCode == 39 || event.keyCode == 37) {
 			event.preventDefault();
 			sphereMesh.geometry.dispose();
 			sphereMesh.geometry = geometries[geomIndex];
+            if (geomIndex > 5) {
+                sphereMesh.scale.set(0.5, 0.5, 0.5);
+            } else {
+                sphereMesh.scale.set(1, 1, 1);
+            }
 		}
 
 		if (event.keyCode == 40 || event.keyCode == 38) {
@@ -137,6 +142,10 @@ var vid360 = function(vid){
 				textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
 			}
 		}
+
+		if (event.keyCode == 32)
+			rotateCamera = !rotateCamera;
+
 		sphereMaterial.needsUpdate = true;
 	}
 
@@ -205,8 +214,6 @@ var vid360 = function(vid){
 	}
 
 	vid.stop = function() {
-		vid.playSound('hc', 1, 7);
-
 		document.removeEventListener('keydown', vid.onDocumentKeyDown, false);
 		document.removeEventListener('mousedown', vid.onDocumentMouseDown, false);
 		document.removeEventListener('mousemove', vid.onDocumentMouseMove, false);
@@ -237,12 +244,15 @@ var vid360 = function(vid){
 	}
 
 	vid.update = function(rotateSpeed) {
-		lon += rotateSpeed;
+		if (rotateCamera)
+			lon += rotateSpeed;
+
 		lat = Math.max(-85, Math.min(85, lat));
 		phi = THREE.MathUtils.degToRad(90 - lat);
 		theta = THREE.MathUtils.degToRad(lon);
 
 		sphereMesh.rotation.y += Math.PI / 180 * 0.3;
+
 		camera.position.x = distance * Math.sin(phi) * Math.cos(theta);
 		camera.position.y = distance * Math.cos(phi);
 		camera.position.z = distance * Math.sin(phi) * Math.sin(theta);
