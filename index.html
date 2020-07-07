@@ -1232,8 +1232,10 @@
                         vidCount = 0;
                         remainingVids = ['barber', 'thornhill2', 'wasserturm1', 'bus', 'petrol', 'wasserturm2', 'thornhill1'];
                     }
-                    if (floatingVids.length == 1)
+                    if (floatingVids.length == 1) {
                         floatingVids.push(addFloatingVid(remainingVids[vidCount]));
+                        vidCount += 1;
+                    }
 
                     for (let j=0; j<floatingVids.length; j++) {
                         floatingVids[j].position.set(
@@ -1243,7 +1245,6 @@
                         );
                         sky.add(floatingVids[j]);
                     }
-                    vidCount += 1;
                 }
                 if (!glimpseOn)
                     return;
