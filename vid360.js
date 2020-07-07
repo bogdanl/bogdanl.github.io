@@ -15,6 +15,26 @@ var vid360 = function(vid){
 	var sphereMaterial, geometry;
 	var geometries;
 
+    // var vids = {
+    //     thornhill1: 'vid/thornhill1.webm',
+    //     thornhill2: 'vid/thornhill2.webm',
+    //     barber: 'vid/barber.webm',
+    //     bus: 'vid/bus.webm',
+    //     petrol: 'vid/petrol.webm',
+    //     wasserturm1: 'vid/wasserturm1.webm',
+    //     wasserturm2: 'vid/wasserturm2.webm',
+    // };        
+
+    var vids = {
+        thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
+        thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4',
+        barber: 'https://content.jwplatform.com/videos/jzY7TFVz-yhiBISfO.mp4',
+        bus: 'https://content.jwplatform.com/videos/RTJiWoIP-yhiBISfO.mp4',
+        petrol: 'https://content.jwplatform.com/videos/MlbrvHu9-yhiBISfO.mp4',
+        wasserturm1: 'https://content.jwplatform.com/videos/2XjjGkh9-yhiBISfO.mp4',
+        wasserturm2: 'https://content.jwplatform.com/videos/vAvPamCv-yhiBISfO.mp4',
+    };
+
 	vid.init = function(renderer, name, curves, snd) {
 		var Curves = curves;
 		vid.playing = false;
@@ -41,7 +61,7 @@ var vid360 = function(vid){
 		vid.video.loop = true;
 		vid.video.playsinline = true;
 		vid.video.muted = true;
-		vid.video.src = name;
+		vid.video.src = vids[name];
 		vid.video.play();
 
 		textureEquirec = new THREE.VideoTexture(vid.video);

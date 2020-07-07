@@ -106,28 +106,6 @@
         var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
         var cameraCube, sceneCube;
 
-        // var vids = {
-        //     // thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
-        //     // thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4'
-        //     thornhill1: 'vid/thornhill1.webm',
-        //     thornhill2: 'vid/thornhill2.webm',
-        //     barber: 'vid/barber.webm',
-        //     bus: 'vid/bus.webm',
-        //     petrol: 'vid/petrol.webm',
-        //     wasserturm1: 'vid/wasserturm1.webm',
-        //     wasserturm2: 'vid/wasserturm2.webm',
-        // };        
-
-        var vids = {
-            thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
-            thornhill2: 'https://content.jwplatform.com/videos/pefTTpeR-yhiBISfO.mp4',
-            barber: 'https://content.jwplatform.com/videos/jzY7TFVz-yhiBISfO.mp4',
-            bus: 'https://content.jwplatform.com/videos/RTJiWoIP-yhiBISfO.mp4',
-            petrol: 'https://content.jwplatform.com/videos/MlbrvHu9-yhiBISfO.mp4',
-            wasserturm1: 'https://content.jwplatform.com/videos/2XjjGkh9-yhiBISfO.mp4',
-            wasserturm2: 'https://content.jwplatform.com/videos/vAvPamCv-yhiBISfO.mp4',
-        };
-
         window.onload = function() {
             var sl = new ShaderLoader();
             sl.loadShaders({
@@ -437,7 +415,7 @@
             // kaleidoscopePass.enabled = true;
             composer.addPass(kaleidoscopePass);
 
-            currVid = vid360.init(renderer, vids['barber'], Curves, playSound);
+            currVid = vid360.init(renderer, 'barber', Curves, playSound);
             currVid.start();
             videoPlaying = true;
             mainSnd = 'ff';
@@ -1172,7 +1150,7 @@
 
             // Queue video
             snds[sndNameToStop].pause();
-            currVid = vid360.init(renderer, vids[window.tunnel.vidName], Curves, playSound);
+            currVid = vid360.init(renderer, window.tunnel.vidName, Curves, playSound);
             currVid.start();
             videoPlaying = true;
         }
@@ -1245,7 +1223,7 @@
                     renderer.setClearColor(backColor);
 
                     for (let j=0; j<floatingVids.length; j++) {
-                        if ("vid/" + floatingVids[j].vidName + '.webm' == lastVideo) {
+                        if (floatingVids[j].vidName == lastVideo) {
                             floatingVids.splice(j, 1);
                         } 
                     }
