@@ -135,7 +135,7 @@
                 name = ['coil', 'cio', 'elaine'][transitionSnd];
                 transitionSnd = (transitionSnd + 1) % 3;
             } else if (name === 'video') {
-                name = ['voices', 'thornhill2', 'ff2', 'ff'][videoSnd];
+                name = ['ff', 'thornhill2', 'ff2', 'voices'][videoSnd];
                 videoSnd = (videoSnd + 1) % 4;
             }
             if (audioLoader == undefined) {
@@ -423,24 +423,7 @@
             // kaleidoscopePass.enabled = true;
             composer.addPass(kaleidoscopePass);
 
-            currVid = vid360.init(renderer, 'barber', Curves, playSound);
-            currVid.start();
-            videoPlaying = true;
-            mainSnd = 'ff';
-            playSound(mainSnd);
-
-            sky = new THREE.Group();
-            sky.add(FBO.particles);
-
-            floatingVids.push(addFloatingVid('thornhill2'));
-            floatingVids.push(addFloatingVid('wasserturm1'));
-
-            remainingVids = ['bus', 'petrol', 'wasserturm2', 'thornhill1'];
-
-            // floatingVids.push(addFloatingVid('thornhill1'));
-            // floatingVids.push(addFloatingVid('bus'));
-            // floatingVids.push(addFloatingVid('petrol'));
-            // floatingVids.push(addFloatingVid('barber'));
+            initVids();
 
             scene.add(sky);
 
@@ -450,8 +433,24 @@
             update();
         }
 
+        function initVids() {
+            currVid = vid360.init(renderer, 'thornhill2', Curves, playSound);
+            currVid.start();
+            videoPlaying = true;
+            mainSnd = 'voices';
+            playSound(mainSnd);
+
+            sky = new THREE.Group();
+            sky.add(FBO.particles);
+
+            floatingVids.push(addFloatingVid('barber'));
+            floatingVids.push(addFloatingVid('barber'));
+
+            allVids = ['thornhill2', 'barber', 'bus', 'wasserturm1', 'petrol', 'wasserturm2', 'thornhill1'];
+        }
+
         var floatingVids = [], currVid, sky;
-        var lastVideo, remainingVids = [], vidCount = 0;
+        var lastVideo, allVids = [], vidCount = 1;
 
         var geometries = [
             new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
@@ -1230,20 +1229,26 @@
                     backColor = new THREE.Color(0, 0, 0);
                     renderer.setClearColor(backColor);
 
-                    for (let j=0; j<floatingVids.length; j++) {
-                        if (floatingVids[j].vidName == lastVideo) {
-                            floatingVids.splice(j, 1);
-                        } 
+                    // for (let j=0; j<floatingVids.length; j++) {
+                    //     if (floatingVids[j].vidName == lastVideo) {
+                    //         floatingVids.splice(j, 1);
+                    //     } 
+                    // }
+
+                    if (vidCount == allVids.length) {
+                        vidCount = 0;
+                        allVids = ['thornhill2', 'barber', 'bus', 'wasserturm1', 'petrol', 'wasserturm2', 'thornhill1'];
                     }
 
-                    if (vidCount == 4) {
-                        vidCount = 0;
-                        remainingVids = ['barber', 'thornhill2', 'wasserturm1', 'bus', 'petrol', 'wasserturm2', 'thornhill1'];
-                    }
-                    if (floatingVids.length == 1) {
-                        floatingVids.push(addFloatingVid(remainingVids[vidCount]));
-                        vidCount += 1;
-                    }
+                    floatingVids = [];
+                    floatingVids.push(addFloatingVid(allVids[vidCount]));
+                    floatingVids.push(addFloatingVid(allVids[vidCount]));
+                    vidCount += 1;
+
+                    // if (floatingVids.length == 1) {
+                    //     floatingVids.push(addFloatingVid(allVids[vidCount]));
+                    //     vidCount += 1;
+                    // }
 
                     for (let j=0; j<floatingVids.length; j++) {
                         floatingVids[j].position.set(
