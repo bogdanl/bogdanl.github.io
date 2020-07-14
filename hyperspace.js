@@ -129,20 +129,20 @@ Tunnel.prototype.initAnimation = function() {
     this.textureParams,
     12,
     {
-      offsetX: 20,
-      ease: Power2.easeInOut
+      offsetX: 100,
+      // ease: Power2.easeInOut
     },
-    0
+    // 0
   );
-  this.hyperSpace.to(
-    this.textureParams,
-    6,
-    {
-      repeatX: 10,
-      ease: Power2.easeInOut
-    },
-    "-=5"
-  );
+  // this.hyperSpace.to(
+  //   this.textureParams,
+  //   6,
+  //   {
+  //     repeatX: 10,
+  //     ease: Power2.easeInOut
+  //   },
+  //   "-=5"
+  // );
   var shake = new TimelineMax({ repeat: -1, repeatDelay: 5 });
   shake.to(
     this.cameraShake,
@@ -174,7 +174,7 @@ Tunnel.prototype.initAnimation = function() {
 };
 Tunnel.prototype.updateMaterialOffset = function() {
   this.tubeMaterial.map.offset.x = this.textureParams.offsetX;
-  this.tubeMaterial.map.offset.y += 0.0018;
+  this.tubeMaterial.map.offset.y += 0.0008;
   this.tubeMaterial.map.repeat.set(
     this.textureParams.repeatX,
     this.textureParams.repeatY
