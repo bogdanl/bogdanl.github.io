@@ -19,28 +19,6 @@
         color: white;
         text-align: justify;
     }
-    #title {
-        position: absolute;
-        left: 10px;
-        bottom: 10px;
-        cursor: url('css/chaos-magick.png'), auto;
-        width: 330px;
-        text-align: justify;
-        text-align-last: justify;
-        text-justify: inter-word;
-    }
-    #instructions {
-        position: absolute;
-        font-family: optima;
-        right: 2px;
-        bottom: 2px;
-        width: 300px;
-/*        text-align: justify;
-        text-align-last: justify;
-        text-justify: inter-word;
-        text-transform: uppercase;*/
-        font-size: 15px;
-    }
     #volume {
         position: absolute;
         top: 3px;
@@ -56,45 +34,295 @@
         text-transform: uppercase;
         cursor: pointer;
     }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .landing-page {
+      /*background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),*/
+        /*url("./img/landing-page.jpeg");*/
+    background-color: black;
+      /*height: 100vh;*/
+      background-position: center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /*opacity: 10.9;*/
+    }
+    .landing-h1 {
+      font-size: 2.3rem;
+    }
+
+    .landing-h1,
+    .landing-p {
+      color: white;
+      padding-left: 20px;
+      padding-right: 20px;
+      text-align: center;
+    }
+
+    .landing-p {
+      margin-top: 10px;
+      font-size: 1.3rem;
+    }
+    #instructions {
+        position: absolute;
+        font-family: optima;
+        right: 2px;
+        bottom: 2px;
+        width: 440px;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: inter-word;
+        /*text-transform: uppercase;*/
+        font-size: 22px;
+    }
+    #title {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        cursor: url('css/chaos-magick.png'), auto;
+        width: 400px;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: inter-word;
+        font-size: 19px;
+    }
+
+.buttons {
+    overflow: hidden;
+}
+
+.buttons > div {
+    width: calc(50% - 40px);
+    padding: 20px;
+    float: left;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+}
+.buttons .dark {
+    background: #000;
+    left: 50%;
+}
+.buttons a {
+    float: left; 
+    margin-right: 20px;
+  margin-bottom: 20px;
+}
+a#link {position: absolute; left: 20px; bottom: 10px; text-decoration: none; color: #555; font-weight: bold;}
+/*------------------------------------------------------*/
+/* BUTTONS */
+/*------------------------------------------------------*/
+.btn,
+input[type="submit"]{
+    cursor: pointer;
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 12px 18px;
+    font-size: 12px;
+    line-height: 19px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+
+.btn-mid {
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 14px 21px;
+    font-size: 13px;
+    line-height: 25px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+
+.btn-big {
+    border-radius: 0px;
+    top: 350px;
+    text-decoration: none;
+    padding: 18px 24px;
+    font-size: 14px;
+    line-height: 40px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+.btn:hover,
+input[type="submit"]:hover{
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+.btn-white{
+    position: absolute;
+    border:solid 2px #fff;
+    background: transparent;
+    color: #fff !important;
+}
+.btn-white:hover{
+    border:solid 2px #fff;
+    background: #fff;
+    color: #1f1f1f !important;
+}
+
+.btn-dark,
+input[type="submit"]{
+    border:solid 2px #1f1f1f;
+    background: transparent;
+    color: #1f1f1f;
+}
+.btn-dark:hover,
+input[type="submit"]:hover,
+.btn-dark.active{
+    border:solid 2px #1f1f1f;
+    background: #1f1f1f;
+    color: #fff;
+}
+
+.btn-color{
+    background: transparent;
+}
+.btn-color:hover{
+    color: #fff;
+}
+
+#container {
+    display: none;
+    background-color: black;
+}
+
 </style>
 </head>
 <body>
-    <div id="fullscreen">fullscreen</div>
-    <div id="title">
-        <strong>mirrors in space ☷ coming soon</strong> to be outlived<br>
-        by the stairs free falling into the running water<br>
-        the stars rolling away from each other<br>
-        outshone by silhouettes on fortuitous placards<br>
-        & out of sight; forgetful of its smeared desires
-    </div>
-    <div id="instructions">
-        <strong>click</strong> on the mirrors to change environment<br>
-        <strong>click and drag</strong> to look around<br>
-        <strong>left/right arrows</strong> to change the mirror shape<br>
-        <strong>up/down arrows</strong> to toggle reflection/refraction<br>
-        <strong>space bar</strong> to toggle automatic rotation<br>
-        <strong>scroll</strong> to zoom on the mirror
-    </div>
-    <div id="volume">TURN SOUND ON</div>
+        <script id="vs" type="x-shader/x-vertex">
+
+            uniform sampler2D map;
+
+            uniform float width;
+            uniform float height;
+            uniform float nearClipping, farClipping;
+
+            uniform float pointSize;
+            uniform float zOffset;
+
+            varying vec2 vUv;
+
+            const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
+            const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
+
+            void main() {
+
+                vUv = vec2( position.x / width, position.y / height );
+
+                vec4 color = texture2D( map, vUv );
+                float depth = ( color.r + color.g + color.b ) / 3.0;
+
+                // Projection code by @kcmic
+
+                float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
+
+                vec4 pos = vec4(
+                    ( position.x / width - 0.5 ) * z * XtoZ,
+                    ( position.y / height - 0.5 ) * z * YtoZ,
+                    - z + zOffset,
+                    1.0);
+
+                gl_PointSize = pointSize;
+                gl_Position = projectionMatrix * modelViewMatrix * pos;
+
+            }
+
+        </script>
+
+        <script id="fs" type="x-shader/x-fragment">
+
+            uniform sampler2D map;
+
+            varying vec2 vUv;
+
+            void main() {
+
+                vec4 color = texture2D( map, vUv );
+                if (color.r > 0.65 && color.g > 0.65 && color.b > 0.65)
+                    discard;
+                gl_FragColor = vec4( color.r, color.g, color.b, 0.2 );
+
+            }
+
+        </script>
+    
+    <script type="x-shader/x-vertex" id="vertexShader">  
+
+      void main()   {
+        gl_Position = vec4( position, 1.0 );
+      }
+    </script>
 
     <div id="container"></div>
+
+    <div id="fullscreen">fullscreen</div>
+    <div id="volume" style="display:none">TURN SOUND ON</div>
+
+    <div class="landing-page">
+        <a class="btn btn-white btn-big" id="enter"><p style="text-align: center">mirrors in space</p></a>
+        <div id="instructions">
+            <p class="landing-p">
+                <strong>click</strong> on the mirrors to change environment<br>
+                <strong>click and drag</strong> to look around<br>
+                <strong>left/right arrows</strong> to change the mirror shape<br>
+                <strong>up/down arrows</strong> to toggle reflection<br>
+                <strong>space bar</strong> to toggle automatic rotation<br>
+                <strong>scroll</strong> to zoom on the mirror
+            </p>
+        </div>
+        <div id="title">
+            we are but mirrors in space, soon to be outlived<br>
+            by the stairs free falling into the running water<br>
+            the stars rolling away from each other<br>
+            outshone by silhouettes on fortuitous placards<br>
+            & out of sight; forgetful of our smeared desires
+        </div>
+    </div>
 
     <script src="vendor/three.min.js"></script>
     <script src="vendor/OrbitControls.js"></script>
     <script src="ShaderLoader.js"></script>
     <script src="fbo.js"></script>
-    <script src="vid360.js"></script>
+    <script type="module" src="vid360.js"></script>
     <script src="vendor/three-bmfont.js"></script>
     <script src="vendor/load-bmfont.js"></script>
     <script src="vendor/TweenMax.min.js"></script>
     <script src="hyperspace.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script type="module">
-        import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/EffectComposer.js';
-        import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/RenderPass.js';
-        import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/postprocessing/ShaderPass.js';
-        import {Reflector} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/objects/Reflector.js';
-        import {Curves} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/curves/CurveExtras.js';
+        import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/EffectComposer.js';
+        import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/RenderPass.js';
+        import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/ShaderPass.js';
+        import {Reflector} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/objects/Reflector.js';
+        import {Curves} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/curves/CurveExtras.js';
+        import {vid360} from './vid360.js';
 
         var scene, camera, renderer, composer, controls, timer=0, timerInc=.01;
         var simulationShader, renderShader, kaleidoscopePass;
@@ -104,7 +332,7 @@
         var texture, video, videoMaterial, defaultTexture;
         var imgUrls = ['ourobouros.jpeg', 'ourobouros2.jpeg', 'sigil.jpeg', 'astro.jpeg', 'focus.jpeg', 'solar.jpeg']
         var imgs = [];
-        var videoPlaying = false, kaleidoing = false;
+        var videoPlaying = true, kaleidoing = false;
         var listener, volumeButton;
 
         var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
@@ -119,6 +347,16 @@
                 noise_renderFS : "",                
                 bmfont_frag : "",
                 bmfont_vert : "",
+                image_simulationVS : "",
+                image_simulationFS : "",
+                image_renderVS : "",
+                image_renderFS : "",
+                transformations_frag: "",
+                transformations_vert: "",
+                blackhole_frag: "",
+                bh_frag: "",
+                droste_frag: "",
+                droste_frag2: "",
             }, "./glsl/", init );
         };
 
@@ -126,7 +364,26 @@
             return arr[THREE.Math.randInt(0, arr.length - 1)];
         }
 
+        function searchFlickr(keyword) {
+            var settings = {
+                // "url": "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=ebea2a03022c72d24c1759957b87b8ba&sort=relevance&text=" + keyword + "&extras=url_m&per_page=10&format=json&nojsoncallback=1",
+                "url": "https://www.googleapis.com/customsearch/v1?key=AIzaSyDLclkvOrvGOsAcz7Q06OS6VHS_AosHwR0&cx=f5ed695aa76ff0bd3&q=" + keyword + "&searchType=image&imgSize=xlarge&alt=json&num=10&start=1",
+                "method": "GET",
+                "timeout": 0,
+            };
+            var img;
+            $.ajax(settings).done(function (response) {
+                loadImages([response['items'][1]['image']['thumbnailLink']]).then(images => {
+                // loadImages([response['photos']['photo'][0]['url_m']]).then(images => {
+                    userImages = userImages.concat(images);
+                    createImage(images[0]);
+                });
+            });
+            return img;
+        }
+
         var skySnd = 0, transitionSnd = 0, videoSnd = 0;
+        var snd;
         function playSound(name, fadeIn, fadeOut) {
             if (name === 'sky') {
                 name = ['meditation',  'aleksi', 'hc'][skySnd];
@@ -135,20 +392,25 @@
                 name = ['coil', 'cio', 'elaine'][transitionSnd];
                 transitionSnd = (transitionSnd + 1) % 3;
             } else if (name === 'video') {
-                name = ['ff', 'thornhill2', 'ff2', 'voices'][videoSnd];
-                videoSnd = (videoSnd + 1) % 4;
+                if (nextVideo in sndVids) {
+                    name = sndVids[nextVideo];
+                } else {
+                    name = ['ff', 'thornhill2', 'ff2', 'voices'][videoSnd];
+                    videoSnd = (videoSnd + 1) % 4;
+                }
             }
+
             if (audioLoader == undefined) {
                 audioLoader = new THREE.AudioLoader();
                 listener = new THREE.AudioListener();
                 camera.add(listener);
             }
 
-            let snd = new THREE.Audio(listener);
+            snd = new THREE.Audio(listener);
             snds[name] = snd;
 
             audioLoader.load('snd/' + name + '.ogg', function(buffer) {
-                volumeButton.style.display = 'block';
+                // volumeButton.style.display = 'block';
                 snd.setBuffer(buffer);
                 snd.setLoop(true);
                 if (soundOn) {
@@ -239,6 +501,19 @@
             return texture;
         }
 
+        var userText = '';
+        function extractTopic() {
+            var settings = {
+                "url": "https://api.meaningcloud.com/topics-2.0?key=6fcafd5f4b8193ad413320c8c9e00758&lang=en&txt=" + userText + "&tt=e",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+        }
+
         function init(args) {
             loadImages(imgUrls).then(images => {
                 imgs = images;
@@ -315,7 +590,7 @@
             textMesh = new THREE.Mesh(textGeometry, textMaterial);
             // scale it down so it fits in our 3D units
             textAnchor = new THREE.Object3D();
-            // textAnchor.scale.multiplyScalar(-0.005);
+            // textAnchor.scale.multiplyScalar(-0.05);
             textAnchor.add(textMesh);
             textAnchor.rotation.x = Math.PI;
             scene.add(textAnchor);
@@ -416,49 +691,389 @@
             addDomListeners();
 
             composer = new EffectComposer(renderer);
-            composer.addPass(new RenderPass(scene, camera));
+            let renderPass = new RenderPass(scene, camera);
+            composer.addPass(renderPass);
 
             kaleidoscopePass = new ShaderPass(kaleidoscopeShader);
             kaleidoscopePass.renderToScreen = true;
+
+            // var effectBloom = new UnrealBloomPass(128, 0.8, 2.0, 0.0);
+            // let scenePass = new THREE.RenderPass(scene, camera)
+            // let effectCopy = new ShaderPass(THREE.CopyShader)
+            // effectCopy.renderToScreen = true;
+            // composer.addPass(renderPass);
+            // composer.addPass(effectBloom);
+            // composer.addPass(effectCopy);
+
             // kaleidoscopePass.enabled = true;
             composer.addPass(kaleidoscopePass);
 
-            initVids();
+            sky = new THREE.Group();
+            sky.add(FBO.particles);
+            // sky.add(textAnchor);
+            // sky.visible = false;
+
+            videoPlaying = false;
+            // initVids();
+            // mainSnd = 'voices';
+            playSound('kaleido');
+            // observer = new Observer(60.0, window.innerWidth/window.innerHeight, 1, 80000);
+            // observer.distance = 8;
+            // camControl = new THREE.CameraDragControls(observer, renderer.domElement); // take care of camera view
+            // // camControl sets up vector
+            // scene.add(observer);
+            // delta = 0;
+            // bTime = 0;
 
             scene.add(sky);
 
-            // whatDoYouSee();
+            startKinect(2);
+
+            sky.visible = true;
+            FBO.particles.material.visible = false;
 
             onResize();
             update();
         }
 
+        var kinVids = [];
+
+        function startKinect(numVideos) {
+            for (let j=0; j < numVideos; j++) {
+                let kin = kinVid('kin' + THREE.Math.randInt(1, 10) + '.mp4');
+                kin.video.play();
+                sky.add(kin);
+                kinVids.push(kin);
+            }
+        }
+
+        function stopKinect() {
+            for (let j=0; j < kinVids.length; j++) {
+                kinVids[j].video.pause();
+                sky.remove(kinVids[j]);
+            }
+            kinVids = [];
+        }
+
+        function kinVid(name) {
+            var video = document.createElement('video');
+            video.crossOrigin = "*";
+            video.loop = true;
+            video.playsinline = true;
+            video.muted = true;
+            video.src = 'vid/' + name;
+
+            const texture = new THREE.VideoTexture( video );
+            texture.minFilter = THREE.NearestFilter;
+
+            const width = 640, height = 480;
+            const nearClipping = 850, farClipping = 4000;
+
+            const geometry = new THREE.BufferGeometry();
+
+            const vertices = new Float32Array( width * height * 3 );
+
+            for ( let i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
+                vertices[ i ] = j % width;
+                vertices[ i + 1 ] = Math.floor( j / width );
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    "map": { value: texture },
+                    "width": { value: width },
+                    "height": { value: height },
+                    "nearClipping": { value: nearClipping },
+                    "farClipping": { value: farClipping },
+                    "pointSize": { value: 4 },
+                    "zOffset": { value: 3000 }
+                },
+                vertexShader: document.getElementById('vs').textContent,
+                fragmentShader: document.getElementById('fs').textContent,
+                blending: THREE.AdditiveBlending,
+                depthTest: false, depthWrite: false,
+                transparent: true
+            });
+
+            const mesh = new THREE.Points(geometry, material);
+            mesh.position.set(THREE.Math.randInt(-150, 50), THREE.Math.randInt(-150, 50), THREE.Math.randInt(-150, 50));
+            mesh.rotation.x = Math.PI;
+            mesh.video = video;
+
+            // video.play();
+            return mesh;
+        }
+        var kin;
+
+        var allVids = [
+            'volks_kaleido',
+            'planetarium_hands',
+            'planetarium_game',
+            'volks_carrying',
+        ];
+
+        var sndVids = {
+            volks_carrying: 'carrying',
+            volks_kaleido: 'kaleido',
+            planetarium_hands: 'drone',
+            planetarium_game: 'voices',
+        };
+
         function initVids() {
-            currVid = vid360.init(renderer, 'thornhill2', Curves, playSound);
-            currVid.start();
+            currVid = vid360.init(renderer, allVids[vidCount], Curves, playSound);
+            // vidCount += 1;
             videoPlaying = true;
-            mainSnd = 'voices';
-            playSound(mainSnd);
+            TweenMax.to(currVid.equirectMaterial, 1, { opacity: 1 });
+        }
 
-            sky = new THREE.Group();
-            sky.add(FBO.particles);
-
-            floatingVids.push(addFloatingVid('barber'));
-            floatingVids.push(addFloatingVid('barber'));
-
-            allVids = ['thornhill2', 'barber', 'bus', 'wasserturm1', 'petrol', 'wasserturm2', 'thornhill1'];
+        function goFuckeryGo() {
+            initVids();
+            // $(".landing-page").hide();
+            currVid.video.currentTime = 0;
+            currVid.start();
+            stopKinect();
+            videoPlaying = true;
+            $("#volume").click();
+            $(".landing-page").fadeOut("slow", function() {
+               $("#container").fadeIn("slow");
+            });
+            volumeButton.style.display = 'block';
+            introing = false;
         }
 
         var floatingVids = [], currVid, sky;
-        var lastVideo, allVids = [], vidCount = 1;
+        var lastVideo, vidCount = 0;
+        var userMeshes = [];
+        var orthoCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow(2, 53), 1), userImgRtts = [];
+        var imgsScene = new THREE.Scene();
+
+        class Img3D {
+
+            constructor(width, height, renderer, simulationMaterial, renderMaterial){
+                //3 rtt setup
+                this.scene = new THREE.Scene();
+                this.orthoCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow(2, 53), 1);
+
+                //4 create a target texture
+                var options = {
+                    minFilter: THREE.NearestFilter,//important as we want to sample square pixels
+                    magFilter: THREE.NearestFilter,//
+                    format: THREE.RGBAFormat,//180407 changed to RGBAFormat
+                    type:THREE.FloatType//important as we need precise coordinates (not ints)
+                };
+                this.rtt = new THREE.WebGLRenderTarget(width, height, options);
+
+                //5 the simulation:
+                //create a bi-unit quadrilateral and uses the simulation material to update the Float Texture
+                var geom = new THREE.BufferGeometry();
+                geom.setAttribute(
+                    'position',
+                    new THREE.BufferAttribute(
+                        new Float32Array([-1,-1,0,0, 1,-1,0,0, 1,1,0,0, -1,-1,0,0, 1,1,0,0, -1,1,0,0]), 
+                        4
+                    ) 
+                );
+                geom.setAttribute('uv',
+                    new THREE.BufferAttribute(
+                        new Float32Array([0,1, 1,1, 1,0, 0,1, 1,0, 0,0]),
+                        2
+                    )
+                );
+                scene.add(new THREE.Mesh(geom, simulationMaterial));
+
+                //6 the particles:
+                //create a vertex buffer of size width * height with normalized coordinates
+                var l = (width * height);
+                var vertices = new Float32Array(l * 4);
+                for (var i = 0; i < l; i++) {
+                    var i3 = i * 4;
+                    vertices[i3] = (i % width) / width ;
+                    vertices[i3 + 1] = (i / width) / height;
+                }
+
+                //create the particles geometry
+                var geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 4));
+                // geometry.setAttribute('newcolor', new THREE.BufferAttribute(colors, 3));
+                //the rendermaterial is used to render the particles
+                
+                this.particles = new THREE.Points(geometry, renderMaterial);
+
+                this.renderer = renderer;
+            }
+
+            //7 update loop
+            update(){
+
+                //1 update the simulation and render the result in a target texture
+                this.renderer.clear();
+                this.renderer.setRenderTarget(this.rtt);
+                this.renderer.render(this.scene, this.orthoCamera);
+                this.renderer.setRenderTarget(null);
+
+                //2 use the result of the swap as the new position for the particles' renderer
+                this.particles.material.uniforms.positions.value = this.rtt.texture;
+
+            }
+        }
+
+        var randomVerts = [], verts, startTime, starsGeometry, currentVerts;
+
+        function createImage(img) {
+            // var width = img.width, height = img.height;
+            // //4 create a target texture
+
+            // var options = {
+            //     minFilter: THREE.NearestFilter,//important as we want to sample square pixels
+            //     magFilter: THREE.NearestFilter,//
+            //     format: THREE.RGBAFormat,//180407 changed to RGBAFormat
+            //     type:THREE.FloatType//important as we need precise coordinates (not ints)
+            // };
+            // userImgRtts.push(THREE.WebGLRenderTarget(width, height, options));
+
+            // //5 the simulation:
+            // //create a bi-unit quadrilateral and uses the simulation material to update the Float Texture
+            // var geom = new THREE.BufferGeometry();
+            // geom.setAttribute(
+            //     'position',
+            //     new THREE.BufferAttribute(
+            //         new Float32Array([-1,-1,0,0, 1,-1,0,0, 1,1,0,0, -1,-1,0,0, 1,1,0,0, -1,1,0,0]), 
+            //         4
+            //     ) 
+            // );
+            // geom.setAttribute('uv',
+            //     new THREE.BufferAttribute(
+            //         new Float32Array([0,1, 1,1, 1,0, 0,1, 1,0, 0,0]),
+            //         2
+            //     )
+            // );
+            // scene.add(new THREE.Mesh(geom, simulationShader));
+
+            // //6 the particles:
+            // //create a vertex buffer of size width * height with normalized coordinates
+            // var l = (width * height);
+            // var vertices = new Float32Array(l * 4);
+            // for (var i = 0; i < l; i++) {
+            //     var i3 = i * 4;
+            //     vertices[i3] = (i % width) / width ;
+            //     vertices[i3 + 1] = (i / width) / height;
+            // }
+
+            //create the particles geometry
+            // var geometry = new THREE.BufferGeometry();
+            // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 4));
+            // //the rendermaterial is used to render the particles
+            // var image = new THREE.Points(geometry, renderShader);
+            // image.position.set(
+            //     THREE.Math.randInt(-110, -20),
+            //     THREE.Math.randInt(-90, -10),
+            //     THREE.Math.randInt(-80, -10)
+            // );
+            // sky.add(image);
+            // userMeshes.push(image);
+            // return image;
+
+            const loader = new THREE.TextureLoader();
+            var texture = loader.load(img.src);
+
+            // var elevation = 64;
+            // var data = getImage( img, img.width, img.height, elevation );
+            // texture = new THREE.DataTexture( data, img.width, img.height, THREE.RGBFormat, THREE.FloatType );
+            // texture.needsUpdate = true;
+
+            var pixels = 100;
+            var pixelSize = 0.2;
+            var randomVerts = [], verts, currentVerts;
+
+            var starsGeometry = new THREE.PlaneBufferGeometry(20, 20, pixels, pixels);
+            currentVerts = starsGeometry.attributes.position.array;
+            verts = new Float32Array(starsGeometry.attributes.position.array);
+
+            for(var i =0;i<starsGeometry.attributes.position.count;i++){
+                randomVerts.push(
+                    THREE.Math.lerp(-2,2,Math.random()),
+                    THREE.Math.lerp(-2,2,Math.random()),
+                    THREE.Math.lerp(-3,3,Math.random())
+              )
+            }
+
+            starsGeometry.attributes.position.setDynamic(true);
+            currentVerts = starsGeometry.attributes.position.array;
+            startTime = new Date().getTime();
+
+            var starsMaterial = new THREE.PointsMaterial({color: 0x888888, size:pixelSize, transparent:true});
+            var starField = new THREE.Points(starsGeometry, starsMaterial);
+
+            starsMaterial.onBeforeCompile = function(shader){
+                shader.vertexShader =  shader.vertexShader.replace('void main() {',[
+                "varying vec2 globalUV;",
+                "void main() {",
+                "globalUV = uv;"
+                ].join('\n'));
+
+                shader.fragmentShader = shader.fragmentShader.replace("uniform vec3 diffuse;",[
+                "varying vec2 globalUV;",
+                "uniform sampler2D tDiffuse;",
+                "uniform vec3 diffuse;",
+                ].join('\n')).replace("gl_FragColor = vec4( outgoingLight, diffuseColor.a );",[
+                "vec4 texColor = texture2D( tDiffuse, globalUV );",
+                "outgoingLight *= texColor.xyz;",
+                "gl_FragColor = vec4( outgoingLight, texColor.a * diffuseColor.a );"
+                ].join('\n'));
+                
+                shader.uniforms.tDiffuse = {value: texture};
+            }
+
+            // var data = getImage(img, img.width, img.height, 64);
+            // for (var i=0; i<starsGeometry.vertices.length; i++ ) {
+            //   starsGeometry.vertices[i].z = data[i];
+            // }
+
+            sky.add(starField);
+            starsGeometry.attributes.position.needsUpdate = true;
+
+            // var texture = new THREE.DataTexture( data, img.width, img.height, THREE.RGBFormat, THREE.FloatType );
+            // texture.needsUpdate = true;
+
+            // //this will be used to update the particles' texture
+
+            // var simulationShader = new THREE.ShaderMaterial({
+            //     uniforms: {
+            //         texture: { type: "t", value: texture }
+            //     },
+            //     vertexShader: ShaderLoader.get( "image_simulationVS" ),
+            //     fragmentShader:  ShaderLoader.get( "image_simulationFS" )
+            // });
+
+
+            // //this will be used to represent the particles on screen
+            // //note that 'positions' is a texture that will be set and updated during the FBO.update() call
+            // var renderShader = new THREE.ShaderMaterial( {
+            //     uniforms: {
+            //         positions: { type: "t", value: null },
+            //         pointSize: { type: "f", value: 1 }
+            //     },
+            //     transparent: true,
+            //     side:THREE.DoubleSide,
+            //     vertexShader: ShaderLoader.get( "image_renderVS" ),
+            //     fragmentShader: ShaderLoader.get( "image_renderFS" )
+            // } );
+
+            // var img = new Img3D(img.width, img.height, renderer, simulationShader, renderShader, scene);
+            // userMeshes.push(img);
+            // scene.add(img.particles);
+
+        }
 
         var geometries = [
-            new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
+            new THREE.SphereBufferGeometry(15, 40, 60),
             new THREE.DodecahedronBufferGeometry(15, 0),
             new THREE.IcosahedronBufferGeometry(15, 0),
             new THREE.OctahedronBufferGeometry(15, 0),
             new THREE.TorusBufferGeometry(13, 3, 100, 16),
-            new THREE.SphereBufferGeometry(15, 40, 60),
+            new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
             new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
             new THREE.TubeBufferGeometry(new Curves.VivianiCurve(70), 1000, 3, 10, true),
             new THREE.TubeBufferGeometry(new Curves.CinquefoilKnot(20), 1000, 3, 10, true),
@@ -473,8 +1088,43 @@
         ], geomIndex = 0;
 
         var rotateCamera = true;
+        var seeingStr = '', lastKeyStroke = Date.now();
+        var lastWord = '', userImages = [];
 
         function onDocumentKeyDown(event) {
+            if (event.keyCode >= 65 && event.keyCode <= 90) {
+                renderer.setClearColor(new THREE.Color(0, 0, 0));
+                textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
+                alphabetOn = true;
+                videoPlaying = false;
+                // startKaleido({});
+                // typing = true;
+                // whatDoYouSeeOn = true;
+                if (Date.now() - lastKeyStroke < 1000) {
+                    seeingStr += String.fromCharCode(event.keyCode);
+                } else {
+                    seeingStr = String.fromCharCode(event.keyCode);
+                }
+                // setTimeout(function(){ whatDoYouSeeOn = false; alphabetOn = false; }, 500);
+                lastKeyStroke = Date.now();
+                lastWord += String.fromCharCode(event.keyCode);
+            } else if (event.keyCode == 32) {
+                seeingStr = '';
+                userText += ' ' + lastWord;
+                if (lastWord.length > 2)
+                    var img = searchFlickr(lastWord);
+                lastWord = '';
+                alphabetOn = false;
+                // if (userText.split(' ').length >= 10) {
+                //     extractTopic();
+                // }
+            } 
+            // else {
+            //     videoPlaying = true;
+            //     whatDoYouSeeOn = false;
+            //     alphabetOn = false;
+            // }
+
             if (event.keyCode == 39) {
                 event.preventDefault();
                 geomIndex = (geomIndex + 1) % geometries.length;
@@ -528,17 +1178,28 @@
             return mesh;
         }
 
+        document.addEventListener('fullscreenchange', exitHandler);
+        document.addEventListener('webkitfullscreenchange', exitHandler);
+        document.addEventListener('mozfullscreenchange', exitHandler);
+        document.addEventListener('MSFullscreenChange', exitHandler);
+
+        function exitHandler() {
+            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+                $("#fullscreen").show();
+            }
+        }  
+
         var snds = {}, mainSnd;
         function addDomListeners() {
-            window.addEventListener("resize", onResize);
-
             volumeButton.addEventListener('click', onVolumeChange);
+            document.getElementById('enter').addEventListener('click', goFuckeryGo);
             window.addEventListener("resize", onResize);
             window.addEventListener("keydown", onDocumentKeyDown);
 
             var goFS = document.getElementById("fullscreen");
             goFS.addEventListener("click", function() {
-              document.body.requestFullscreen();
+                $("#fullscreen").hide();
+                document.body.requestFullscreen();
             }, false);
         }
 
@@ -643,6 +1304,27 @@
                     angle: 0.,
                     uvOffsetRange: [-.5, -0.2],
                     diffuseOffsetRange: [0.1, 0.5],
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 40,// Math.pow(10, 5), // lots of movement
+                frequency: Math.pow(10, 4), // still particles + grid lines
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: THREE.Math.randInt(3, 5),
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    diffuseOffset: 0.22042724965922889,
+                    uvOffset: -0.5,
+                    trigoX: 0,
+                    trigoY: 3
+                    // uvOffsetRange: [-.5, -0.2],
+                    // diffuseOffsetRange: [0.1, 0.5],
                 }
             },
             {
@@ -871,7 +1553,7 @@
                 morph: {
                     morph: 1.0,
                     textureDest: null,
-                    speed: 100.,
+                    speed: 10.,
                 },   
                 kaleido: {
                     sides: 2.,
@@ -906,11 +1588,17 @@
             }
         ];
 
+        var introing = true, introFlow;
+
         function startAlphabet(str) {
             alphabeting = true;
             textMaterial.uniforms.timer.value = 0;
             // let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            if (typeof str == 'undefined') {
+            if (seeingStr !== '' && typing) {
+                str = seeingStr;
+            }
+
+            if (typeof str == 'undefined' || str == '') {
                 str = "";
                 for (let j = 0; j < 1; j++) {
                     str += String.fromCharCode(65+Math.floor(Math.random() * 26));
@@ -919,14 +1607,13 @@
 
             textGeometry.update(str);
             // textGeometry.update(String.fromCharCode(65+Math.floor(Math.random() * 26)));
-            // textGeometry.update( Math.random().toString(36).substring(2, 25) + Math.random().toString(36).substring(2, 25));
 
             // center the text
             textMesh.position.x = -textGeometry.layout.width / 2;
             textMesh.position.y = textGeometry.layout.height / 2 - 6;
             presentGaze.cameraPosition = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
             camera.position.set(0, 0, 30);
-            renderer.setClearColor(new THREE.Color(1, 1, 1));
+            // renderer.setClearColor(new THREE.Color(1, 1, 1));
             FBO.particles.visible = false;
             textAnchor.visible = true;
         }
@@ -940,8 +1627,16 @@
         }
 
         var whatDoYouSeeOn = false;
-        var seeingStr = ["WHAT", "DO", "YOU", "SEE?"];
-        var seeingCount = 0, seeingKaleido;
+        // var seeingStr = ["WHAT", "DO", "YOU", "SEE?"];
+        var seeingCount = 0;
+        var seeingKaleido = {
+            sides: 1.,
+            angle: 0.,
+            uvOffsetRange: [-0.7, -0.3],
+            diffuseOffsetRange: [0.4, 0.6],
+            // trigoX: 0,
+            // trigoY: 1
+        }
 
         function whatDoYouSee() {
             whatDoYouSeeOn = true;
@@ -964,10 +1659,13 @@
         }
 
         function startGlimpse() {
+            // kin.video.play();
+            // sky.visible = true;
             glimpsing = true;
             glimpseCount += 1;
 
             savePresentGaze();
+            // idx = idx || THREE.Math.randInt(0, theFlow.length - 1);
             theGlimpse = theFlow[THREE.Math.randInt(0, theFlow.length - 1)];
 
             if ('kaleido' in theGlimpse) {
@@ -1015,7 +1713,7 @@
             alphabetOn = true;
             scheduleVideo(name, 8);
 
-            sndNameToStop = playSound('transition', 0.3, 1);
+            sndNameToStop = playSound('transition', 0.5, 1);
 
             for (var j=0; j<floatingVids.length; j++) {
                 sky.remove(floatingVids[j]);
@@ -1081,7 +1779,6 @@
             presentGaze.backgroundColor = backColor;
             presentGaze.currentRotation = currentRotation;
             presentGaze.cameraPosition = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-            // debugger;
         }
 
         function bringBackPresentGaze() {
@@ -1103,12 +1800,7 @@
             glimpseBackColor = backColor;
             backColor = tempBack;
             renderer.setClearColor(backColor);
-            // let tempParticle = stroboParticleColor;
-            // stroboParticleColor = particleColor;
-            // particleColor = tempParticle;
-            // renderShader.uniforms.nColor.value = particleColor;
         }
-
         var nextVideo, nextVideoCountdown = 0;
 
         function scheduleVideo(name, time) {
@@ -1124,7 +1816,7 @@
         var glimpseTimer = 0, sndNameToStop;
         function delayGlimpseStop(time) {
             glimpseTimer = time;
-            playSound('video', 2, -1);
+            playSound('video', 2, 18);
         }
 
         function hyperspace(name, renderer, scene) {
@@ -1132,7 +1824,6 @@
             hyperspacing = true;
             var loader = new THREE.TextureLoader();
             loader.crossOrigin = "Anonymous";
-            // theGlimpse.length *= 3;
             loader.load(
                 "vid/" + name + ".jpeg",
                 function(texture) {
@@ -1143,7 +1834,7 @@
         }
 
         var glimpseOn = false, alphabetOn = false;
-        var stroboHyper = true;
+        var stroboHyper = true, typing = false;
         var hyperspaceOn = false, hyperspacing = false;
 
         function stopHyperspace() {
@@ -1157,13 +1848,11 @@
 
             // Queue video
             snds[sndNameToStop].pause();
+            stopKinect();
             currVid = vid360.init(renderer, window.tunnel.vidName, Curves, playSound);
             currVid.start();
             videoPlaying = true;
         }
-
-        var seeingStr = ["WHAT", "DO", "YOU", "SEE?"];
-        var seeingCount = 0;
 
         function update() { 
             requestAnimationFrame(update);
@@ -1174,32 +1863,43 @@
             simulationShader.uniforms.timer.value = timer;
             renderShader.uniforms.timer.value = timer;
 
-            if (whatDoYouSeeOn) {
-                // if (timerInt % 4 == 0)
-                seeingCount = parseInt((timerInt % 8)/2);
-
-                var alaphabetInterval = THREE.Math.randInt(2, 4);
-                if (!alphabeting && timerInt % alaphabetInterval == 0) {
-                    startKaleido(seeingKaleido);
-                    startAlphabet(seeingStr[seeingCount]);
-                    renderer.setClearColor(new THREE.Color(0, 0, 0));
-                    textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
-                } else if (alphabeting && timer % alaphabetInterval > 1) {
-                    stopAlphabet();
-                    kaleidoing = false;
-                    renderer.setClearColor(new THREE.Color(0, 0, 0));
+            if (starsGeometry !== undefined) {
+                var imgTime = (new Date().getTime() - startTime) / 3000;    
+                var alpha = THREE.Math.clamp(-(Math.floor(imgTime) - imgTime) * 1.5,0,1);
+                for(var i = 0;i < starsGeometry.attributes.position.count;i++){
+                    currentVerts[i*3] = THREE.Math.lerp(randomVerts[i*3],verts[i*3], alpha);
+                    currentVerts[i*3 +1] = THREE.Math.lerp(randomVerts[i*3 + 1],verts[i*3 + 1], alpha);
+                    currentVerts[i*3 + 2] = THREE.Math.lerp(randomVerts[i*3 + 2 ],verts[i*3 + 2], alpha);
                 }
-                textMaterial.uniforms.timer.value += timerInc;
-                if (textMaterial.uniforms.timer.value > alphabetDuration) {
-                    textMaterial.uniforms.timer.value = 0;
-                }
-
-                if (timerInt % 3 == 0)
-                    composer.render();
-                else 
-                    renderer.render(scene, camera);
-                return;
+                starsGeometry.attributes.position.needsUpdate = true;
             }
+
+            // if (whatDoYouSeeOn) {
+            //     // if (timerInt % 4 == 0)
+            //     seeingCount = parseInt((timerInt % 8) / 2);
+
+            //     var alaphabetInterval = THREE.Math.randInt(2, 4);
+            //     if (!alphabeting && timerInt % alaphabetInterval == 0) {
+            //         startKaleido(seeingKaleido);
+            //         startAlphabet(seeingStr[seeingCount]);
+            //         renderer.setClearColor(new THREE.Color(0, 0, 0));
+            //         textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
+            //     } else if (alphabeting && timer % alaphabetInterval > 1) {
+            //         stopAlphabet();
+            //         kaleidoing = false;
+            //         renderer.setClearColor(new THREE.Color(0, 0, 0));
+            //     }
+            //     textMaterial.uniforms.timer.value += timerInc;
+            //     if (textMaterial.uniforms.timer.value > alphabetDuration) {
+            //         textMaterial.uniforms.timer.value = 0;
+            //     }
+
+            //     if (timerInt % 3 == 0)
+            //         composer.render();
+            //     else 
+            //         renderer.render(scene, camera);
+            //     return;
+            // }
 
             if (glimpseTimer > 0) {
                 glimpseTimer -= timerInc;
@@ -1216,6 +1916,8 @@
                     videoPlaying = false;
                     playSound('sky', 0.5, 3);
                     lastVideo = currVid.name;
+                    FBO.particles.material.visible = true;
+                    startKinect(1);
 
                     if (glimpsing)
                         stopGlimpse();
@@ -1229,26 +1931,10 @@
                     backColor = new THREE.Color(0, 0, 0);
                     renderer.setClearColor(backColor);
 
-                    // for (let j=0; j<floatingVids.length; j++) {
-                    //     if (floatingVids[j].vidName == lastVideo) {
-                    //         floatingVids.splice(j, 1);
-                    //     } 
-                    // }
-
-                    if (vidCount == allVids.length) {
-                        vidCount = 0;
-                        allVids = ['thornhill2', 'barber', 'bus', 'wasserturm1', 'petrol', 'wasserturm2', 'thornhill1'];
-                    }
+                    vidCount = (vidCount + 1) % allVids.length;
 
                     floatingVids = [];
                     floatingVids.push(addFloatingVid(allVids[vidCount]));
-                    floatingVids.push(addFloatingVid(allVids[vidCount]));
-                    vidCount += 1;
-
-                    // if (floatingVids.length == 1) {
-                    //     floatingVids.push(addFloatingVid(allVids[vidCount]));
-                    //     vidCount += 1;
-                    // }
 
                     for (let j=0; j<floatingVids.length; j++) {
                         floatingVids[j].position.set(
@@ -1258,13 +1944,14 @@
                         );
                         sky.add(floatingVids[j]);
                     }
+
                 }
                 if (!glimpseOn)
                     return;
             }
 
             if (hyperspaceOn) {
-                if (typeof window.tunnel !== undefined) {
+                if (typeof window.tunnel !== 'undefined') {
                     if (window.tunnel.progress() > 0.99) {
                         stopHyperspace();
                         return;
@@ -1278,7 +1965,7 @@
                         hyperspacing = false;
                     }
                 }
-                if (hyperspacing) {
+                if (hyperspacing && typeof window.tunnel !== 'undefined') {
                     window.tunnel.render();
                     return;
                 }
@@ -1296,9 +1983,13 @@
             //update simulation
             FBO.update();
 
-            if (glimpseOn) {
+            for(let k=0; k < userMeshes.length; k++) {
+                userMeshes[k].update();
+            }
+
+            if (glimpseOn || introing) {
                 // Pick a time interval for how often to start the glimpse effect
-                var glimpseInterval = THREE.Math.randInt(1, 9);
+                var glimpseInterval = THREE.Math.randInt(2, 9);
                 if (timerInt % glimpseInterval == 0) {
                     if (!glimpsing) {
                         startGlimpse();
@@ -1322,7 +2013,6 @@
                         alphabeting = false;
                     }
                 }
-
             }
 
             // Constant counter-clockwise rotation, dervish style
@@ -1358,7 +2048,7 @@
                 renderer.render(scene, camera);
             }
             // renderer.render(sceneCube, cameraCube);
-            renderer.autoClear = false;
+            // renderer.autoClear = false;
 
             // Increase or decrease the amplitutde cyclically every time unit
             if (timerInt % 2 == 0) {
@@ -1399,8 +2089,12 @@
             return canvas.getContext("2d");
         }
 
-        function getRandImgTexture() {
-            let img = imgs[THREE.Math.randInt(0, imgs.length - 1)];
+        function getRandImgTexture(src) {
+            var img;
+            if (src == undefined) {
+                img = imgs[THREE.Math.randInt(0, imgs.length - 1)];
+            }
+            // img = userImages[0];
             let data = getImage(img, 64);
             let texture = new THREE.DataTexture(data, img.width, img.height, THREE.RGBFormat, THREE.FloatType);
             texture.needsUpdate = true;
@@ -1456,7 +2150,13 @@
                 promiseArray.push(new Promise(resolve => {
                     const img = new Image();
                     img.onload = resolve;
-                    img.src = 'img/' + imageUrl;
+
+                    if (imageUrl.startsWith('http')) {
+                        img.src = imageUrl;
+                        img.crossOrigin = "Anonymous";
+                    } else {
+                        img.src = 'img/' + imageUrl;
+                    }
                     imageArray.push(img);
                 }));
             }

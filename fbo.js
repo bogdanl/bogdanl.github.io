@@ -54,7 +54,7 @@ var FBO = function( exports ){
         exports.renderer = renderer;
         return scene;
     };
-
+    
     //7 update loop
     exports.update = function(){
 
