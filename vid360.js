@@ -69,7 +69,7 @@ export const vid360 = function(vid){
     	volks_cups: "https://content.jwplatform.com/videos/M3BtsvPF-yhiBISfO.mp4",
     	planetarium_free: "https://content.jwplatform.com/videos/oPuF8wm3-yhiBISfO.mp4",
     	planetarium_phrase: "https://content.jwplatform.com/videos/xGy2B5Em-yhiBISfO.mp4",
-    	volks_kaleido_special: "https://content.jwplatform.com/videos/a2PWp3SQ-SOhSvJ9D.mp4"
+    	volks_kaleido_special: "https://content.jwplatform.com/videos/a2PWp3SQ-yhiBISfO.mp4"
     };
 
 	vid.init = function(renderer, name, curves, snd) {

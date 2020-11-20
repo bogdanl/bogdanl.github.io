@@ -1116,33 +1116,33 @@ input[type="submit"]:hover,
         var lastWord = '', userImages = [];
 
         function onDocumentKeyDown(event) {
-            if (event.keyCode >= 65 && event.keyCode <= 90) {
-                renderer.setClearColor(new THREE.Color(0, 0, 0));
-                textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
-                alphabetOn = true;
-                videoPlaying = false;
-                // startKaleido({});
-                // typing = true;
-                // whatDoYouSeeOn = true;
-                if (Date.now() - lastKeyStroke < 1000) {
-                    seeingStr += String.fromCharCode(event.keyCode);
-                } else {
-                    seeingStr = String.fromCharCode(event.keyCode);
-                }
-                // setTimeout(function(){ whatDoYouSeeOn = false; alphabetOn = false; }, 500);
-                lastKeyStroke = Date.now();
-                lastWord += String.fromCharCode(event.keyCode);
-            } else if (event.keyCode == 32) {
-                seeingStr = '';
-                userText += ' ' + lastWord;
-                if (lastWord.length > 2)
-                    var img = searchFlickr(lastWord);
-                lastWord = '';
-                alphabetOn = false;
-                // if (userText.split(' ').length >= 10) {
-                //     extractTopic();
-                // }
-            } 
+            // if (event.keyCode >= 65 && event.keyCode <= 90) {
+            //     renderer.setClearColor(new THREE.Color(0, 0, 0));
+            //     textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
+            //     alphabetOn = true;
+            //     videoPlaying = false;
+            //     // startKaleido({});
+            //     // typing = true;
+            //     // whatDoYouSeeOn = true;
+            //     if (Date.now() - lastKeyStroke < 1000) {
+            //         seeingStr += String.fromCharCode(event.keyCode);
+            //     } else {
+            //         seeingStr = String.fromCharCode(event.keyCode);
+            //     }
+            //     // setTimeout(function(){ whatDoYouSeeOn = false; alphabetOn = false; }, 500);
+            //     lastKeyStroke = Date.now();
+            //     lastWord += String.fromCharCode(event.keyCode);
+            // } else if (event.keyCode == 32) {
+            //     seeingStr = '';
+            //     userText += ' ' + lastWord;
+            //     if (lastWord.length > 2)
+            //         var img = searchFlickr(lastWord);
+            //     lastWord = '';
+            //     alphabetOn = false;
+            //     // if (userText.split(' ').length >= 10) {
+            //     //     extractTopic();
+            //     // }
+            // } 
             // else {
             //     videoPlaying = true;
             //     whatDoYouSeeOn = false;
