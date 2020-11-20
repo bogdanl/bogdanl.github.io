@@ -68,7 +68,7 @@ export const vid360 = function(vid){
     	planetarium_game: "https://content.jwplatform.com/videos/ZFi3B8T7-yhiBISfO.mp4",
     	volks_cups: "https://content.jwplatform.com/videos/M3BtsvPF-yhiBISfO.mp4",
     	planetarium_free: "https://content.jwplatform.com/videos/oPuF8wm3-yhiBISfO.mp4",
-    	planetarium_phrase: "https://content.jwplatform.com/videos/xGy2B5Em-SOhSvJ9D.mp4",
+    	planetarium_phrase: "https://content.jwplatform.com/videos/xGy2B5Em-yhiBISfO.mp4",
     	volks_kaleido_special: "https://content.jwplatform.com/videos/a2PWp3SQ-SOhSvJ9D.mp4"
     };
 
@@ -429,7 +429,11 @@ export const vid360 = function(vid){
 		document.addEventListener('mouseup', vid.onDocumentMouseUp, false);
 		document.addEventListener('wheel', vid.onDocumentMouseWheel, false);
 		window.addEventListener('resize', vid.onWindowResize, false);
-		vid.video.currentTime = 0;
+		if (vid.name == 'volks_cups') {
+			vid.video.currentTime = 10;
+		} else {
+			vid.video.currentTime = 0;
+		}
 		vid.video.play();
 		vid.playing = true;
 
