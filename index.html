@@ -72,19 +72,19 @@
         font-family: optima;
         right: 2px;
         bottom: 2px;
-        width: 440px;
-        text-align: justify;
+        width: 370px;
+        text-align: left;
         text-align-last: justify;
         text-justify: inter-word;
         /*text-transform: uppercase;*/
-        font-size: 22px;
+        font-size: 19px;
     }
     #title {
         position: absolute;
         left: 10px;
         bottom: 10px;
         cursor: url('css/chaos-magick.png'), auto;
-        width: 400px;
+        width: 380px;
         text-align: justify;
         text-align-last: justify;
         text-justify: inter-word;
@@ -288,20 +288,23 @@ input[type="submit"]:hover,
         <a class="btn btn-white btn-big" id="enter"><p style="text-align: center">mirrors in space</p></a>
         <div id="instructions">
             <p class="landing-p">
-                <strong>click</strong> on the mirrors to change environment<br>
                 <strong>click and drag</strong> to look around<br>
-                <strong>left/right arrows</strong> to change the mirror shape<br>
+                <strong>click</strong> on the mirror to change space<br>
+                <strong>left/right arrows</strong> to change mirror<br>
                 <strong>up/down arrows</strong> to toggle reflection<br>
-                <strong>space bar</strong> to toggle automatic rotation<br>
+                <strong>space bar</strong> to toggle rotation<br>
                 <strong>scroll</strong> to zoom on the mirror
             </p>
         </div>
         <div id="title">
-            we are but mirrors in space, soon to be outlived<br>
+            we are but mirrors in space – to be outlived<br>
             by the stairs free falling into the running water<br>
             the stars rolling away from each other<br>
             outshone by silhouettes on fortuitous placards<br>
-            & out of sight; forgetful of our smeared desires
+            & out of sight, forgetful of our smeared desires
+        </div>
+        <div class="landing-p" style="position: absolute; top: 2px">
+            <strong>warning:</strong> this website contains stroboscopic effects
         </div>
     </div>
 
@@ -550,6 +553,7 @@ input[type="submit"]:hover,
             controls.enableDamping = true;
             controls.maxDistance = 30;
             controls.minDistance = 30;
+            controls.enableKeys = false;
 
             cameraCube = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000000);
             sceneCube = new THREE.Scene();
@@ -716,7 +720,7 @@ input[type="submit"]:hover,
             videoPlaying = false;
             // initVids();
             // mainSnd = 'voices';
-            playSound('kaleido');
+            playSound('mirrors');
             // observer = new Observer(60.0, window.innerWidth/window.innerHeight, 1, 80000);
             // observer.distance = 8;
             // camControl = new THREE.CameraDragControls(observer, renderer.domElement); // take care of camera view
@@ -744,6 +748,7 @@ input[type="submit"]:hover,
                 kin.video.play();
                 sky.add(kin);
                 kinVids.push(kin);
+                cameraCube.lookAt(kin.position);
             }
         }
 
@@ -767,7 +772,7 @@ input[type="submit"]:hover,
             texture.minFilter = THREE.NearestFilter;
 
             const width = 640, height = 480;
-            const nearClipping = 850, farClipping = 4000;
+            const nearClipping = 0.01, farClipping = 4000;
 
             const geometry = new THREE.BufferGeometry();
 
@@ -809,17 +814,26 @@ input[type="submit"]:hover,
 
         var allVids = [
             'volks_kaleido',
-            'planetarium_hands',
             'planetarium_game',
+            'volks_cups',
+            'planetarium_phrase',
             'volks_carrying',
+            'planetarium_free',
+            'volks_kaleido_special',
+            'planetarium_hands',
         ];
 
         var sndVids = {
             volks_carrying: 'carrying',
-            volks_kaleido: 'kaleido',
-            planetarium_hands: 'drone',
-            planetarium_game: 'voices',
+            volks_kaleido: 'mirrors',
+            planetarium_hands: 'voices',
+            planetarium_game: 'drone',
+            volks_cups: 'kaleido',
+            planetarium_phrase: 'game',
+            planetarium_free: 'glacier',
+            volks_kaleido_special: 'gong'
         };
+
 
         function initVids() {
             currVid = vid360.init(renderer, allVids[vidCount], Curves, playSound);
@@ -835,7 +849,17 @@ input[type="submit"]:hover,
             currVid.start();
             stopKinect();
             videoPlaying = true;
-            $("#volume").click();
+            
+            let volume = {x : -0.2};
+            TweenMax.to(volume, 1, {
+                x: 1,
+                onUpdate: function() {
+                    if (this.target.x > 0.01 && $("#volume").text() == "TURN SOUND ON") {
+                        $("#volume").click();
+                    }
+                    snd.setVolume(this.target.x);
+                }
+            });
             $(".landing-page").fadeOut("slow", function() {
                $("#container").fadeIn("slow");
             });
@@ -1151,19 +1175,31 @@ input[type="submit"]:hover,
                 }
             }
 
+            // if (event.keyCode == 40 || event.keyCode == 38) {
+            //     event.preventDefault();
+            //     for (var j=0; j<floatingVids.length; j++) {
+            //         if (floatingVids[j].getRenderTarget().texture.mapping == THREE.EquirectangularReflectionMapping) {
+            //             floatingVids[j].getRenderTarget().texture.mapping = THREE.EquirectangularRefractionMapping;
+            //         } else {
+            //             floatingVids[j].getRenderTarget().texture.mapping = THREE.EquirectangularReflectionMapping;
+            //         }
+            //         floatingVids[j].material.needsUpdate = true;
+            //     }
+            // }
+
             if (event.keyCode == 32) {
                 rotateCamera = !rotateCamera;
             }
         }
 
         function addFloatingVid(name) {
-            var geometry = new THREE.TorusKnotBufferGeometry(10, 3, 100, 16);
+            var geometry = new THREE.SphereBufferGeometry(15, 40, 60);
             var mesh = new Reflector(geometry, {
                 clipBias: 0.003,
                 textureWidth: window.innerWidth * window.devicePixelRatio,
                 textureHeight: window.innerHeight * window.devicePixelRatio,
-                recursion: 1000,
-                color: new THREE.Color(0.9843, 0.6549, 0)
+                recursion: 100,
+                color: new THREE.Color(0.9843, 0.6549, 0),
                 // color: new THREE.Color(1, 1, 0)
             } );
             mesh.getRenderTarget().texture.wrapS = THREE.MirroredRepeatWrapping;

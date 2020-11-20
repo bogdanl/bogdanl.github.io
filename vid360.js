@@ -36,15 +36,20 @@ export const vid360 = function(vid){
     //     volks_carrying: 'vid/volks_carrying.mp4',
     //     volks_cups: 'vid/volks_cups.mp4',
     //     planetarium_game: 'vid/planetarium_game.mp4',
+    //     planetarium_carrying: 'vid/planetarium_carrying.mp4'
     // };
 
     var sndVids = {
         volks_carrying: 'carrying',
-        volks_kaleido: 'kaleido',
-        planetarium_hands: 'drone',
-        planetarium_game: 'voices',
-
+        volks_kaleido: 'mirrors',
+        planetarium_hands: 'voices',
+        planetarium_game: 'drone',
+        volks_cups: 'kaleido',
+        planetarium_phrase: 'game',
+        planetarium_free: 'glacier',
+        volks_kaleido_special: 'gong'
     };
+
 
     // var vids = {
     //     thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
@@ -61,6 +66,10 @@ export const vid360 = function(vid){
     	volks_kaleido: "https://content.jwplatform.com/videos/CAY9lwL7-yhiBISfO.mp4",
     	planetarium_hands: "https://content.jwplatform.com/videos/2z6Qse0T-yhiBISfO.mp4",
     	planetarium_game: "https://content.jwplatform.com/videos/ZFi3B8T7-yhiBISfO.mp4",
+    	volks_cups: "https://content.jwplatform.com/videos/M3BtsvPF-yhiBISfO.mp4",
+    	planetarium_free: "https://content.jwplatform.com/videos/oPuF8wm3-yhiBISfO.mp4",
+    	planetarium_phrase: "https://content.jwplatform.com/videos/xGy2B5Em-SOhSvJ9D.mp4",
+    	volks_kaleido_special: "https://content.jwplatform.com/videos/a2PWp3SQ-SOhSvJ9D.mp4"
     };
 
 	vid.init = function(renderer, name, curves, snd) {
@@ -355,7 +364,7 @@ export const vid360 = function(vid){
 
         composer.addPass(bhPass);
         droste = true;
-		setTimeout(vid.stop, 10000);
+		setTimeout(vid.stop, 14000);
 		drosteStart = Date.now();
 	}
 
