@@ -39,17 +39,17 @@ export const vid360 = function(vid){
     //     planetarium_carrying: 'vid/planetarium_carrying.mp4'
     // };
 
+
     var sndVids = {
         volks_carrying: 'carrying',
         volks_kaleido: 'mirrors',
-        planetarium_hands: 'voices',
-        planetarium_game: 'drone',
+        planetarium_hands: 'drone',
+        planetarium_game: 'voices',
         volks_cups: 'kaleido',
         planetarium_phrase: 'game',
         planetarium_free: 'glacier',
         volks_kaleido_special: 'gong'
     };
-
 
     // var vids = {
     //     thornhill1: 'https://content.jwplatform.com/videos/uyV9eWMN-ac7wx05Q.mp4',
