@@ -160,20 +160,15 @@ input[type="submit"]{
     text-transform: uppercase;
     font-family: 'Montserrat', sans-serif; font-weight:400;
     letter-spacing: 3px;
-    -webkit-transition: all .4s ease-in-out;
-       -moz-transition: all .4s ease-in-out;
-        -ms-transition: all .4s ease-in-out;
-         -o-transition: all .4s ease-in-out;
-            transition: all .4s ease-in-out;
 }
-.btn:hover,
+/*.btn:hover,
 input[type="submit"]:hover{
     -webkit-transition: all .4s ease-in-out;
        -moz-transition: all .4s ease-in-out;
         -ms-transition: all .4s ease-in-out;
          -o-transition: all .4s ease-in-out;
             transition: all .4s ease-in-out;
-}
+}*/
 .btn-white{
     position: absolute;
     border:solid 2px #fff;
@@ -211,10 +206,16 @@ input[type="submit"]:hover,
     display: none;
     background-color: black;
 }
-a:link, a:visited, a:hover {
+#email:link, #email:visited, #email:hover {
     color: white;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 20px;
+}
+#enter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
 </head>
@@ -307,21 +308,21 @@ a:link, a:visited, a:hover {
             outshone by silhouettes on fortuitous placards<br>
             & out of sight, forgetful of our smeared desires
         </div>
-        <div class="landing-p" style="position: absolute; top: 2px">
-            <strong>warning:</strong> this website contains stroboscopic effects
+        <div class="landing-p" style="position: absolute; top: 2px; font-size: 17px">
+            <strong>warning:</strong> stroboscopic effects
         </div>
     </div>
         <div class="landing-p" style="position: absolute; top: -6px; left: -9px; colo: white; cursor: pointer">
             <strong><span id="about">about</span></strong>
         </div>
     <div id="about-section" class="landing-page" style="display:none;">
-        <div class="landing-p" style=" position: absolute; top:50px; font-size: 20px">
-        <div><strong>Concept & development</strong>:<br>
+        <div class="landing-p" style=" position: absolute; top:100px; font-size: 20px">
+        <div><span style="font-size: 22px"><strong>concept & development</strong><span><br>
             Bogdan Licar<br>
             Emily Ranford<br>
         </div><br>
         <div class="landing-p" style="font-size: 20px">
-        <div><strong>Performers</strong>:<br>
+        <div><span style="font-size: 22px"><strong>performers</strong></span><br>
             Emily Ranford<br>
             Anna Jarrige<br>
             Nikoleta Koutitsa<br>
@@ -330,12 +331,12 @@ a:link, a:visited, a:hover {
         </div><br>
 
         <div class="landing-p" style="font-size: 20px">
-        <div><strong>Supported by</strong>:<br>
+        <div><span style="font-size: 22px"><strong>supported by</strong></span><br>
             Lake Studios Berlin<br>
             TroikaTronix
         </div>
         <br>
-        <div><a href="mailto:space.in.mirrors@gmail.com">space.in.mirrors@gmail.com</a></div>
+        <div><a id="email" href="mailto:space.in.mirrors@gmail.com">space.in.mirrors@gmail.com</a></div>
         </div>
     </div>
 
@@ -353,6 +354,7 @@ a:link, a:visited, a:hover {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script type="module">
+
         import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/EffectComposer.js';
         import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/RenderPass.js';
         import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/ShaderPass.js';
@@ -373,7 +375,6 @@ a:link, a:visited, a:hover {
 
         var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
         var cameraCube, sceneCube;
-
         window.onload = function() {
             var sl = new ShaderLoader();
             sl.loadShaders({
@@ -876,6 +877,7 @@ a:link, a:visited, a:hover {
         }
 
         function goFuckeryGo() {
+            $("#about").hide();
             initVids();
             // $(".landing-page").hide();
             currVid.video.currentTime = 0;
@@ -1274,12 +1276,12 @@ a:link, a:visited, a:hover {
             $("#about").click(function(){
                 if ($("#about").text() == "about") {
                     // $("#about").hide();
-                    $("#main-section").hide('slow');
-                    $("#about-section").show('slow');
+                    $("#main-section").fadeOut('slow');
+                    $("#about-section").fadeIn('slow');
                     $("#about").text("back");
                 } else {
-                    $("#about-section").hide('slow');
-                    $("#main-section").show('slow');
+                    $("#about-section").fadeOut('slow');
+                    $("#main-section").fadeIn('slow');
                     $("#about").text("about");
                 }
             });
