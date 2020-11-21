@@ -27,6 +27,19 @@
         font-style: bold;
         cursor: pointer;
     }
+    #info {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        display: none;
+        cursor: pointer;
+    }
+    #info-instructions {
+        position: absolute;
+        right: 30px;
+        bottom: 6px;
+        display: none;
+    }
     #fullscreen {
         position: absolute;
         top: 3px;
@@ -290,6 +303,9 @@ input[type="submit"]:hover,
 
     <div id="fullscreen">fullscreen</div>
     <div id="volume" style="display:none">TURN SOUND ON</div>
+    <div id="info">
+        <img src="img/info-button.png" width="25px"/>
+    </div>
 
     <div id="main-section" class="landing-page">
         <a class="btn btn-white btn-big" id="enter"><p style="text-align: center">mirrors in space</p></a>
@@ -314,34 +330,42 @@ input[type="submit"]:hover,
             <strong>warning:</strong> stroboscopic effects
         </div>
     </div>
-        <div class="landing-p" style="position: absolute; top: -6px; left: -9px; colo: white; cursor: pointer">
-            <strong><span id="about">about</span></strong>
-        </div>
-    <div id="about-section" class="landing-page" style="display:none;">
-        <div class="landing-p" style=" position: absolute; top:100px; font-size: 20px">
-        <div><span style="font-size: 22px"><strong>concept & development</strong><span><br>
-            Bogdan Licar<br>
-            Emily Ranford<br>
-        </div><br>
-        <div class="landing-p" style="font-size: 20px">
-        <div><span style="font-size: 22px"><strong>performers</strong></span><br>
-            Emily Ranford<br>
-            Anna Jarrige<br>
-            Nikoleta Koutitsa<br>
-            Nitsan Margaliot<br>
-            Bogdan Licar<br>
-        </div><br>
 
-        <div class="landing-p" style="font-size: 20px">
-        <div><span style="font-size: 22px"><strong>supported by</strong></span><br>
-            Lake Studios Berlin<br>
-            TroikaTronix
-        </div>
-        <br>
-        <div><a id="email" href="mailto:space.in.mirrors@gmail.com">space.in.mirrors@gmail.com</a></div>
+    <div class="landing-p" style="position: absolute; top: -6px; left: -9px; colo: white; cursor: pointer">
+        <strong><span id="about">about</span></strong>
+    </div>
+
+    <div id="about-section" class="landing-page" style="display:none;">
+
+        <div class="landing-p" style=" position: absolute; top:100px; font-size: 20px">
+            <div><span style="font-size: 22px"><strong>concept & development</strong></span><br>
+                Bogdan Licar<br>
+                Emily Ranford<br>
+            </div><br>
+            <div><span style="font-size: 22px"><strong>performers</strong></span><br>
+                Emily Ranford<br>
+                Anna Jarrige<br>
+                Nikoleta Koutitsa<br>
+                Nitsan Margaliot<br>
+                Bogdan Licar<br>
+            </div><br>
+
+            <div><span style="font-size: 22px"><strong>supported by</strong></span><br>
+                Lake Studios Berlin<br>
+                TroikaTronix
+            </div>
+            <br>
+            <div><a id="email" href="mailto:space.in.mirrors@gmail.com">space.in.mirrors@gmail.com</a></div>
         </div>
     </div>
 
+    <div id="info-instructions">
+        <strong>click and drag</strong> to look around<br>
+        <strong>click</strong> on the mirror to change space<br>
+        <strong>left/right arrows</strong> to change mirror<br>
+        <strong>up/down arrows</strong> to toggle reflection<br>
+        <strong>space bar</strong> to toggle rotation<br>
+        <strong>scroll</strong> to zoom on the mirror
     </div>
 
     <script src="vendor/three.min.js"></script>
@@ -851,7 +875,7 @@ input[type="submit"]:hover,
         var allVids = [
             'volks_kaleido',
             'planetarium_game',
-            'volks_cups',
+            'volks_trees',
             'planetarium_phrase',
             'volks_kaleido_special',
             'volks_carrying',
@@ -864,7 +888,7 @@ input[type="submit"]:hover,
             volks_kaleido: 'mirrors',
             planetarium_hands: 'drone',
             planetarium_game: 'voices',
-            volks_cups: 'kaleido',
+            volks_trees: 'kaleido',
             planetarium_phrase: 'game',
             planetarium_free: 'glacier',
             volks_kaleido_special: 'gong'
@@ -899,6 +923,7 @@ input[type="submit"]:hover,
             });
             $(".landing-page").fadeOut("slow", function() {
                $("#container").fadeIn("slow");
+               $("#info").fadeIn("slow");
             });
             volumeButton.style.display = 'block';
             introing = false;
@@ -1277,7 +1302,6 @@ input[type="submit"]:hover,
 
             $("#about").click(function(){
                 if ($("#about").text() == "about") {
-                    // $("#about").hide();
                     $("#main-section").fadeOut('slow');
                     $("#about-section").fadeIn('slow');
                     $("#about").text("back");
@@ -1288,6 +1312,12 @@ input[type="submit"]:hover,
                 }
             });
 
+            $("#info").mouseenter(function(){
+                $("#info-instructions").fadeIn("fast");
+            });
+            $("#info").mouseleave(function() {
+                $("#info-instructions").fadeOut("fast");
+            });
         }
 
         function getSpherePoint(point, size){

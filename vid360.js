@@ -45,7 +45,7 @@ export const vid360 = function(vid){
         volks_kaleido: 'mirrors',
         planetarium_hands: 'drone',
         planetarium_game: 'voices',
-        volks_cups: 'kaleido',
+        volks_trees: 'kaleido',
         planetarium_phrase: 'game',
         planetarium_free: 'glacier',
         volks_kaleido_special: 'gong'
@@ -66,7 +66,7 @@ export const vid360 = function(vid){
     	volks_kaleido: "https://content.jwplatform.com/videos/CAY9lwL7-yhiBISfO.mp4",
     	planetarium_hands: "https://content.jwplatform.com/videos/2z6Qse0T-yhiBISfO.mp4",
     	planetarium_game: "https://content.jwplatform.com/videos/ZFi3B8T7-yhiBISfO.mp4",
-    	volks_cups: "https://content.jwplatform.com/videos/M3BtsvPF-yhiBISfO.mp4",
+    	volks_trees: "https://content.jwplatform.com/videos/AghxU4Sk-yhiBISfO.mp4",
     	planetarium_free: "https://content.jwplatform.com/videos/oPuF8wm3-yhiBISfO.mp4",
     	planetarium_phrase: "https://content.jwplatform.com/videos/xGy2B5Em-yhiBISfO.mp4",
     	volks_kaleido_special: "https://content.jwplatform.com/videos/a2PWp3SQ-yhiBISfO.mp4"
