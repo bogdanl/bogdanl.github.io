@@ -214,7 +214,7 @@ input[type="submit"]:hover,
 a:link, a:visited, a:hover {
     color: white;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 25px;
 }
 </style>
 </head>
@@ -288,7 +288,7 @@ a:link, a:visited, a:hover {
     <div id="fullscreen">fullscreen</div>
     <div id="volume" style="display:none">TURN SOUND ON</div>
 
-    <div class="landing-page">
+    <div id="main-section" class="landing-page">
         <a class="btn btn-white btn-big" id="enter"><p style="text-align: center">mirrors in space</p></a>
         <div id="instructions">
             <p class="landing-p">
@@ -310,9 +310,35 @@ a:link, a:visited, a:hover {
         <div class="landing-p" style="position: absolute; top: 2px">
             <strong>warning:</strong> this website contains stroboscopic effects
         </div>
-        <div class="landing-p" style="position: absolute; top: -10px; left: -13px; colo: white; ">
-            <a href="mailto:space.in.mirrors@gmail.com">space.in.mirrors@gmail.com</a>
+    </div>
+        <div class="landing-p" style="position: absolute; top: -8px; left: -11px; colo: white;">
+            <strong><a href="#" id="about">about</a></strong>
         </div>
+    <div id="about-section" class="landing-page" style="display:none;">
+        <div class="landing-p" style=" position: absolute; top:50px; font-size: 20px">
+        <div><strong>Concept</strong>:<br>
+            Bogdan Licar<br>
+            Emily Ranford<br>
+        </div><br>
+        <div class="landing-p" style="font-size: 20px">
+        <div><strong>Performers</strong>:<br>
+            Emily Ranford<br>
+            Anna Jarrige<br>
+            Nikoleta Koutitsa<br>
+            Nitsan Margaliot<br>
+            Bogdan Licar<br>
+        </div><br><br>
+
+        <div class="landing-p" style="font-size: 20px">
+        <div><strong>Supported by</strong>:<br>
+            Lake Studios Berlin<br>
+            TroikaTronix
+        </div>
+        <br>
+        <div><a href="mailto:space.in.mirrors@gmail.com">space.in.mirrors@gmail.com</a></div>
+        </div>
+    </div>
+
     </div>
 
     <script src="vendor/three.min.js"></script>
@@ -1244,6 +1270,20 @@ a:link, a:visited, a:hover {
                 $("#fullscreen").hide();
                 document.body.requestFullscreen();
             }, false);
+
+            $("#about").click(function(){
+                if ($("#about").text() == "about") {
+                    // $("#about").hide();
+                    $("#main-section").hide('slow');
+                    $("#about-section").show('slow');
+                    $("#about").text("back");
+                } else {
+                    $("#about-section").hide('slow');
+                    $("#main-section").show('slow');
+                    $("#about").text("about");
+                }
+            });
+
         }
 
         function getSpherePoint(point, size){
