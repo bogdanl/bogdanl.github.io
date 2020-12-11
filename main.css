@@ -1,0 +1,214 @@
+head, body{
+    width:100%;
+    height:100%;
+    overflow: hidden;
+    top:0;
+    left:0;
+    margin:0;
+    padding:0;
+    cursor: url('css/chaos-magick.png'), auto;
+    font-family: optima;
+    color: white;
+    text-align: justify;
+}
+#volume {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    font-size: 13px;
+    font-style: bold;
+    cursor: pointer;
+}
+#info {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    display: none;
+    cursor: pointer;
+}
+#info-instructions {
+    position: absolute;
+    right: 30px;
+    bottom: 6px;
+    display: none;
+}
+#fullscreen {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+.landing-page {
+background-color: black;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.landing-h1 {
+  font-size: 2.3rem;
+}
+
+.landing-h1,
+.landing-p {
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+
+.landing-p {
+  margin-top: 10px;
+  /*font-size: 1.3rem;*/
+}
+#instructions {
+    position: absolute;
+    font-family: optima;
+    right: 2px;
+    bottom: 10px;
+    width: 340px;
+    text-align: left;
+    text-align-last: justify;
+    text-justify: inter-word;
+    font-size: 19px;
+}
+#instructions .landing-p {
+    padding-right: 10px;
+}
+#title {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    cursor: url('css/chaos-magick.png'), auto;
+    width: 380px;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: inter-word;
+    font-size: 19px;
+}
+
+.buttons {
+    overflow: hidden;
+}
+
+.buttons > div {
+    width: calc(50% - 40px);
+    padding: 20px;
+    float: left;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+}
+.buttons .dark {
+    background: #000;
+    left: 50%;
+}
+.buttons a {
+    float: left; 
+    margin-right: 20px;
+  margin-bottom: 20px;
+}
+a#link {position: absolute; left: 20px; bottom: 10px; text-decoration: none; color: #555; font-weight: bold;}
+/*------------------------------------------------------*/
+/* BUTTONS */
+/*------------------------------------------------------*/
+.btn,
+input[type="submit"]{
+    cursor: pointer;
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 12px 18px;
+    font-size: 12px;
+    line-height: 19px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+
+.btn-mid {
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 14px 21px;
+    font-size: 13px;
+    line-height: 25px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+
+.btn-big {
+    border-radius: 0px;
+    top: 350px;
+    text-decoration: none;
+    padding: 18px 24px;
+    font-size: 14px;
+    line-height: 40px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+}
+.btn-white{
+    position: absolute;
+    border:solid 2px #fff;
+    background: transparent;
+    color: #fff !important;
+}
+.btn-white:hover{
+    border:solid 2px #fff;
+    background: #fff;
+    color: #1f1f1f !important;
+}
+
+.btn-dark,
+input[type="submit"]{
+    border:solid 2px #1f1f1f;
+    background: transparent;
+    color: #1f1f1f;
+}
+.btn-dark:hover,
+input[type="submit"]:hover,
+.btn-dark.active{
+    border:solid 2px #1f1f1f;
+    background: #1f1f1f;
+    color: #fff;
+}
+
+.btn-color{
+    background: transparent;
+}
+.btn-color:hover{
+    color: #fff;
+}
+
+#container {
+    display: none;
+    background-color: black;
+}
+#email:link, #email:visited, #email:hover {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+#enter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

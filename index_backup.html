@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-688Y8VZHQV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-688Y8VZHQV');
+    </script>
+    <meta charset="UTF-8">
+    <title>mirrorsin.space</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <!-- <link href="css/main.css" rel="stylesheet"> -->
+    <style>
+    head, body{
+        width:100%;
+        height:100%;
+        overflow: hidden;
+        top:0;
+        left:0;
+        margin:0;
+        padding:0;
+        cursor: url('css/chaos-magick.png'), auto;
+        font-family: optima;
+        color: white;
+        text-align: justify;
+    }
+    #volume {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        font-size: 13px;
+        font-style: bold;
+        cursor: pointer;
+    }
+    #info {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        display: none;
+        cursor: pointer;
+    }
+    #info-instructions {
+        position: absolute;
+        right: 30px;
+        bottom: 6px;
+        display: none;
+    }
+    #fullscreen {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .landing-page {
+      /*background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),*/
+        /*url("./img/landing-page.jpeg");*/
+    background-color: black;
+      /*height: 100vh;*/
+      background-position: center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      /*opacity: 10.9;*/
+    }
+    .landing-h1 {
+      font-size: 2.3rem;
+    }
+
+    .landing-h1,
+    .landing-p {
+      color: white;
+      padding-left: 20px;
+      padding-right: 20px;
+      text-align: center;
+    }
+
+    .landing-p {
+      margin-top: 10px;
+      font-size: 1.3rem;
+    }
+    #instructions {
+        position: absolute;
+        font-family: optima;
+        right: 2px;
+        bottom: 2px;
+        width: 370px;
+        text-align: left;
+        text-align-last: justify;
+        text-justify: inter-word;
+        /*text-transform: uppercase;*/
+        font-size: 19px;
+    }
+    #title {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        cursor: url('css/chaos-magick.png'), auto;
+        width: 380px;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: inter-word;
+        font-size: 19px;
+    }
+
+.buttons {
+    overflow: hidden;
+}
+
+.buttons > div {
+    width: calc(50% - 40px);
+    padding: 20px;
+    float: left;
+    position: fixed;
+    bottom: 0;
+    top: 0;
+}
+.buttons .dark {
+    background: #000;
+    left: 50%;
+}
+.buttons a {
+    float: left; 
+    margin-right: 20px;
+  margin-bottom: 20px;
+}
+a#link {position: absolute; left: 20px; bottom: 10px; text-decoration: none; color: #555; font-weight: bold;}
+/*------------------------------------------------------*/
+/* BUTTONS */
+/*------------------------------------------------------*/
+.btn,
+input[type="submit"]{
+    cursor: pointer;
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 12px 18px;
+    font-size: 12px;
+    line-height: 19px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+
+.btn-mid {
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 14px 21px;
+    font-size: 13px;
+    line-height: 25px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}
+
+.btn-big {
+    border-radius: 0px;
+    top: 350px;
+    text-decoration: none;
+    padding: 18px 24px;
+    font-size: 14px;
+    line-height: 40px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif; font-weight:400;
+    letter-spacing: 3px;
+}
+/*.btn:hover,
+input[type="submit"]:hover{
+    -webkit-transition: all .4s ease-in-out;
+       -moz-transition: all .4s ease-in-out;
+        -ms-transition: all .4s ease-in-out;
+         -o-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+}*/
+.btn-white{
+    position: absolute;
+    border:solid 2px #fff;
+    background: transparent;
+    color: #fff !important;
+}
+.btn-white:hover{
+    border:solid 2px #fff;
+    background: #fff;
+    color: #1f1f1f !important;
+}
+
+.btn-dark,
+input[type="submit"]{
+    border:solid 2px #1f1f1f;
+    background: transparent;
+    color: #1f1f1f;
+}
+.btn-dark:hover,
+input[type="submit"]:hover,
+.btn-dark.active{
+    border:solid 2px #1f1f1f;
+    background: #1f1f1f;
+    color: #fff;
+}
+
+.btn-color{
+    background: transparent;
+}
+.btn-color:hover{
+    color: #fff;
+}
+
+#container {
+    display: none;
+    background-color: black;
+}
+#email:link, #email:visited, #email:hover {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+#enter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
+<meta property="og:title" content="Mirrors In Space" />
+<meta property="og:image" content="https://i.imgur.com/RVwIl8k.jpg" />
+</head>
+<body>
+        <script id="vs" type="x-shader/x-vertex">
+
+            uniform sampler2D map;
+
+            uniform float width;
+            uniform float height;
+            uniform float nearClipping, farClipping;
+
+            uniform float pointSize;
+            uniform float zOffset;
+
+            varying vec2 vUv;
+
+            const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
+            const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
+
+            void main() {
+
+                vUv = vec2( position.x / width, position.y / height );
+
+                vec4 color = texture2D( map, vUv );
+                float depth = ( color.r + color.g + color.b ) / 3.0;
+
+                // Projection code by @kcmic
+
+                float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
+
+                vec4 pos = vec4(
+                    ( position.x / width - 0.5 ) * z * XtoZ,
+                    ( position.y / height - 0.5 ) * z * YtoZ,
+                    - z + zOffset,
+                    1.0);
+
+                gl_PointSize = pointSize;
+                gl_Position = projectionMatrix * modelViewMatrix * pos;
+
+            }
+
+        </script>
+
+        <script id="fs" type="x-shader/x-fragment">
+
+            uniform sampler2D map;
+
+            varying vec2 vUv;
+
+            void main() {
+
+                vec4 color = texture2D( map, vUv );
+                if (color.r > 0.65 && color.g > 0.65 && color.b > 0.65)
+                    discard;
+                gl_FragColor = vec4( color.r, color.g, color.b, 0.2 );
+
+            }
+
+        </script>
+    
+    <script type="x-shader/x-vertex" id="vertexShader">  
+
+      void main()   {
+        gl_Position = vec4( position, 1.0 );
+      }
+    </script>
+
+    <div id="container"></div>
+
+    <div id="fullscreen">fullscreen</div>
+    <div id="volume" style="display:none">TURN SOUND ON</div>
+    <div id="info">
+        <img src="css/info-button.png" width="25px"/>
+    </div>
+
+    <div id="main-section" class="landing-page">
+        <a class="btn btn-white btn-big" id="enter"><p style="text-align: center">mirrors in space</p></a>
+        <div id="instructions">
+            <p class="landing-p">
+                <strong>click and drag</strong> to look around<br>
+                <strong>click</strong> on the mirror to change space<br>
+                <strong>left/right arrows</strong> to change mirror<br>
+                <strong>up/down arrows</strong> to toggle reflection<br>
+                <strong>space bar</strong> to toggle rotation<br>
+                <strong>scroll</strong> to zoom on the mirror
+            </p>
+        </div>
+        <div id="title">
+            we are but mirrors in space – to be outlived<br>
+            by the stairs free falling into the running water<br>
+            the stars rolling away from each other<br>
+            outshone by silhouettes on fortuitous placards<br>
+            & out of sight, forgetful of our smeared desires
+        </div>
+        <div class="landing-p" style="position: absolute; top: 2px; font-size: 17px">
+            <strong>warning:</strong> stroboscopic effects
+        </div>
+    </div>
+
+    <div class="landing-p" style="position: absolute; top: -6px; left: -9px; colo: white; cursor: pointer">
+        <strong><span id="about">about</span></strong>
+    </div>
+
+    <div id="about-section" class="landing-page" style="display:none;">
+
+        <div class="landing-p" style=" position: absolute; top:100px; font-size: 20px">
+            <div><span style="font-size: 22px"><strong>concept & development</strong></span><br>
+                Bogdan Licar<br>
+                Emily Ranford<br>
+            </div><br>
+            <div><span style="font-size: 22px"><strong>performers</strong></span><br>
+                Emily Ranford<br>
+                Anna Jarrige<br>
+                Nikoleta Koutitsa<br>
+                Nitsan Margaliot<br>
+                Bogdan Licar<br>
+            </div><br>
+
+            <div><span style="font-size: 22px"><strong>supported by</strong></span><br>
+                Lake Studios Berlin<br>
+                TroikaTronix<br>
+                Berliner Senat
+            </div>
+            <br>
+            <div><a id="email" href="mailto:weare@mirrorsin.space">weare@mirrorsin.space</a></div>
+        </div>
+    </div>
+
+    <div id="info-instructions">
+        <strong>click and drag</strong> to look around<br>
+        <strong>click</strong> on the mirror to change space<br>
+        <strong>left/right arrows</strong> to change mirror<br>
+        <strong>up/down arrows</strong> to toggle reflection<br>
+        <strong>space bar</strong> to toggle rotation<br>
+        <strong>scroll</strong> to zoom on the mirror
+    </div>
+
+    <script src="vendor/three.min.js"></script>
+    <script src="vendor/OrbitControls.js"></script>
+    <script src="ShaderLoader.js"></script>
+    <script src="fbo.js"></script>
+    <script type="module" src="vid360.js"></script>
+    <script src="vendor/three-bmfont.js"></script>
+    <script src="vendor/load-bmfont.js"></script>
+    <script src="vendor/TweenMax.min.js"></script>
+    <script src="hyperspace.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script type="module">
+
+        import {EffectComposer} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/EffectComposer.js';
+        import {RenderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/RenderPass.js';
+        import {ShaderPass} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/postprocessing/ShaderPass.js';
+        import {Reflector} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/objects/Reflector.js';
+        import {Curves} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/curves/CurveExtras.js';
+        import {vid360} from './vid360.js';
+
+        var scene, camera, renderer, composer, controls, timer=0, timerInc=.01;
+        var simulationShader, renderShader, kaleidoscopePass;
+        var soundOn=false, audioLoader, soundObj;
+
+        var glimpsing = false, glimpseLength = 1, amplInc = 0.11, amplDec = 0.08;
+        var texture, video, videoMaterial, defaultTexture;
+        var imgUrls = ['ourobouros.jpeg', 'ourobouros2.jpeg', 'sigil.jpeg', 'astro.jpeg', 'focus.jpeg', 'solar.jpeg']
+        var imgs = [];
+        var videoPlaying = true, kaleidoing = false;
+        var listener, volumeButton;
+
+        var textMaterial, textGeometry, textMesh, textAnchor, font, fontTexture, alphabeting, alphabetDuration = 0.5;
+        var cameraCube, sceneCube;
+        window.onload = function() {
+            var sl = new ShaderLoader();
+            sl.loadShaders({
+                noise_simulationVS : "",
+                noise_simulationFS : "",
+                noise_renderVS : "",
+                noise_renderFS : "",                
+                bmfont_frag : "",
+                bmfont_vert : "",
+                image_simulationVS : "",
+                image_simulationFS : "",
+                image_renderVS : "",
+                image_renderFS : "",
+                transformations_frag: "",
+                transformations_vert: "",
+                blackhole_frag: "",
+                bh_frag: "",
+                droste_frag: "",
+                droste_frag2: "",
+                kin_vert: "",
+                kin_frag: "",
+            }, "./glsl/", init );
+        };
+
+        function rndItem(arr) {
+            return arr[THREE.Math.randInt(0, arr.length - 1)];
+        }
+
+        function searchFlickr(keyword) {
+            var settings = {
+                // "url": "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=ebea2a03022c72d24c1759957b87b8ba&sort=relevance&text=" + keyword + "&extras=url_m&per_page=10&format=json&nojsoncallback=1",
+                "url": "https://www.googleapis.com/customsearch/v1?key=AIzaSyDLclkvOrvGOsAcz7Q06OS6VHS_AosHwR0&cx=f5ed695aa76ff0bd3&q=" + keyword + "&searchType=image&imgSize=xlarge&alt=json&num=10&start=1",
+                "method": "GET",
+                "timeout": 0,
+            };
+            var img;
+            $.ajax(settings).done(function (response) {
+                loadImages([response['items'][1]['image']['thumbnailLink']]).then(images => {
+                // loadImages([response['photos']['photo'][0]['url_m']]).then(images => {
+                    userImages = userImages.concat(images);
+                    createImage(images[0]);
+                });
+            });
+            return img;
+        }
+
+        var skySnd = 0, transitionSnd = 0, videoSnd = 0;
+        var snd;
+        function playSound(name, fadeIn, fadeOut) {
+            if (name === 'sky') {
+                name = ['meditation',  'aleksi', 'hc'][skySnd];
+                skySnd = (skySnd + 1) % 3;
+            } else if (name === 'transition') {
+                name = ['coil', 'cio', 'elaine'][transitionSnd];
+                transitionSnd = (transitionSnd + 1) % 3;
+            } else if (name === 'video') {
+                if (nextVideo in sndVids) {
+                    name = sndVids[nextVideo];
+                } else {
+                    name = ['ff', 'thornhill2', 'ff2', 'voices'][videoSnd];
+                    videoSnd = (videoSnd + 1) % 4;
+                }
+            }
+
+            if (audioLoader == undefined) {
+                audioLoader = new THREE.AudioLoader();
+                listener = new THREE.AudioListener();
+                camera.add(listener);
+            }
+
+            snd = new THREE.Audio(listener);
+            snds[name] = snd;
+
+            audioLoader.load('snd/' + name + '.ogg', function(buffer) {
+                // volumeButton.style.display = 'block';
+                snd.setBuffer(buffer);
+                snd.setLoop(true);
+                if (soundOn) {
+                    snd.play();
+                }
+            });
+
+            fadeOut = fadeOut || 0;
+            fadeIn = fadeIn || 0;
+
+            if (fadeIn > 0) {
+                let volume = {x : 0};
+                TweenMax.to(volume, fadeIn, {
+                    x: 1,
+                    onUpdate: function() {
+                        snd.setVolume(this.target.x);
+                    }
+                });
+            } else {
+                snd.setVolume(1);
+            }
+
+            if (fadeOut > 0) {
+                let volume = {x : 1};
+                var fadeOutSnds = Object.assign({}, snds);
+                delete fadeOutSnds[name];
+
+                // if (snds[name] !== undefined) snds.splice(index, 1);
+                TweenMax.to(volume, fadeOut, {
+                    x: 0,
+                    onUpdate: function() {
+                        for (const [sndName, snd] of Object.entries(fadeOutSnds)) {
+                            if (sndName !== name) {
+                                snd.setVolume(this.target.x);
+                            }
+                        }
+                    },
+                    onComplete: function() {
+                        for (const [sndName, snd] of Object.entries(fadeOutSnds)) {
+                            if (sndName !== name)
+                                snd.pause();
+                        }
+                    },
+                });
+            } else if (fadeOut == 0) {
+                var fadeOutSnds = Object.assign({}, snds);
+                delete fadeOutSnds[name];
+                for (const [sndName, snd] of Object.entries(fadeOutSnds)) {
+                    if (sndName !== name)
+                        snd.pause();
+                }
+            }
+            return name;
+        }
+
+        function onVolumeChange(event) {
+            if (!soundOn) {
+                soundOn = true;
+                for (const [name, snd] of Object.entries(snds)) {
+                    snd.play();
+                }
+                volumeButton.innerHTML = "TURN SOUND OFF";
+            } else {
+                for (const [name, snd] of Object.entries(snds)) {
+                    snd.pause();
+                }
+                volumeButton.innerHTML = "TURN SOUND ON";
+                soundOn = false;
+            }
+        }
+
+        //returns a Float32Array buffer of random 3D coordinates
+        function getRandomData(count, size){
+            var len = count * 4;
+            var data = new Float32Array(len);
+            while(len--) {
+                data[len] = (Math.random() - .5) * size;
+            }
+            return data;
+        }
+
+        function getDefaultTexture(width, height, size) {
+            let data = getSphere(width * height, size);
+            let texture = new THREE.DataTexture(
+                data, width, height, THREE.RGBAFormat, THREE.FloatType, THREE.DEFAULT_MAPPING, THREE.MirroredRepeatWrapping, THREE.MirroredRepeatWrapping
+                );
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        var userText = '';
+        function extractTopic() {
+            var settings = {
+                "url": "https://api.meaningcloud.com/topics-2.0?key=6fcafd5f4b8193ad413320c8c9e00758&lang=en&txt=" + userText + "&tt=e",
+                "method": "POST",
+                "timeout": 0,
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
+        }
+
+        function init(args) {
+            loadImages(imgUrls).then(images => {
+                imgs = images;
+                loadFont('fonts/DejaVu-sdf.fnt', function(err, fnt) {
+                    font = fnt;
+                    let textureLoader = new THREE.TextureLoader();
+                    textureLoader.load('fonts/DejaVu-sdf.png', function (texture) {
+                        fontTexture = texture;
+                        initCont(args);
+                    });
+                });
+            });
+        }
+
+        function initCont(args) {
+            args = args || {};
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            renderer = new THREE.WebGLRenderer({
+                logarithmicDepthBuffer: true,
+                antialias: true
+            });
+            renderer.setSize(w, h);
+            renderer.setClearColor(defaultBackColor);
+            renderer.autoClear = false;
+
+            document.body.appendChild(renderer.domElement);
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000000);
+
+            controls = new THREE.OrbitControls(camera);
+            camera.position.z = 30;
+            controls.enableDamping = true;
+            controls.maxDistance = 30;
+            controls.minDistance = 30;
+            controls.enableKeys = false;
+
+            cameraCube = new THREE.PerspectiveCamera(100, 0, 0.0001, 10000000);
+            sceneCube = new THREE.Scene();
+            var ambient = new THREE.AmbientLight(0xffffff);
+            sceneCube.add(ambient);
+
+            // create an AudioListener and add it to the camera
+            volumeButton = document.getElementById('volume');
+            volumeButton.style.display = 'none';
+
+            var ww = 512;
+            var width  = args.w || ww;
+            var height = args.h || ww;
+
+            // create a geometry of packed bitmap glyphs, 
+            // word wrapped to 300px and right-aligned
+            textGeometry = bmfont({
+                width: 100,
+                align: 'center',
+                font: font,
+                // flipY: true
+            });
+            // the texture atlas containing our glyphs
+            textMaterial = new THREE.RawShaderMaterial({
+                vertexShader: ShaderLoader.get("bmfont_vert"),
+                fragmentShader: ShaderLoader.get("bmfont_frag"),
+                uniforms: {
+                    animate: {type: 'f', value: 1.},
+                    duration: {type: 'f', value: alphabetDuration},
+                    timer: {type: 'f', value: 0.},
+                    map: {type: 't', value: fontTexture},
+                    color: {type: 'c', value: new THREE.Color(0, 0, 0)}
+                },
+                transparent: true,
+                side: THREE.DoubleSide,
+                depthTest: false
+            });
+            textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            // scale it down so it fits in our 3D units
+            textAnchor = new THREE.Object3D();
+            // textAnchor.scale.multiplyScalar(-0.05);
+            textAnchor.add(textMesh);
+            textAnchor.rotation.x = Math.PI;
+            scene.add(textAnchor);
+
+            defaultTexture = getDefaultTexture(width, height, args.s || 2000);
+
+            simulationShader = new THREE.ShaderMaterial({
+                uniforms: {
+                    texture: {type: "t", value: defaultTexture},
+                    timer: {type: "f", value: 0},
+                    frequency: {type: "f", value: .00032},
+                    amplitude: {type: "f", value: 40},
+                    maxDistance: {type: "f", value: 40},
+                    morph: {type: 'f', value: 0.0},
+                    textureDest: {type: "t", value: null},
+                    morphTimestamp: {type: 'f', value: null},
+                    morphSpeed: {type: 'f', value: 0.1},
+                    mouse: {type: "v3", value: new THREE.Vector3(0)},
+                    // alphaMap: { type: 't', value: currVid.mesh.material.alphaMap }
+                },
+                vertexShader: ShaderLoader.get( "noise_simulationVS"),
+                fragmentShader:  ShaderLoader.get( "noise_simulationFS"),
+            });
+
+            renderShader = new THREE.ShaderMaterial( {
+                uniforms: {
+                    positions: {type: "t", value: null},
+                    pointSize: {type: "f", value: 3},
+                    nColor: {type: "v3", value: new THREE.Vector3(1, 1, 1)},
+                    big: {type: "v3", value: new THREE.Vector3(207, 221, 212).multiplyScalar(1/0xFF)},
+                    small: {type: "v3", value: new THREE.Vector3(213, 239, 229).multiplyScalar(1/0xFF)},
+                    timer: {value: timer},
+                    mouse: {type: "v3", value: new THREE.Vector3(0)}
+                },
+                vertexShader: ShaderLoader.get("noise_renderVS"),
+                fragmentShader: ShaderLoader.get("noise_renderFS"),
+                transparent: true,
+                side:THREE.DoubleSide,
+            });
+
+            const kaleidoscopeShader = {
+                uniforms: {
+                  "tDiffuse": {value: null},
+                  "sides": {value: 1.},
+                  "angle": {value: 0.},
+                  "uvOffset": {value: -.5},
+                  "diffuseOffset": {value: .5},
+                  // 0=sin, 1=cos, 2=tan, 3=atan
+                  "trigoX": {value: 0},
+                  "trigoY": {value: 1}
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+                    }
+                `,
+                fragmentShader: `
+                    uniform sampler2D tDiffuse;
+                    uniform float sides;
+                    uniform float angle;
+                    uniform float uvOffset;
+                    uniform float diffuseOffset;
+                    uniform int trigoX;
+                    uniform int trigoY;
+
+                    varying vec2 vUv;
+                    const float tau = 2. * 3.1415926535897932384626433832795;
+
+                    float _trigo(int trigo, float a) {
+                        if (trigo == 0)
+                            return sin(a);
+                        if (trigo == 1)
+                            return cos(a);
+                        if (trigo == 2)
+                            return tan(a);
+                        if (trigo == 3)
+                            return atan(a);
+                    }
+
+                    void main() {
+                        vec2 p = vUv + uvOffset;
+                        float r = length(p);
+                        float a = atan(p.x, p.y) + angle;
+                        a = mod(a, tau/sides);
+                        a = abs(a - tau/sides/2.);
+                        p = r * vec2(_trigo(trigoX, a), _trigo(trigoY, a));
+                        vec4 color = texture2D(tDiffuse, p + diffuseOffset);
+                        gl_FragColor = color;
+                    }
+                `
+              };
+
+            FBO.init(width, height, renderer, simulationShader, renderShader);
+
+            addDomListeners();
+
+            composer = new EffectComposer(renderer);
+            let renderPass = new RenderPass(scene, camera);
+            composer.addPass(renderPass);
+
+            kaleidoscopePass = new ShaderPass(kaleidoscopeShader);
+            kaleidoscopePass.renderToScreen = true;
+
+            // var effectBloom = new UnrealBloomPass(128, 0.8, 2.0, 0.0);
+            // let scenePass = new THREE.RenderPass(scene, camera)
+            // let effectCopy = new ShaderPass(THREE.CopyShader)
+            // effectCopy.renderToScreen = true;
+            // composer.addPass(renderPass);
+            // composer.addPass(effectBloom);
+            // composer.addPass(effectCopy);
+
+            // kaleidoscopePass.enabled = true;
+            composer.addPass(kaleidoscopePass);
+
+            sky = new THREE.Group();
+            sky.add(FBO.particles);
+            // sky.add(textAnchor);
+            // sky.visible = false;
+
+            videoPlaying = false;
+            // initVids();
+            // mainSnd = 'voices';
+            playSound('mirrors');
+            // observer = new Observer(60.0, window.innerWidth/window.innerHeight, 1, 80000);
+            // observer.distance = 8;
+            // camControl = new THREE.CameraDragControls(observer, renderer.domElement); // take care of camera view
+            // // camControl sets up vector
+            // scene.add(observer);
+            // delta = 0;
+            // bTime = 0;
+
+            scene.add(sky);
+
+            startKinect(2);
+
+            sky.visible = true;
+            FBO.particles.material.visible = false;
+
+            onResize();
+            update();
+        }
+
+        var kinVids = [];
+
+        function startKinect(numVideos) {
+            for (let j=0; j < numVideos; j++) {
+                let kin = kinVid('kin' + THREE.Math.randInt(1, 10) + '.mp4');
+                kin.video.play();
+                sky.add(kin);
+                kinVids.push(kin);
+                cameraCube.lookAt(kin.position);
+            }
+        }
+
+        function stopKinect() {
+            for (let j=0; j < kinVids.length; j++) {
+                kinVids[j].video.pause();
+                sky.remove(kinVids[j]);
+            }
+            kinVids = [];
+        }
+
+        function kinVid(name) {
+            var video = document.createElement('video');
+            video.crossOrigin = "*";
+            video.loop = true;
+            video.playsinline = true;
+            video.muted = true;
+            video.src = 'vid/' + name;
+
+            const texture = new THREE.VideoTexture( video );
+            texture.minFilter = THREE.NearestFilter;
+
+            const width = 640, height = 480;
+            const nearClipping = 0.01, farClipping = 4000;
+
+            const geometry = new THREE.BufferGeometry();
+
+            const vertices = new Float32Array( width * height * 3 );
+
+            for ( let i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
+                vertices[ i ] = j % width;
+                vertices[ i + 1 ] = Math.floor( j / width );
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    "map": { value: texture },
+                    "width": { value: width },
+                    "height": { value: height },
+                    "nearClipping": { value: nearClipping },
+                    "farClipping": { value: farClipping },
+                    "pointSize": { value: 4 },
+                    "zOffset": { value: 3000 }
+                },
+                vertexShader: ShaderLoader.get("kin_vert"),
+                fragmentShader: ShaderLoader.get("kin_frag"),
+                blending: THREE.AdditiveBlending,
+                depthTest: false, depthWrite: false,
+                transparent: true
+            });
+
+            const mesh = new THREE.Points(geometry, material);
+            mesh.position.set(THREE.Math.randInt(-150, 50), THREE.Math.randInt(-150, 50), THREE.Math.randInt(-150, 50));
+            mesh.rotation.x = Math.PI;
+            mesh.video = video;
+
+            // video.play();
+            return mesh;
+        }
+        var kin;
+
+        var allVids = [
+            'volks_kaleido',
+            'volks_carrying',
+            'planetarium_game',
+            'volks_trees',
+            'planetarium_phrase',
+            'volks_kaleido_special',
+            'planetarium_free',
+            'planetarium_hands',
+        ];
+
+        var sndVids = {
+            volks_carrying: 'carrying',
+            volks_kaleido: 'mirrors',
+            planetarium_hands: 'drone',
+            planetarium_game: 'voices',
+            volks_trees: 'kaleido',
+            planetarium_phrase: 'game',
+            planetarium_free: 'glacier',
+            volks_kaleido_special: 'gong'
+        };
+
+
+        function initVids() {
+            currVid = vid360.init(renderer, allVids[vidCount], Curves, playSound);
+            // vidCount += 1;
+            videoPlaying = true;
+            TweenMax.to(currVid.equirectMaterial, 1, { opacity: 1 });
+        }
+
+        function goFuckeryGo() {
+            $("#about").hide();
+            initVids();
+            // $(".landing-page").hide();
+            currVid.video.currentTime = 0;
+            currVid.start();
+            stopKinect();
+            videoPlaying = true;
+            
+            let volume = {x : -0.2};
+            TweenMax.to(volume, 1, {
+                x: 1,
+                onUpdate: function() {
+                    if (this.target.x > 0.01 && $("#volume").text() == "TURN SOUND ON") {
+                        $("#volume").click();
+                    }
+                    snd.setVolume(this.target.x);
+                }
+            });
+            $(".landing-page").fadeOut("slow", function() {
+               $("#container").fadeIn("slow");
+               $("#info").fadeIn("slow");
+            });
+            volumeButton.style.display = 'block';
+            introing = false;
+        }
+
+        var floatingVids = [], currVid, sky;
+        var lastVideo, vidCount = 0;
+        var userMeshes = [];
+        var orthoCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow(2, 53), 1), userImgRtts = [];
+        var imgsScene = new THREE.Scene();
+
+        class Img3D {
+
+            constructor(width, height, renderer, simulationMaterial, renderMaterial){
+                //3 rtt setup
+                this.scene = new THREE.Scene();
+                this.orthoCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow(2, 53), 1);
+
+                //4 create a target texture
+                var options = {
+                    minFilter: THREE.NearestFilter,//important as we want to sample square pixels
+                    magFilter: THREE.NearestFilter,//
+                    format: THREE.RGBAFormat,//180407 changed to RGBAFormat
+                    type:THREE.FloatType//important as we need precise coordinates (not ints)
+                };
+                this.rtt = new THREE.WebGLRenderTarget(width, height, options);
+
+                //5 the simulation:
+                //create a bi-unit quadrilateral and uses the simulation material to update the Float Texture
+                var geom = new THREE.BufferGeometry();
+                geom.setAttribute(
+                    'position',
+                    new THREE.BufferAttribute(
+                        new Float32Array([-1,-1,0,0, 1,-1,0,0, 1,1,0,0, -1,-1,0,0, 1,1,0,0, -1,1,0,0]), 
+                        4
+                    ) 
+                );
+                geom.setAttribute('uv',
+                    new THREE.BufferAttribute(
+                        new Float32Array([0,1, 1,1, 1,0, 0,1, 1,0, 0,0]),
+                        2
+                    )
+                );
+                scene.add(new THREE.Mesh(geom, simulationMaterial));
+
+                //6 the particles:
+                //create a vertex buffer of size width * height with normalized coordinates
+                var l = (width * height);
+                var vertices = new Float32Array(l * 4);
+                for (var i = 0; i < l; i++) {
+                    var i3 = i * 4;
+                    vertices[i3] = (i % width) / width ;
+                    vertices[i3 + 1] = (i / width) / height;
+                }
+
+                //create the particles geometry
+                var geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 4));
+                // geometry.setAttribute('newcolor', new THREE.BufferAttribute(colors, 3));
+                //the rendermaterial is used to render the particles
+                
+                this.particles = new THREE.Points(geometry, renderMaterial);
+
+                this.renderer = renderer;
+            }
+
+            //7 update loop
+            update(){
+
+                //1 update the simulation and render the result in a target texture
+                this.renderer.clear();
+                this.renderer.setRenderTarget(this.rtt);
+                this.renderer.render(this.scene, this.orthoCamera);
+                this.renderer.setRenderTarget(null);
+
+                //2 use the result of the swap as the new position for the particles' renderer
+                this.particles.material.uniforms.positions.value = this.rtt.texture;
+
+            }
+        }
+
+        var randomVerts = [], verts, startTime, starsGeometry, currentVerts;
+
+        function createImage(img) {
+            // var width = img.width, height = img.height;
+            // //4 create a target texture
+
+            // var options = {
+            //     minFilter: THREE.NearestFilter,//important as we want to sample square pixels
+            //     magFilter: THREE.NearestFilter,//
+            //     format: THREE.RGBAFormat,//180407 changed to RGBAFormat
+            //     type:THREE.FloatType//important as we need precise coordinates (not ints)
+            // };
+            // userImgRtts.push(THREE.WebGLRenderTarget(width, height, options));
+
+            // //5 the simulation:
+            // //create a bi-unit quadrilateral and uses the simulation material to update the Float Texture
+            // var geom = new THREE.BufferGeometry();
+            // geom.setAttribute(
+            //     'position',
+            //     new THREE.BufferAttribute(
+            //         new Float32Array([-1,-1,0,0, 1,-1,0,0, 1,1,0,0, -1,-1,0,0, 1,1,0,0, -1,1,0,0]), 
+            //         4
+            //     ) 
+            // );
+            // geom.setAttribute('uv',
+            //     new THREE.BufferAttribute(
+            //         new Float32Array([0,1, 1,1, 1,0, 0,1, 1,0, 0,0]),
+            //         2
+            //     )
+            // );
+            // scene.add(new THREE.Mesh(geom, simulationShader));
+
+            // //6 the particles:
+            // //create a vertex buffer of size width * height with normalized coordinates
+            // var l = (width * height);
+            // var vertices = new Float32Array(l * 4);
+            // for (var i = 0; i < l; i++) {
+            //     var i3 = i * 4;
+            //     vertices[i3] = (i % width) / width ;
+            //     vertices[i3 + 1] = (i / width) / height;
+            // }
+
+            //create the particles geometry
+            // var geometry = new THREE.BufferGeometry();
+            // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 4));
+            // //the rendermaterial is used to render the particles
+            // var image = new THREE.Points(geometry, renderShader);
+            // image.position.set(
+            //     THREE.Math.randInt(-110, -20),
+            //     THREE.Math.randInt(-90, -10),
+            //     THREE.Math.randInt(-80, -10)
+            // );
+            // sky.add(image);
+            // userMeshes.push(image);
+            // return image;
+
+            const loader = new THREE.TextureLoader();
+            var texture = loader.load(img.src);
+
+            // var elevation = 64;
+            // var data = getImage( img, img.width, img.height, elevation );
+            // texture = new THREE.DataTexture( data, img.width, img.height, THREE.RGBFormat, THREE.FloatType );
+            // texture.needsUpdate = true;
+
+            var pixels = 100;
+            var pixelSize = 0.2;
+            var randomVerts = [], verts, currentVerts;
+
+            var starsGeometry = new THREE.PlaneBufferGeometry(20, 20, pixels, pixels);
+            currentVerts = starsGeometry.attributes.position.array;
+            verts = new Float32Array(starsGeometry.attributes.position.array);
+
+            for(var i =0;i<starsGeometry.attributes.position.count;i++){
+                randomVerts.push(
+                    THREE.Math.lerp(-2,2,Math.random()),
+                    THREE.Math.lerp(-2,2,Math.random()),
+                    THREE.Math.lerp(-3,3,Math.random())
+              )
+            }
+
+            starsGeometry.attributes.position.setDynamic(true);
+            currentVerts = starsGeometry.attributes.position.array;
+            startTime = new Date().getTime();
+
+            var starsMaterial = new THREE.PointsMaterial({color: 0x888888, size:pixelSize, transparent:true});
+            var starField = new THREE.Points(starsGeometry, starsMaterial);
+
+            starsMaterial.onBeforeCompile = function(shader){
+                shader.vertexShader =  shader.vertexShader.replace('void main() {',[
+                "varying vec2 globalUV;",
+                "void main() {",
+                "globalUV = uv;"
+                ].join('\n'));
+
+                shader.fragmentShader = shader.fragmentShader.replace("uniform vec3 diffuse;",[
+                "varying vec2 globalUV;",
+                "uniform sampler2D tDiffuse;",
+                "uniform vec3 diffuse;",
+                ].join('\n')).replace("gl_FragColor = vec4( outgoingLight, diffuseColor.a );",[
+                "vec4 texColor = texture2D( tDiffuse, globalUV );",
+                "outgoingLight *= texColor.xyz;",
+                "gl_FragColor = vec4( outgoingLight, texColor.a * diffuseColor.a );"
+                ].join('\n'));
+                
+                shader.uniforms.tDiffuse = {value: texture};
+            }
+
+            // var data = getImage(img, img.width, img.height, 64);
+            // for (var i=0; i<starsGeometry.vertices.length; i++ ) {
+            //   starsGeometry.vertices[i].z = data[i];
+            // }
+
+            sky.add(starField);
+            starsGeometry.attributes.position.needsUpdate = true;
+
+            // var texture = new THREE.DataTexture( data, img.width, img.height, THREE.RGBFormat, THREE.FloatType );
+            // texture.needsUpdate = true;
+
+            // //this will be used to update the particles' texture
+
+            // var simulationShader = new THREE.ShaderMaterial({
+            //     uniforms: {
+            //         texture: { type: "t", value: texture }
+            //     },
+            //     vertexShader: ShaderLoader.get( "image_simulationVS" ),
+            //     fragmentShader:  ShaderLoader.get( "image_simulationFS" )
+            // });
+
+
+            // //this will be used to represent the particles on screen
+            // //note that 'positions' is a texture that will be set and updated during the FBO.update() call
+            // var renderShader = new THREE.ShaderMaterial( {
+            //     uniforms: {
+            //         positions: { type: "t", value: null },
+            //         pointSize: { type: "f", value: 1 }
+            //     },
+            //     transparent: true,
+            //     side:THREE.DoubleSide,
+            //     vertexShader: ShaderLoader.get( "image_renderVS" ),
+            //     fragmentShader: ShaderLoader.get( "image_renderFS" )
+            // } );
+
+            // var img = new Img3D(img.width, img.height, renderer, simulationShader, renderShader, scene);
+            // userMeshes.push(img);
+            // scene.add(img.particles);
+
+        }
+
+        var geometries = [
+            new THREE.SphereBufferGeometry(15, 40, 60),
+            new THREE.DodecahedronBufferGeometry(15, 0),
+            new THREE.IcosahedronBufferGeometry(15, 0),
+            new THREE.OctahedronBufferGeometry(15, 0),
+            new THREE.TorusBufferGeometry(13, 3, 100, 16),
+            new THREE.TorusKnotBufferGeometry(13, 3, 100, 16),
+            new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+            new THREE.TubeBufferGeometry(new Curves.VivianiCurve(70), 1000, 3, 10, true),
+            new THREE.TubeBufferGeometry(new Curves.CinquefoilKnot(20), 1000, 3, 10, true),
+            new THREE.TubeBufferGeometry(new Curves.FigureEightPolynomialKnot(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4b(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.HelixCurve(), 100, 2, 5, true),
+            // new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot4a(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.DecoratedTorusKnot5c(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.TrefoilKnot(), 1000, 3, 10, true),
+            // new THREE.TubeBufferGeometry(new Curves.GrannyKnot(), 1000, 3, 10, true),
+            // [THREE.ParametricBufferGeometry, [THREE.ParametricGeometries.klein, 25, 25]]
+        ], geomIndex = 0;
+
+        var rotateCamera = true;
+        var seeingStr = '', lastKeyStroke = Date.now();
+        var lastWord = '', userImages = [];
+
+        function onDocumentKeyDown(event) {
+            // if (event.keyCode >= 65 && event.keyCode <= 90) {
+            //     renderer.setClearColor(new THREE.Color(0, 0, 0));
+            //     textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
+            //     alphabetOn = true;
+            //     videoPlaying = false;
+            //     // startKaleido({});
+            //     // typing = true;
+            //     // whatDoYouSeeOn = true;
+            //     if (Date.now() - lastKeyStroke < 1000) {
+            //         seeingStr += String.fromCharCode(event.keyCode);
+            //     } else {
+            //         seeingStr = String.fromCharCode(event.keyCode);
+            //     }
+            //     // setTimeout(function(){ whatDoYouSeeOn = false; alphabetOn = false; }, 500);
+            //     lastKeyStroke = Date.now();
+            //     lastWord += String.fromCharCode(event.keyCode);
+            // } else if (event.keyCode == 32) {
+            //     seeingStr = '';
+            //     userText += ' ' + lastWord;
+            //     if (lastWord.length > 2)
+            //         var img = searchFlickr(lastWord);
+            //     lastWord = '';
+            //     alphabetOn = false;
+            //     // if (userText.split(' ').length >= 10) {
+            //     //     extractTopic();
+            //     // }
+            // } 
+            // else {
+            //     videoPlaying = true;
+            //     whatDoYouSeeOn = false;
+            //     alphabetOn = false;
+            // }
+
+            if (event.keyCode == 39) {
+                event.preventDefault();
+                geomIndex = (geomIndex + 1) % geometries.length;
+            } else if (event.keyCode == 37) {
+                event.preventDefault();
+                if (geomIndex > 0) {
+                    geomIndex = (geomIndex - 1) % geometries.length;
+                } else {
+                    geomIndex = geometries.length - 1;
+                }
+            }
+
+            if (event.keyCode == 39 || event.keyCode == 37) {
+                event.preventDefault();
+                for (var j=0; j<floatingVids.length; j++) {
+                    floatingVids[j].geometry.dispose();
+                    floatingVids[j].geometry = geometries[geomIndex];
+                    // floatingVids[j].material.needsUpdate = true;
+                    if (geomIndex > 5) {
+                        floatingVids[j].scale.set(0.5, 0.5, 0.5);
+                    } else {
+                        floatingVids[j].scale.set(1, 1, 1);
+                    }
+                }
+            }
+
+            // if (event.keyCode == 40 || event.keyCode == 38) {
+            //     event.preventDefault();
+            //     for (var j=0; j<floatingVids.length; j++) {
+            //         if (floatingVids[j].getRenderTarget().texture.mapping == THREE.EquirectangularReflectionMapping) {
+            //             floatingVids[j].getRenderTarget().texture.mapping = THREE.EquirectangularRefractionMapping;
+            //         } else {
+            //             floatingVids[j].getRenderTarget().texture.mapping = THREE.EquirectangularReflectionMapping;
+            //         }
+            //         floatingVids[j].material.needsUpdate = true;
+            //     }
+            // }
+
+            if (event.keyCode == 32) {
+                rotateCamera = !rotateCamera;
+            }
+        }
+
+        function addFloatingVid(name) {
+            var geometry = new THREE.SphereBufferGeometry(15, 40, 60);
+            var mesh = new Reflector(geometry, {
+                clipBias: 0.003,
+                textureWidth: window.innerWidth * window.devicePixelRatio,
+                textureHeight: window.innerHeight * window.devicePixelRatio,
+                recursion: 100,
+                color: new THREE.Color(0.9843, 0.6549, 0),
+                // color: new THREE.Color(1, 1, 0)
+            } );
+            mesh.getRenderTarget().texture.wrapS = THREE.MirroredRepeatWrapping;
+            mesh.getRenderTarget().texture.wrapT = THREE.MirroredRepeatWrapping;
+            mesh.material.needsUpdate = true;
+            mesh.material.side = THREE.DoubleSide;
+            // mesh.position.y = 0.5;
+            // mesh.rotateX( - Math.PI / 2 );
+            mesh.vidName = name;
+
+            // mesh.vidName = name;
+            return mesh;
+        }
+
+        document.addEventListener('fullscreenchange', exitHandler);
+        document.addEventListener('webkitfullscreenchange', exitHandler);
+        document.addEventListener('mozfullscreenchange', exitHandler);
+        document.addEventListener('MSFullscreenChange', exitHandler);
+
+        function exitHandler() {
+            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+                $("#fullscreen").show();
+            }
+        }  
+
+        var snds = {}, mainSnd;
+        function addDomListeners() {
+            volumeButton.addEventListener('click', onVolumeChange);
+            document.getElementById('enter').addEventListener('click', goFuckeryGo);
+            window.addEventListener("resize", onResize);
+            window.addEventListener("keydown", onDocumentKeyDown);
+
+            var goFS = document.getElementById("fullscreen");
+            goFS.addEventListener("click", function() {
+                $("#fullscreen").hide();
+                document.body.requestFullscreen();
+            }, false);
+
+            $("#about").click(function(){
+                if ($("#about").text() == "about") {
+                    $("#main-section").fadeOut('slow');
+                    $("#about-section").fadeIn('slow');
+                    $("#about").text("back");
+                } else {
+                    $("#about-section").fadeOut('slow');
+                    $("#main-section").fadeIn('slow');
+                    $("#about").text("about");
+                }
+            });
+
+            $("#info").mouseenter(function(){
+                $("#info-instructions").fadeIn("fast");
+            });
+            $("#info").mouseleave(function() {
+                $("#info-instructions").fadeOut("fast");
+            });
+        }
+
+        function getSpherePoint(point, size){
+            point.x = Math.random() * 2 - 1;
+            point.y = Math.random() * 2 - 1;
+            point.z = Math.random() * 2 - 1;
+
+            if(point.length() > 1) {
+                return getSpherePoint(point, size);
+            }
+            return point.normalize().multiplyScalar(size);
+        }
+
+        //returns a Float32Array buffer of spherical 3D points
+        function getSphere(count, size){
+            var len = count * 4;
+            var data = new Float32Array(len);
+            var point = new THREE.Vector3();
+            for(var i = 0; i < len; i += 4){
+                getSpherePoint(point, size);
+                data[i] = point.x;
+                data[i + 1] = point.y;
+                data[i + 2] = point.z;
+                data[i + 3] = Math.abs(point.x / size);
+            }
+            return data;
+        }
+
+        function onResize(){
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            renderer.setSize(w, h);
+            composer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+
+        var presentGaze = {};
+        var morphRender = {};
+        var glimpseCount = 0;
+        var theGlimpse = {};
+        var currentRotation = Math.PI / 180 * .3;
+
+        var kaleidoSettings = [
+            {
+                // horizontal
+                "sides": {value: .1},
+                "angle": {value: .0},
+                "uvOffset": {value: 0.},
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                // vertical
+                "sides": {value: 1.}, //> 1 diagonal w/ part; <1 diagonal w/o
+                "angle": {value: .0},
+                "uvOffset": {value: 0.},
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                "sides": {value: 0.00000003}, // circles down left
+                "angle": {value: .0},
+                "uvOffset": {value: 0.},
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                "sides": {value: 0.00000003},
+                "angle": {value: .0},
+                "uvOffset": {value: -.5},  // circles centre
+                "diffuseOffset": {value: 0.},
+            }, 
+            {
+                "sides": {value: .000003}, // trippy circle
+                "angle": {value: .0},
+                "uvOffset": {value: -.5},
+                "diffuseOffset": {value: 0.3},
+            }, 
+            {
+                "sides": {value: .000003},
+                "angle": {value: 0.},
+                "uvOffset": {value: -.5},
+                "diffuseOffset": {value: .5},
+                "trigoX": {value: 0}, // 0=sin, 1=cos, 2=tan, 3=atan
+                "trigoY": {value: 1}
+            }
+        ];
+
+        var glimpseBack = new THREE.Color(0, 0, 0), glimpseCol = new THREE.Color(1, 1, 1);
+        var theFlow = [
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 5), // lots of movement
+                frequency: Math.pow(10, 4), // still particles + grid lines
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: THREE.Math.randInt(3, 5),
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffsetRange: [-.5, -0.2],
+                    diffuseOffsetRange: [0.1, 0.5],
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 40,// Math.pow(10, 5), // lots of movement
+                frequency: Math.pow(10, 4), // still particles + grid lines
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: THREE.Math.randInt(3, 5),
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    diffuseOffset: 0.22042724965922889,
+                    uvOffset: -0.5,
+                    trigoX: 0,
+                    trigoY: 3
+                    // uvOffsetRange: [-.5, -0.2],
+                    // diffuseOffsetRange: [0.1, 0.5],
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: .000003,
+                    angle: 0.,
+                    uvOffset: -.5,
+                    diffuseOffset: .5,
+                    trigoX: 0, // 0=sin, 1=cos, 2=tan, 3=atan
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: .00000003,
+                    angle: 0.,
+                    uvOffset: -.5,
+                    diffuseOffset: .0,
+                }
+            },            
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: 0.00032, // movement
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 10,
+                kaleido: {
+                    // vertical
+                    sides: 1., //> 1 diagonal w/ part; <1 diagonal w/o
+                    angle: .0,
+                    uvOffset: 0.,
+                    diffuseOffset: 0.,
+                    trigoX: 0,
+                    trigoY: 1,
+                }
+            },
+            {   // vert kaleido
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: [Math.pow(10, 2), Math.pow(10, 6)], // lots of movement
+                frequency: 0.00032,
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                    trigoX: 0,
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: .00032, // movement
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 12,
+                kaleido: {
+                    // horizontal
+                    sides: .3,
+                    angle: .0,
+                    uvOffset: 0.,
+                    diffuseOffset: 0.,
+                    // trigoX: 0,
+                    // trigoY: 1,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 6), // lots of movement
+                frequency: Math.pow(10, 6), // grid
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.6, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: 2.20000003,
+                    angle: .0,
+                    uvOffset: -.3,  // circles centre
+                    diffuseOffset: 0.,
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 3), // lots of movement
+                frequency: 0.5, // movement
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * .3, // left or k-inwards
+                pointSize: 20,
+                kaleido: {
+                    sides: 0.00000003,
+                    angle: .0,
+                    uvOffsetRange: [-.3, -.7],  // circles centre - bottom-left - top-right
+                    diffuseOffsetRange: [-.2, .1],
+                    trigoX: 0, // 0=sin, 1=cos, 2=tan, 3=atan
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 5), // lots of movement
+                frequency: Math.pow(10, 4),
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: -Math.PI / 180 * .3, // left or k-inwards
+                pointSize: 3,
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: Math.pow(10, 10), // lots of movement
+                frequency: 0.0002,
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 2.3, // left or k-inwards
+                pointSize: 4,
+            },
+            {   // vert kaleido
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: [Math.pow(10, 1), Math.pow(10, 7)], // lots of movement
+                frequency: 0.00032,
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 4,
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                    trigoX: 0,
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 96, // lots of movement
+                frequency: 1221,
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 5,
+                morph: {
+                    morph: 1.0,
+                    textureDest: null,
+                    speed: 100.,
+                },   
+                kaleido: {
+                    sides: 1.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                    trigoX: 0,
+                    trigoY: 1
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 96, // lots of movement
+                frequency: 1221,
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * 0.3, // left or k-inwards
+                pointSize: 4,
+                morph: {
+                    morph: 1.0,
+                    textureDest: null,
+                    speed: 10.,
+                },   
+                kaleido: {
+                    sides: 2.,
+                    angle: 0.,
+                    uvOffset: -0.5,
+                    diffuseOffset: 0.5,
+                    trigoX: 0,
+                    trigoY: 2
+                }
+            },
+            {
+                length: 1,
+                stroboBackground: false,
+                sound: 'tempo-change',
+                amplitude: 96, // lots of movement
+                frequency: 1221,
+                particlesColor: glimpseCol,
+                backgroundColor: glimpseBack,
+                particlesRotationY: Math.PI / 180 * .03, // left or k-inwards
+                pointSize: 11,
+                // morph: {
+                //     morph: 1.0,
+                //     textureDest: null,
+                //     speed: 100.,
+                // },        
+                kaleido: {
+                    sides: 1.12002201,
+                    angle: 4.2,
+                    uvOffsetRange: [-.4, .2],  // circles centre
+                    diffuseOffsetRange: [-.4, .4],
+                }
+            }
+        ];
+
+        var introing = true, introFlow;
+
+        function startAlphabet(str) {
+            alphabeting = true;
+            textMaterial.uniforms.timer.value = 0;
+            // let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if (seeingStr !== '' && typing) {
+                str = seeingStr;
+            }
+
+            if (typeof str == 'undefined' || str == '') {
+                str = "";
+                for (let j = 0; j < 1; j++) {
+                    str += String.fromCharCode(65+Math.floor(Math.random() * 26));
+                }
+            }
+
+            textGeometry.update(str);
+            // textGeometry.update(String.fromCharCode(65+Math.floor(Math.random() * 26)));
+
+            // center the text
+            textMesh.position.x = -textGeometry.layout.width / 2;
+            textMesh.position.y = textGeometry.layout.height / 2 - 6;
+            presentGaze.cameraPosition = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+            camera.position.set(0, 0, 30);
+            // renderer.setClearColor(new THREE.Color(1, 1, 1));
+            FBO.particles.visible = false;
+            textAnchor.visible = true;
+        }
+
+        function stopAlphabet() {
+            alphabeting = false;
+            camera.position.set(presentGaze.cameraPosition.x, presentGaze.cameraPosition.y, presentGaze.cameraPosition.z);
+            renderer.setClearColor(new THREE.Color(0, 0, 0));
+            FBO.particles.visible = true;
+            textAnchor.visible = false;
+        }
+
+        var whatDoYouSeeOn = false;
+        // var seeingStr = ["WHAT", "DO", "YOU", "SEE?"];
+        var seeingCount = 0;
+        var seeingKaleido = {
+            sides: 1.,
+            angle: 0.,
+            uvOffsetRange: [-0.7, -0.3],
+            diffuseOffsetRange: [0.4, 0.6],
+            // trigoX: 0,
+            // trigoY: 1
+        }
+
+        function whatDoYouSee() {
+            whatDoYouSeeOn = true;
+            alphabetDuration = 3;
+            // var str = ["WHAT", "DO", "YOU", "SEE?"];
+            // for (var j=0; j<str.length; j++) {
+            //     startAlphabet(str);
+            // }
+            for (let j=0; j<floatingVids.length; j++)
+                floatingVids[j].visible = false;
+
+            seeingKaleido = {
+                sides: 1.,
+                angle: 0.,
+                uvOffsetRange: [-0.7, -0.3],
+                diffuseOffsetRange: [0.4, 0.6],
+                // trigoX: 0,
+                // trigoY: 1
+            }
+        }
+
+        function startGlimpse() {
+            // kin.video.play();
+            // sky.visible = true;
+            glimpsing = true;
+            glimpseCount += 1;
+
+            savePresentGaze();
+            // idx = idx || THREE.Math.randInt(0, theFlow.length - 1);
+            theGlimpse = theFlow[THREE.Math.randInt(0, theFlow.length - 1)];
+
+            if ('kaleido' in theGlimpse) {
+                startKaleido();
+            }
+            if ('morph' in theGlimpse) {
+                startMorph(
+                    theGlimpse.morph.textureDest,
+                    theGlimpse.morph.speed,
+                    theGlimpse.morph.pointSize
+                )
+            }
+
+            if (Array.isArray(theGlimpse.amplitude)) {
+                simulationShader.uniforms.amplitude.value = THREE.Math.randFloat(theGlimpse.amplitude[0], theGlimpse.amplitude[1]);
+            } else {
+                simulationShader.uniforms.amplitude.value = theGlimpse.amplitude;
+            }
+            simulationShader.uniforms.frequency.value = THREE.Math.randFloat(theGlimpse.frequency / 3, theGlimpse.frequency * 3);
+            renderShader.uniforms.pointSize.value = theGlimpse.pointSize;
+            // var cc = [theGlimpse.particlesColor, particleColor];
+            renderShader.uniforms.nColor.value = theGlimpse.particlesColor; //cc[THREE.Math.randInt(0, 1)];
+            glimpseBackColor = theGlimpse.backgroundColor;
+            currentRotation = theGlimpse.particlesRotationY;
+
+            renderer.setClearColor(glimpseBackColor);
+            // playSound(theGlimpse.sound);
+        }
+
+        function stopGlimpse() {
+            kaleidoing = false;
+            glimpsing = false;
+            // soundObj.pause();
+            bringBackPresentGaze();
+
+            if ('morph' in theGlimpse) {
+                stopMorph();
+            }
+
+            renderer.setClearColor(backColor);
+        }
+
+        function startTrip(name) {
+            glimpseOn = true;
+            alphabetOn = true;
+            scheduleVideo(name, 8);
+
+            sndNameToStop = playSound('transition', 0.5, 1);
+
+            for (var j=0; j<floatingVids.length; j++) {
+                sky.remove(floatingVids[j]);
+            }
+
+            simulationShader.uniforms.amplitude.value += 10;
+            // timer = 200;
+            document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+            renderShader.uniforms.nColor.value = new THREE.Color(0, 0, 0);
+            backColor = new THREE.Color(1, 1, 1);
+            renderer.setClearColor(backColor);
+        }
+
+        function startKaleido(params) {
+            kaleidoing = true;
+            params = params || theGlimpse.kaleido;
+
+            kaleidoscopePass.material.uniforms.sides.value = params.sides;
+
+            if (Array.isArray(params.angle))
+                kaleidoscopePass.material.uniforms.angle.value = THREE.Math.randFloat(params.angle[0], params.angle[1]);
+            else {
+                kaleidoscopePass.material.uniforms.angle.value = params.angle;
+            }
+
+            if ('uvOffset' in params) {
+                kaleidoscopePass.material.uniforms.uvOffset.value = params.uvOffset;
+            } else if ('uvOffsetRange' in params) {
+                kaleidoscopePass.material.uniforms.uvOffset.value = THREE.Math.randFloat(params.uvOffsetRange[0], params.uvOffsetRange[1]);
+            }
+
+            if ('diffuseOffset' in params) {
+                kaleidoscopePass.material.uniforms.diffuseOffset.value = params.diffuseOffset;
+            } else if ('diffuseOffsetRange' in params) {
+                kaleidoscopePass.material.uniforms.diffuseOffset.value = THREE.Math.randFloat(params.diffuseOffsetRange[0], params.diffuseOffsetRange[1]);
+            }
+            kaleidoscopePass.material.uniforms.trigoX.value = params.trigoX !== undefined ? params.trigoX : THREE.Math.randInt(0, 3);
+            kaleidoscopePass.material.uniforms.trigoY.value = params.trigoY !== undefined ? params.trigoY : THREE.Math.randInt(0, 3);
+
+            kaleidoscopePass.material.needsUpdate = true;
+            // kaleidoscopePass.enabled = true;
+        }
+
+        function startMorph(textureDest, speed, pointSize) {
+            simulationShader.uniforms.morph.value = 1.0;
+            simulationShader.uniforms.textureDest.value = textureDest || getRandImgTexture();
+            simulationShader.uniforms.morphTimestamp.value = timer;
+            simulationShader.uniforms.morphSpeed.value = speed || 0.8;
+            renderShader.uniforms.pointSize.value = pointSize || 4;
+            camera.position.set(0., 200., 5.);
+        }
+
+        function stopMorph() {
+            simulationShader.uniforms.morph.value = 0.0;
+        }
+
+        function savePresentGaze() {
+            presentGaze.amplitude = simulationShader.uniforms.amplitude.value;
+            presentGaze.frequency = simulationShader.uniforms.frequency.value;
+            presentGaze.texture = simulationShader.uniforms.texture.value;
+            presentGaze.pointSize = renderShader.uniforms.pointSize.value;
+            presentGaze.renderColor = renderShader.uniforms.nColor.value;
+            presentGaze.backgroundColor = backColor;
+            presentGaze.currentRotation = currentRotation;
+            presentGaze.cameraPosition = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+        }
+
+        function bringBackPresentGaze() {
+            simulationShader.uniforms.amplitude.value = presentGaze.amplitude;
+            simulationShader.uniforms.frequency.value = presentGaze.frequency;
+            simulationShader.uniforms.texture.value = presentGaze.texture;
+            renderShader.uniforms.pointSize.value = presentGaze.pointSize;
+            renderShader.uniforms.nColor.value = presentGaze.renderColor;
+            backColor = presentGaze.backgroundColor;
+            currentRotation = presentGaze.currentRotation;
+            camera.position.set(presentGaze.cameraPosition.x, presentGaze.cameraPosition.y, presentGaze.cameraPosition.z);
+        }
+
+        var defaultBackColor=new THREE.Color(0, 0, 0.02), backColor=new THREE.Color(0, 0, 0.02), glimpseBackColor=new THREE.Color(1, 1, 1);
+        var defaultParticleColor=new THREE.Color(1, 1, 1), particleColor=new THREE.Color(1, 1, 1), stroboParticleColor=new THREE.Color(0, 0, 0);
+
+        function stroboBackground() {
+            let tempBack = glimpseBackColor;
+            glimpseBackColor = backColor;
+            backColor = tempBack;
+            renderer.setClearColor(backColor);
+        }
+        var nextVideo, nextVideoCountdown = 0;
+
+        function scheduleVideo(name, time) {
+            nextVideo = name;
+            nextVideoCountdown = time;
+        }
+
+        function playVideo(name) {
+            hyperspace(name, renderer, scene);
+            delayGlimpseStop(4);
+        }
+
+        var glimpseTimer = 0, sndNameToStop;
+        function delayGlimpseStop(time) {
+            glimpseTimer = time;
+            playSound('video', 2, 18);
+        }
+
+        function hyperspace(name, renderer, scene) {
+            hyperspaceOn = true;
+            hyperspacing = true;
+            var loader = new THREE.TextureLoader();
+            loader.crossOrigin = "Anonymous";
+            loader.load(
+                "vid/" + name + ".jpeg",
+                function(texture) {
+                    window.tunnel = new Tunnel(texture, renderer, scene);
+                    window.tunnel.vidName = name;
+                }
+            );
+        }
+
+        var glimpseOn = false, alphabetOn = false;
+        var stroboHyper = true, typing = false;
+        var hyperspaceOn = false, hyperspacing = false;
+
+        function stopHyperspace() {
+            hyperspaceOn = false;
+            hyperspacing = false;
+            scene.remove(window.tunnel.tubeMesh);
+            window.tunnel.stop();
+
+            if (glimpsing)
+                stopGlimpse();
+
+            // Queue video
+            snds[sndNameToStop].pause();
+            stopKinect();
+            currVid = vid360.init(renderer, window.tunnel.vidName, Curves, playSound);
+            currVid.start();
+            videoPlaying = true;
+        }
+
+        function update() { 
+            requestAnimationFrame(update);
+
+            timer += timerInc;
+            let timerInt = parseInt(timer);
+
+            simulationShader.uniforms.timer.value = timer;
+            renderShader.uniforms.timer.value = timer;
+
+            if (starsGeometry !== undefined) {
+                var imgTime = (new Date().getTime() - startTime) / 3000;    
+                var alpha = THREE.Math.clamp(-(Math.floor(imgTime) - imgTime) * 1.5,0,1);
+                for(var i = 0;i < starsGeometry.attributes.position.count;i++){
+                    currentVerts[i*3] = THREE.Math.lerp(randomVerts[i*3],verts[i*3], alpha);
+                    currentVerts[i*3 +1] = THREE.Math.lerp(randomVerts[i*3 + 1],verts[i*3 + 1], alpha);
+                    currentVerts[i*3 + 2] = THREE.Math.lerp(randomVerts[i*3 + 2 ],verts[i*3 + 2], alpha);
+                }
+                starsGeometry.attributes.position.needsUpdate = true;
+            }
+
+            // if (whatDoYouSeeOn) {
+            //     // if (timerInt % 4 == 0)
+            //     seeingCount = parseInt((timerInt % 8) / 2);
+
+            //     var alaphabetInterval = THREE.Math.randInt(2, 4);
+            //     if (!alphabeting && timerInt % alaphabetInterval == 0) {
+            //         startKaleido(seeingKaleido);
+            //         startAlphabet(seeingStr[seeingCount]);
+            //         renderer.setClearColor(new THREE.Color(0, 0, 0));
+            //         textMaterial.uniforms.color.value = new THREE.Color(1, 1, 1);
+            //     } else if (alphabeting && timer % alaphabetInterval > 1) {
+            //         stopAlphabet();
+            //         kaleidoing = false;
+            //         renderer.setClearColor(new THREE.Color(0, 0, 0));
+            //     }
+            //     textMaterial.uniforms.timer.value += timerInc;
+            //     if (textMaterial.uniforms.timer.value > alphabetDuration) {
+            //         textMaterial.uniforms.timer.value = 0;
+            //     }
+
+            //     if (timerInt % 3 == 0)
+            //         composer.render();
+            //     else 
+            //         renderer.render(scene, camera);
+            //     return;
+            // }
+
+            if (glimpseTimer > 0) {
+                glimpseTimer -= timerInc;
+                if (glimpseTimer <= 0) {
+                    glimpseOn = false;
+                    alphabetOn = false;
+                    hyperspacing = true;
+                }
+            }
+
+            if (videoPlaying) {
+                currVid.update(-0.1);
+                if (!currVid.playing) {
+                    videoPlaying = false;
+                    playSound('sky', 0.5, 3);
+                    lastVideo = currVid.name;
+                    FBO.particles.material.visible = true;
+                    startKinect(1);
+
+                    if (glimpsing)
+                        stopGlimpse();
+                    if (alphabeting)
+                        stopAlphabet();
+
+                    // simulationShader.uniforms.amplitude.value = 100;
+                    // timer = 200;
+                    document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+                    renderShader.uniforms.nColor.value = new THREE.Color(1, 1, 1);
+                    backColor = new THREE.Color(0, 0, 0);
+                    renderer.setClearColor(backColor);
+
+                    vidCount = (vidCount + 1) % allVids.length;
+
+                    floatingVids = [];
+                    floatingVids.push(addFloatingVid(allVids[vidCount]));
+
+                    for (let j=0; j<floatingVids.length; j++) {
+                        floatingVids[j].position.set(
+                            THREE.Math.randInt(-110, -20),
+                            THREE.Math.randInt(-90, -10),
+                            THREE.Math.randInt(-80, -10)
+                        );
+                        sky.add(floatingVids[j]);
+                    }
+
+                }
+                if (!glimpseOn)
+                    return;
+            }
+
+            if (hyperspaceOn) {
+                if (typeof window.tunnel !== 'undefined') {
+                    if (window.tunnel.progress() > 0.99) {
+                        stopHyperspace();
+                        return;
+                    }
+                }
+                if (glimpseOn) {
+                    var hyperspaceInterval = THREE.Math.randInt(2, 9);
+                    if (!hyperspacing && timerInt % hyperspaceInterval == 0) {
+                        hyperspacing = true;
+                    } else if (hyperspacing && timer % hyperspaceInterval > 1) {
+                        hyperspacing = false;
+                    }
+                }
+                if (hyperspacing && typeof window.tunnel !== 'undefined') {
+                    window.tunnel.render();
+                    return;
+                }
+            }
+
+            if (nextVideoCountdown > 0) {
+                nextVideoCountdown -= timerInc;
+                if (nextVideoCountdown <= 0) {
+                    if (!videoPlaying) {
+                        playVideo(nextVideo);
+                    }
+                }
+            }
+
+            //update simulation
+            FBO.update();
+
+            for(let k=0; k < userMeshes.length; k++) {
+                userMeshes[k].update();
+            }
+
+            if (glimpseOn || introing) {
+                // Pick a time interval for how often to start the glimpse effect
+                var glimpseInterval = THREE.Math.randInt(2, 9);
+                if (timerInt % glimpseInterval == 0) {
+                    if (!glimpsing) {
+                        startGlimpse();
+                    }
+                } else if (glimpsing && timer % glimpseInterval > theGlimpse.length * 5) {
+                    stopGlimpse();
+                }
+            }
+
+            if (alphabetOn) {
+                var alaphabetInterval = THREE.Math.randInt(2, 9);
+                if (!alphabeting && timerInt % alaphabetInterval == 0) {
+                    startAlphabet();
+                } else if (alphabeting && timer % alaphabetInterval > 3) {
+                    stopAlphabet();
+                }
+                if (alphabeting) {
+                    textMaterial.uniforms.timer.value += timerInc;
+                    if (textMaterial.uniforms.timer.value > alphabetDuration) {
+                        textMaterial.uniforms.timer.value = 0;
+                        alphabeting = false;
+                    }
+                }
+            }
+
+            // Constant counter-clockwise rotation, dervish style
+            // FBO.particles.rotation.y -= currentRotation;
+
+            // camera.position.x -= 10 * Math.PI / 180;
+            if (rotateCamera)
+                sky.rotation.y -= currentRotation;
+
+            controls.update();
+
+            for (let j=0; j<floatingVids.length; j++) {
+                floatingVids[j].lookAt(camera.position);
+            }
+
+            // If we are in glimpse mode
+            // Also check if the kaleido effect is on and call the effect composer
+            if (glimpsing) {
+                if (theGlimpse.stroboBackground) {
+                    stroboBackground();
+                }
+            } else {
+                // When we reach min/max sphere amplitude, reverse
+                if (simulationShader.uniforms.amplitude.value < 50 || simulationShader.uniforms.amplitude.value > 175) {
+                    amplDec = -amplDec;
+                    amplInc = -amplInc;
+                }
+            }
+
+            if (kaleidoing) {
+                composer.render();
+            } else {
+                renderer.render(scene, camera);
+            }
+            // renderer.render(sceneCube, cameraCube);
+            // renderer.autoClear = false;
+
+            // Increase or decrease the amplitutde cyclically every time unit
+            if (timerInt % 2 == 0) {
+                simulationShader.uniforms.amplitude.value += amplInc;
+            } else if (timerInt % 2 == 1) {
+                simulationShader.uniforms.amplitude.value -= amplDec;
+            }
+        }
+
+        //returns a Float32Array buffer of 3D points after an image
+        function getImage(img, elevation){
+            var ctx = getContext(null, img.width, img.height);
+            ctx.drawImage(img, 0, 0);
+            var imgData = ctx.getImageData(0, 0, img.width, img.height);
+            var iData = imgData.data;
+
+            var l = (img.width * img.height);
+            var data = new Float32Array(l * 3);
+            for (var i = 0; i < l; i++) {
+                var i3 = i * 3;
+                var i4 = i * 4;
+                data[i3] = (i % img.width) - img.width * .5;
+                data[i3 + 1] = (iData[i4] / 0xFF * 0.299 +iData[i4+1]/0xFF * 0.587 + iData[i4+2] / 0xFF * 0.114) * elevation;
+                data[i3 + 2] = (parseInt(i / img.width) - img.height * .5);
+            }
+            return data;
+        }
+        function getCanvas(w, h){
+            var canvas = document.createElement("canvas");
+            canvas.width = w || 512;
+            canvas.height = h || 512;
+            return canvas;
+        }
+        function getContext(canvas, w, h){
+            canvas = canvas || getCanvas(w, h);
+            canvas.width = w || canvas.width;
+            canvas.height = h || canvas.height;
+            return canvas.getContext("2d");
+        }
+
+        function getRandImgTexture(src) {
+            var img;
+            if (src == undefined) {
+                img = imgs[THREE.Math.randInt(0, imgs.length - 1)];
+            }
+            // img = userImages[0];
+            let data = getImage(img, 64);
+            let texture = new THREE.DataTexture(data, img.width, img.height, THREE.RGBFormat, THREE.FloatType);
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+        var mouse = new THREE.Vector2();
+        var raycaster = new THREE.Raycaster();
+
+        function onDocumentMouseMove(event) {
+            if (videoPlaying) {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+                return;
+            }
+
+            var mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(floatingVids);
+            if (intersects.length) {
+                document.body.style.cursor = "pointer";
+            } else {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+            }
+        }
+
+        document.addEventListener('mousedown', onMouseDown, false);
+        function onMouseDown(event) {
+            if (videoPlaying) {
+                document.body.style.cursor = "url('css/chaos-magick.png'), auto";
+                return;
+            }
+            event.preventDefault();
+
+            var mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(floatingVids);
+            if (intersects.length) {
+                startTrip(intersects[0].object.vidName);
+            }
+        }
+
+        async function loadImages(imageUrlArray) {
+            const promiseArray = [];
+            const imageArray = [];
+
+            for (let imageUrl of imageUrlArray) {
+                promiseArray.push(new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = resolve;
+
+                    if (imageUrl.startsWith('http')) {
+                        img.src = imageUrl;
+                        img.crossOrigin = "Anonymous";
+                    } else {
+                        img.src = 'img/' + imageUrl;
+                    }
+                    imageArray.push(img);
+                }));
+            }
+
+            await Promise.all(promiseArray);
+            return imageArray;
+        }
+
+    </script>
+</body>
+</html>
